@@ -5,12 +5,19 @@
  * Date:
  */
 class AccountController extends Controller {
+    public function index(){
+        $this->view("login-page", []);
+    }
 
     public function create() {
 
     }
 
     public function signIn($user) {
+        $this->view("login-page", []);
+    }
+
+    public function signUp(){
 
     }
 
