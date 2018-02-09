@@ -6,7 +6,7 @@
  */
 class PropertyController extends Controller {
     public function index (){
-        $this->view("add-property-page", []);
+        $this->view("list-property-page", []);
     }
 
     public function add() {
@@ -14,10 +14,10 @@ class PropertyController extends Controller {
     }
 
     public function update() {
-
+        $this->view("update-property-page", []);
     }
 
     public function delete() {
-
+        $this->view("delete-property-page", []);
     }
 }

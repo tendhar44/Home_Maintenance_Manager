@@ -6,7 +6,7 @@
  */
 class TaskController extends Controller {
     public function index() {
-        $this->view("add-task-page", []);
+        $this->view("list-task-page", []);
     }
 
     public function add() {
@@ -14,11 +14,11 @@ class TaskController extends Controller {
     }
 
     public function update() {
-
+        $this->view("update-task-page", []);
     }
 
     public function delete() {
-
+        $this->view("delete-task-page", []);
     }
 
 }

@@ -6,7 +6,7 @@ class ConfirmationController extends Controller{
     }
 
     public function thankYou() {
-        $this->view("thankyou", []);
+        $this->view("confirmation-thankyou-page", []);
     }
 
 }

@@ -28,11 +28,10 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
 </div>
 
 <?php
-echo "<h2>Your Input:</h2>";
+echo "<h4>Your Input:</h4>";
 echo $tname;
 $_POST["taskDes"];
 echo "<br>";
 echo $tdes;
 echo "<br>";
 ?>
-

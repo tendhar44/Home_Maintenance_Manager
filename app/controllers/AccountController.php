@@ -6,27 +6,27 @@
  */
 class AccountController extends Controller {
     public function index(){
-        $this->view("login-page", []);
-    }
-
-    public function create() {
-
+        $this->view("account-signin-page", []);
     }
 
     public function signIn($user) {
-        $this->view("login-page", []);
+        $this->view("account-signin-page", []);
     }
 
     public function signUp(){
-
+        $this->view("account-signup-page", []);
     }
 
     public function signOut($user) {
-
+        $this->view("account-signout-page", []);
     }
 
-    public function changePassword($user) {
+    public function delete() {
+        $this->view("account-delete-page", []);
+    }
 
+    public function update() {
+        $this->view("account-update-page", []);
     }
 
 }

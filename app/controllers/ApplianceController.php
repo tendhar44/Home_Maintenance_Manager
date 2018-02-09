@@ -6,7 +6,7 @@
  */
 class ApplianceController extends Controller {
     public function index() {
-        $this->view("add-appliance-page", []);
+        $this->view("list-appliance-page", []);
     }
 
     public function add() {
@@ -14,11 +14,11 @@ class ApplianceController extends Controller {
     }
 
     public function update() {
-
+        $this->view("update-appliance-page", []);
     }
 
     public function delete() {
-
+        $this->view("delete-appliance-page", []);
     }
 
 }
