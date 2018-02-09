@@ -13,11 +13,14 @@ class Task {
     protected $reminder;
     protected $status;
     protected $picture;
+    protected $userId;
+    protected $applianceId;
+    protected $id;
 
 
 
 
-    public function insertQuery(){
+    public function addTask(){
         require_once("../app/DatabaseConnection.php");
 
         $db_con = new DatabaseConnection();
@@ -34,6 +37,14 @@ class Task {
         } else{
             echo "ERROR: Could not able to execute $sql_data. " . $db_connection->error;
         }
+    }
+
+    public function updateTask(){
+
+    }
+
+    public function deleteTask(){
+
     }
 
 }

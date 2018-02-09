@@ -9,4 +9,16 @@ class Appliance {
     protected $model;
     protected $picture;
 
+    public function addAppliance() {
+
+    }
+
+    public function updateAppliance() {
+
+    }
+
+    public function deleteAppliance() {
+
+    }
+
 }

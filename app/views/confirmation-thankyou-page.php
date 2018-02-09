@@ -8,7 +8,7 @@ require_once("../app/models/Validation.php");
 require_once("../app/models/Task.php");
 
 $task = new Task();
-$task->insertQuery();
+$task->addTask();
 
 $valid = new Validation();
 

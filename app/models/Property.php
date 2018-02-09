@@ -10,4 +10,16 @@ class Property {
     protected $address;
     protected $picture;
 
+    public function addProperty() {
+
+    }
+
+    public function updateProperty() {
+
+    }
+
+    public function deleteProperty() {
+
+    }
+
 }
