@@ -23,4 +23,16 @@ class User {
     public function deleteUser() {
 
     }
+
+    public function signInUser() {
+
+    }
+
+    public function signOutUser() {
+
+    }
+
+    public function signUpUser() {
+
+    }
 }

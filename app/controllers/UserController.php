@@ -21,4 +21,16 @@ class UserController extends Controller {
         $this->view("delete-user-page", []);
     }
 
+    public function signIn() {
+        $this->view("sign-in-page", []);
+    }
+
+    public function signOut() {
+        $this->view("sign-out-page", []);
+    }
+
+    public function signUp() {
+        $this->view("sign-up-page", []);
+    }
+
 }

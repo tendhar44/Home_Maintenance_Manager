@@ -5,7 +5,7 @@
  * Date:
  */
 class ApplianceController extends Controller {
-    public function index() {
+    public function index (){
         $this->view("list-appliance-page", []);
     }
 
