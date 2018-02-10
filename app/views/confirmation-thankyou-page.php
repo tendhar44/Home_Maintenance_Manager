@@ -18,8 +18,8 @@ $tdes = "";
 
 //validates the inputs
 if($_SERVER["REQUEST_METHOD"] == "POST") {
-    $tname = $valid->checkInput($_POST["taskName"]);
-    $tdes = $valid->checkInput($_POST["taskDes"]);
+$tname = $valid->checkInput($_POST["taskName"]);
+$tdes = $valid->checkInput($_POST["taskDes"]);
 }
 ?>
 

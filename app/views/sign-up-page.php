@@ -2,24 +2,6 @@
 
 ?>
 
-<!--<form action="/Home_Maintenance_Manager/public/confirmationcontroller/thankyou" method="post">
-    <table>
-        <tr><td>First Name</td><td><input type="text" name="signupFirstName"></td></tr>
-        <tr><td>Last Name</td><td><input type="text" name="signupLastName"></td></tr>
-        <tr><td>Username</td><td><input type="text" name="signupUserName"></td></tr>
-        <tr><td>Password</td><td><input type="text" name="signupPassWord"></td></tr>
-        <tr><td>Email</td><td><input type="text" name="signupEmail"></td></tr>
-        <tr><td>User Type</td>
-            <td>
-                <select name="signupUserType">
-                    <option value="PropertyManager">Property Manager</option>
-                </select>
-            </td>
-        </tr>
-        <tr><td><input type="submit" value="Sign In"></td></tr>
-    </table>
-</form>-->
-
 <div class="container">
 
     <div class="row">
@@ -31,6 +13,24 @@
                 <hr>
 
                 <?php
+                /*require_once("../app/models/Validation.php");
+                require_once("../app/models/User.php");
+
+                $user = new User();
+                $user->signUpUser();
+
+                $valid = new Validation();
+
+                //define variable and set to empty
+                $tname = "";
+                $tdes = "";
+
+                //validates the inputs
+                if($_SERVER["REQUEST_METHOD"] == "POST") {
+                    $tname = $valid->checkInput($_POST["taskName"]);
+                    $tdes = $valid->checkInput($_POST["taskDes"]);
+                }*/
+
                 //check for any errors
                 if(isset($error)){
                     foreach($error as $error){
@@ -44,37 +44,41 @@
                 ?>
 
                 <div class="form-group">
-                    <input type="text" name="username" id="username" class="form-control input-lg" placeholder="User Name" value="<?php if(isset($error)){ echo htmlspecialchars($_POST['username'], ENT_QUOTES); } ?>" tabindex="1">
+                    <input type="text" name="username" id="username" class="form-control input-lg" placeholder="User Name" tabindex="1">
                 </div>
                 <div class="form-group">
-                    <input type="text" name="firstname" id="firstname" class="form-control input-lg" placeholder="First Name" value="<?php if(isset($error)){ echo htmlspecialchars($_POST['firstname'], ENT_QUOTES); } ?>" tabindex="1">
+                    <input type="text" name="firstname" id="firstname" class="form-control input-lg" placeholder="First Name" tabindex="2">
                 </div>
                 <div class="form-group">
-                    <input type="text" name="lastname" id="lastname" class="form-control input-lg" placeholder="Last Name" value="<?php if(isset($error)){ echo htmlspecialchars($_POST['lastname'], ENT_QUOTES); } ?>" tabindex="1">
+                    <input type="text" name="lastname" id="lastname" class="form-control input-lg" placeholder="Last Name" tabindex="3">
                 </div>
                 <div class="form-group">
-                    <input type="email" name="email" id="email" class="form-control input-lg" placeholder="Email Address" value="<?php if(isset($error)){ echo htmlspecialchars($_POST['email'], ENT_QUOTES); } ?>" tabindex="2">
+                    <input type="email" name="email" id="email" class="form-control input-lg" placeholder="Email Address" tabindex="4">
                 </div>
                 <div class="row">
                     <div class="col-xs-6 col-sm-6 col-md-6">
                         <div class="form-group">
-                            <input type="password" name="password" id="password" class="form-control input-lg" placeholder="Password" tabindex="3">
+                            <input type="password" name="password" id="password" class="form-control input-lg" placeholder="Password" tabindex="5">
                         </div>
                     </div>
                     <div class="col-xs-6 col-sm-6 col-md-6">
                         <div class="form-group">
-                            <input type="password" name="passwordConfirm" id="passwordConfirm" class="form-control input-lg" placeholder="Confirm Password" tabindex="4">
+                            <input type="password" name="passwordConfirm" id="passwordConfirm" class="form-control input-lg" placeholder="Confirm Password" tabindex="6">
                         </div>
                     </div>
                 </div>
 
                 <div class="row">
-                    <div class="col-xs-6 col-md-6"><input type="submit" name="submit" value="Register" class="btn btn-dark btn-block btn-lg" tabindex="5"></div>
+                    <div class="col-xs-6 col-md-6"><input type="submit" name="submit" value="Register" class="btn btn-dark btn-block btn-lg" tabindex="8"></div>
                 </div>
             </form>
         </div>
     </div>
 
+    <div>
+        <br><br><br><br><br><br>
+        * = required
+    </div>
 </div>
 
 
