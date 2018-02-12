@@ -9,8 +9,6 @@
     <div class="row">
         <div class="col-md-6">
 
-            Testing data passed from User Model: <?php echo $data["name"]?>
-
             <h2>Home Maintenance Manager</h2>
             <hr>
             <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.</p>

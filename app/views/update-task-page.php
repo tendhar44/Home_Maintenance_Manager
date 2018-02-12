@@ -1,7 +1,9 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: tibiverson44
- * Date: 2/9/2018
- * Time: 1:21 AM
- */
+
+require_once('../app/config/config.php');
+require_once('../app/functions.php');
+$userSigned = $user->isSignedIn();
+
+//if not logged in redirect to login page
+ifNotLoggedIn('../public/usercontroller/signin', $userSigned);
+?>

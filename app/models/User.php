@@ -5,12 +5,24 @@
  * Date:
  */
 class User {
+    private $database;
+
     protected $userName;
     protected $passWord;
     protected $firstName;
     protected $lastName;
     protected $email;
     protected $type;
+
+    public function __construct($database) {
+        $this->database = $database;
+    }
+
+    public function isSignedIn() {
+        if(isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true){
+            return true;
+        }
+    }
 
     public function addUser() {
 
