@@ -9,7 +9,7 @@ require_once('../app/functions.php');
 $userSigned = $user->isSignedIn();
 
 //if not logged in redirect to login page
-ifNotLoggedIn('../public/usercontroller/signin', $userSigned);
+ifNotLoggedIn(BASE_LINK . 'usercontroller/signin', $userSigned);
 
 require_once("../app/models/Validation.php");
 require_once("../app/models/Task.php");

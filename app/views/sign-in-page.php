@@ -4,7 +4,7 @@ require_once('../app/functions.php');
 $userSigned = $user->isSignedIn();
 
 //if not logged in redirect to login page
-ifLoggedIn('../public/homecontroller', $userSigned);
+ifLoggedIn(BASE_LINK . 'homecontroller', $userSigned);
 ?>
 
 
@@ -56,22 +56,42 @@ ifLoggedIn('../public/homecontroller', $userSigned);
                 ?>
 
                 <div class="form-group">
-                    <input type="text" name="username" id="username" class="form-control input-lg" placeholder="User Name" tabindex="1">
+                    <input type="text" name="userName" id="username" class="form-control input-lg" placeholder="User Name" tabindex="1">
                 </div>
                 <div class="form-group">
-                    <input type="text" name="password" id="password" class="form-control input-lg" placeholder="Password" tabindex="2">
+                    <input type="text" name="passWord" id="password" class="form-control input-lg" placeholder="Password" tabindex="2">
                 </div>
 
                 <div class="row">
-                    <div class="col-xs-6 col-md-6"><input type="submit" name="submit" value="Register" class="btn btn-dark btn-block btn-lg" tabindex="5"></div>
+                    <div class="col-xs-6 col-md-6"><input type="submit" name="submit" value="Sign In" class="btn btn-dark btn-block btn-lg" tabindex="5"></div>
                 </div>
             </form>
         </div>
     </div>
 
 <div>
-    <br><br><br><br><br><br>
+    <br><br><br><br>
     * = required
 </div>
 
 </div>
+
+<?php
+require_once("../app/models/Validation.php");
+$valid = new Validation();
+
+//define variable and set to empty
+$username = "";
+$password = "";
+
+//validates the inputs
+if($_SERVER["REQUEST_METHOD"] == "POST") {
+    $username = $valid->checkInput($_POST["userName"]);
+    $password = $valid->checkInput($_POST["passWord"]);
+}
+if(isset($_POST['submit'])) {
+    $user->signInUser($username, $password);
+    header('Location: /home_maintenance_manager/public');
+}
+
+?>

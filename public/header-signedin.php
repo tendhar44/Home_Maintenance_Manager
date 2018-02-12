@@ -31,12 +31,6 @@
                 <a class="nav-link" href="/home_maintenance_manager/public/homecontroller">Home</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/home_maintenance_manager/public/usercontroller/signin">Sign In</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/home_maintenance_manager/public/usercontroller/signup">Sign Up</a>
-            </li>
-            <li class="nav-item">
                 <a class="nav-link" href="/home_maintenance_manager/public/propertycontroller">Property</a>
             </li>
             <li class="nav-item">
@@ -44,6 +38,9 @@
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="/home_maintenance_manager/public/taskcontroller">Task</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/home_maintenance_manager/public/usercontroller/signout">Sign Out</a>
             </li>
         </ul>
     </div>

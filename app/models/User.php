@@ -25,7 +25,7 @@ class User {
     }
 
     public function addUser() {
-        require_once("../app/DatabaseConnection.php");
+        /*require_once("../app/DatabaseConnection.php");
 
         $db_con = new DatabaseConnection();
         $db_connection = $db_con->db_connect();
@@ -40,10 +40,23 @@ class User {
             echo "Records inserted successfully.";
         } else{
             echo "ERROR: Could not able to execute $sql_data. " . $db_connection->error;
-        }
+        }*/
     }
 
     public function getUser($username){
+        require_once("../app/DatabaseConnection.php");
+
+        $db_con = new DatabaseConnection();
+        $db_connection = $db_con->db_connect();
+
+
+
+        //attempt select query execution
+        $sql_data = "SELECT * FROM user WHERE user_name = '$username'";
+
+        $userData = $db_connection->query($sql_data);
+
+        return $userData->fetch_assoc();
 
     }
 
@@ -56,9 +69,10 @@ class User {
     }
 
     public function isValidUsername($username){
+        require_once("../app/models/Validation.php");
         $valid = new Validation();
 
-        $userName = $valid->checkInput($username]);
+        $userName = $valid->checkInput($username);
         if (strlen($userName) < 3) return false;
         if (strlen($userName) > 17) return false;
         if (!ctype_alnum($userName)) return false;
@@ -71,13 +85,13 @@ class User {
 
         $row = $this->getUser($username);
 
-        if($this->password_verify($password,$row['password']) == 1){
+        //if($this->password_verify($password,$row['password']) == 1){
 
             $_SESSION['loggedin'] = true;
-            $_SESSION['username'] = $row['username'];
-            $_SESSION['memberID'] = $row['memberID'];
+            $_SESSION['username'] = $row['user_name'];
+            $_SESSION['userid'] = $row['user_id'];
             return true;
-        }
+        //}
 
     }
 
@@ -93,14 +107,18 @@ class User {
         $first_name = (isset($_POST['firstName'])) ? $_POST['firstName'] : '';
         $last_name = (isset($_POST['lastName'])) ? $_POST['lastName'] : '';
         $email = (isset($_POST['email'])) ? $_POST['email'] : '';
+        $password = (isset($_POST['password'])) ? $_POST['password'] : '';
 
         // attempt insert query execution
-        $sql_data = "INSERT INTO user (user_name, first_name, last_name, email) VALUES ('$user_name', '$first_name', '$last_name', '$email')";
+        $sql_data = "INSERT INTO user (user_name, password, email, first_name, last_name) VALUES ('$user_name', '$password', '$email', '$first_name', '$last_name')";
 
-        if($db_connection->query($sql_data) === true){
+        $db_connection->query($sql_data);
+
+        $this->signInUser($user_name, $password);
+        /*if($db_connection->query($sql_data) === true){
             echo "Records inserted successfully.";
         } else{
             echo "ERROR: Could not able to execute $sql_data. " . $db_connection->error;
-        }
+        }*/
     }
 }

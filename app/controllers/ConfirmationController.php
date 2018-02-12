@@ -9,4 +9,8 @@ class ConfirmationController extends Controller{
         $this->view("confirmation-thankyou-page", []);
     }
 
+    public function confirmationSignUp() {
+        $this->view("confirmation-signup-page", []);
+    }
+
 }
