@@ -3,6 +3,8 @@
  * Name:
  * Date:
  */
+
+require_once('../app/config/config.php');
 ?>
 
 <div class="container">

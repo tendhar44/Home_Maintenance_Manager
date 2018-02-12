@@ -25,6 +25,25 @@ class User {
     }
 
     public function addUser() {
+        require_once("../app/DatabaseConnection.php");
+
+        $db_con = new DatabaseConnection();
+        $db_connection = $db_con->db_connect();
+
+        $user_name= (isset($_POST['userName'])) ? $_POST['userName'] : '';
+        $pass_word= (isset($_POST['passWord'])) ? $_POST['passWord'] : '';
+
+        // attempt insert query execution
+        $sql_data = "INSERT INTO user (user_name, password) VALUES ('$user_name', '$pass_word')";
+
+        if($db_connection->query($sql_data) === true){
+            echo "Records inserted successfully.";
+        } else{
+            echo "ERROR: Could not able to execute $sql_data. " . $db_connection->error;
+        }
+    }
+
+    public function getUser($username){
 
     }
 
@@ -36,12 +55,34 @@ class User {
 
     }
 
-    public function signInUser() {
+    public function isValidUsername($username){
+        $valid = new Validation();
+
+        $userName = $valid->checkInput($username]);
+        if (strlen($userName) < 3) return false;
+        if (strlen($userName) > 17) return false;
+        if (!ctype_alnum($userName)) return false;
+        return true;
+    }
+
+    public function signInUser($username,$password) {
+        if (!$this->isValidUsername($username)) return false;
+        if (strlen($password) < 3) return false;
+
+        $row = $this->getUser($username);
+
+        if($this->password_verify($password,$row['password']) == 1){
+
+            $_SESSION['loggedin'] = true;
+            $_SESSION['username'] = $row['username'];
+            $_SESSION['memberID'] = $row['memberID'];
+            return true;
+        }
 
     }
 
     public function signOutUser() {
-
+        session_destroy();
     }
 
     public function signUpUser() {
