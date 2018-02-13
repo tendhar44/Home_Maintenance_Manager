@@ -56,10 +56,10 @@ ifLoggedIn(BASE_LINK . 'homecontroller', $userSigned);
                 ?>
 
                 <div class="form-group">
-                    <input type="text" name="userName" id="username" class="form-control input-lg" placeholder="User Name" tabindex="1">
+                    <input type="text" name="username" id="username" class="form-control input-lg" placeholder="User Name" tabindex="1">
                 </div>
                 <div class="form-group">
-                    <input type="text" name="passWord" id="password" class="form-control input-lg" placeholder="Password" tabindex="2">
+                    <input type="text" name="password" id="password" class="form-control input-lg" placeholder="Password" tabindex="2">
                 </div>
 
                 <div class="row">
@@ -86,8 +86,8 @@ $password = "";
 
 //validates the inputs
 if($_SERVER["REQUEST_METHOD"] == "POST") {
-    $username = $valid->checkInput($_POST["userName"]);
-    $password = $valid->checkInput($_POST["passWord"]);
+    $username = $valid->checkInput($_POST["username"]);
+    $password = $valid->checkInput($_POST["password"]);
 }
 if(isset($_POST['submit'])) {
     $user->signInUser($username, $password);

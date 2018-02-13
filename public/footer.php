@@ -13,7 +13,7 @@
                 <br>(Do not call these number under any circumstance)
             </p>
             <div class="hmm-second-footer">
-                <p class="hmm-copyright">©2018, <a href="/home_maintenance_manager/public/homecontroller">Home Maintenance Manager.</a></p>
+                <p class="hmm-copyright">©2018 <a href="/home_maintenance_manager/public/homecontroller">Home Maintenance Manager.</a></p>
             </div>
         </div>
     </div>
