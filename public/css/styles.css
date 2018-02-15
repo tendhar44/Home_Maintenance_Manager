@@ -46,3 +46,8 @@ label{
 	text-decoration: none;
 	color: #c2ff98;
 }
+
+/*change color of the asterisk */
+.reqAsk {
+	color: red;
+}
