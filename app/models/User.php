@@ -79,18 +79,33 @@ class User {
         return true;
     }
 
+    //turn the password into hash code
+    public function passwordHash($password, $hashCode) {
+
+    }
+
     public function signInUser($username,$password) {
-        if (!$this->isValidUsername($username)) return false;
-        if (strlen($password) < 3) return false;
+        if(!$this->isValidUsername($username)) {
+            return false;
+        }
+        if (strlen($password) < 3) {
+            return false;
+        }
 
         $row = $this->getUser($username);
 
-        //if($this->password_verify($password,$row['password']) == 1){
-
+        //if($this->passwordHash($password,$row['password']) == 1){
+        if($username == $row['user_name'] && $password == $row['password']) {
             $_SESSION['loggedin'] = true;
             $_SESSION['username'] = $row['user_name'];
             $_SESSION['userid'] = $row['user_id'];
+            $_SESSION['email'] = $row['email'];
+            $_SESSION['firstname'] = $row['first_name'];
+            $_SESSION['lastname'] = $row['last_name'];
             return true;
+        }else {
+            return false;
+        }
         //}
 
     }
