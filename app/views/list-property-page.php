@@ -8,4 +8,5 @@ $userSigned = $user->isSignedIn();
 ifNotLoggedIn(BASE_LINK . 'usercontroller/signin', $userSigned);
 ?>
 
-<p>List Property Page</p>
+
+<a href="/home_maintenance_manager/public/propertycontroller/add">+ Add Property</a>

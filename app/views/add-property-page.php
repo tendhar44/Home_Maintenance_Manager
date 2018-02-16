@@ -11,5 +11,3 @@ $userSigned = $user->isSignedIn();
 //if not logged in redirect to login page
 ifNotLoggedIn(BASE_LINK . 'public/usercontroller/signin', $userSigned);
 ?>
-
-    Testing Add Property Page:

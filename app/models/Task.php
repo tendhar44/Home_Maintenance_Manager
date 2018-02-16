@@ -35,12 +35,13 @@ class Task {
         $task_active_status = (isset($_POST['taskActiveStatus'])) ? $_POST['taskActiveStatus'] : '';
 
         // attempt insert query execution
-        $sql_data = "INSERT INTO task (task_name, task_description, task_due, task_length, task_reminder, task_complete_status, task_active_status) VALUES ('$task_name', '$task_des', '$task_due', '$task_length', '$task_reminder', '$task_complete_status', '$task_active_status')";
+        $sql_data = "INSERT INTO task (task_name, task_description, task_due, task_length, task_reminder, task_complete_status, task_active_status)
+                    VALUES ('$task_name', '$task_des', '$task_due', '$task_length', '$task_reminder', '$task_complete_status', '$task_active_status')";
 
         if($db_connection->query($sql_data) === true){
-            echo "Records inserted successfully.";
+            echo "Successfully added your task!";
         } else{
-            echo "ERROR: Could not able to execute $sql_data. " . $db_connection->error;
+            echo "We weren't able to add your task. Please try again.";
         }
     }
 

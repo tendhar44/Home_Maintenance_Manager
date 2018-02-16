@@ -30,10 +30,6 @@ $tdes = $valid->checkInput($_POST["taskDes"]);
 }
 ?>
 
-<div>
-    <p>Your task has been added...</p>
-</div>
-
 <?php
 echo "<h4>Your Input:</h4>";
 echo $tname;
