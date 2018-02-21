@@ -19,7 +19,7 @@
 
 
 <nav class="navbar navbar-expand-sm navbar-dark" style="background-color: #343a40;">
-    <a class="navbar-brand" href="/home_maintenance_manager/public/homecontroller">HMM</a>
+    <a class="navbar-brand" href="/home_maintenance_manager/public/homecontroller/home">HMM</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
@@ -28,16 +28,10 @@
         </ul>
         <ul class="navbar-nav">
             <li class="nav-item">
-                <a class="nav-link" href="/home_maintenance_manager/public/homecontroller">Home</a>
+                <a class="nav-link" href="/home_maintenance_manager/public/homecontroller/home">Home</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="/home_maintenance_manager/public/propertycontroller">Property</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/home_maintenance_manager/public/appliancecontroller">Appliance</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/home_maintenance_manager/public/taskcontroller">Task</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="/home_maintenance_manager/public/usercontroller/signout">Sign Out</a>

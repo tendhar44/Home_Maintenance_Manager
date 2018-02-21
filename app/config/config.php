@@ -11,8 +11,11 @@ if(isset($_SESSION['loggedin'])){
     require_once("../public/header.php");
 }
 
-//include the user class and database
+//include the user and property class and database
 include('../app/models/user.php');
+include('../app/models/property.php');
+include('../app/models/appliance.php');
+include('../app/models/task.php');
 include('../app/databaseConnection.php');
 
 //create new database connection object
@@ -23,3 +26,6 @@ $db = $db_con->db_connect();
 
 //create new User object
 $user = new User($db);
+$property = new Property($db);
+$appliance = new Appliance($db);
+$task = new Task($db);

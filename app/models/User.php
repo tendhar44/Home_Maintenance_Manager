@@ -44,20 +44,18 @@ class User {
     }
 
     public function getUser($username){
-        require_once("../app/DatabaseConnection.php");
+        //require_once("../app/DatabaseConnection.php");
 
-        $db_con = new DatabaseConnection();
-        $db_connection = $db_con->db_connect();
-
-
+        //$db_con = new DatabaseConnection();
+        //$db_connection = $db_con->db_connect();
+        $db_connection = $this->database;
 
         //attempt select query execution
-        $sql_data = "SELECT * FROM user WHERE user_name = '$username'";
+        $sql_data = "SELECT * FROM user WHERE username = '$username'";
 
         $userData = $db_connection->query($sql_data);
 
         return $userData->fetch_assoc();
-
     }
 
     public function updateUser() {
@@ -95,13 +93,13 @@ class User {
         $row = $this->getUser($username);
 
         //if($this->passwordHash($password,$row['password']) == 1){
-        if($username == $row['user_name'] && $password == $row['password']) {
+        if($username == $row['username'] && $password == $row['password']) {
             $_SESSION['loggedin'] = true;
-            $_SESSION['username'] = $row['user_name'];
-            $_SESSION['userid'] = $row['user_id'];
+            $_SESSION['username'] = $row['username'];
+            $_SESSION['userid'] = $row['userid'];
             $_SESSION['email'] = $row['email'];
-            $_SESSION['firstname'] = $row['first_name'];
-            $_SESSION['lastname'] = $row['last_name'];
+            $_SESSION['firstname'] = $row['firstname'];
+            $_SESSION['lastname'] = $row['lastname'];
             return true;
         }else {
             return false;
@@ -115,21 +113,23 @@ class User {
     }
 
     public function signUpUser() {
-        $db_con = new DatabaseConnection();
-        $db_connection = $db_con->db_connect();
+        //$db_con = new DatabaseConnection();
+        //$db_connection = $db_con->db_connect();
 
-        $user_name = (isset($_POST['userName'])) ? $_POST['userName'] : '';
-        $first_name = (isset($_POST['firstName'])) ? $_POST['firstName'] : '';
-        $last_name = (isset($_POST['lastName'])) ? $_POST['lastName'] : '';
+        $db_connection = $this->database;
+
+        $username = (isset($_POST['userName'])) ? $_POST['userName'] : '';
+        $firstname = (isset($_POST['firstName'])) ? $_POST['firstName'] : '';
+        $lastname = (isset($_POST['lastName'])) ? $_POST['lastName'] : '';
         $email = (isset($_POST['email'])) ? $_POST['email'] : '';
         $password = (isset($_POST['password'])) ? $_POST['password'] : '';
 
         // attempt insert query execution
-        $sql_data = "INSERT INTO user (user_name, password, email, first_name, last_name) VALUES ('$user_name', '$password', '$email', '$first_name', '$last_name')";
+        $sql_data = "INSERT INTO user (username, password, email, firstname, lastname) VALUES ('$username', '$password', '$email', '$firstname', '$lastname')";
 
         $db_connection->query($sql_data);
 
-        $this->signInUser($user_name, $password);
+        $this->signInUser($username, $password);
         /*if($db_connection->query($sql_data) === true){
             echo "Records inserted successfully.";
         } else{

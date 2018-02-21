@@ -13,11 +13,11 @@ class PropertyController extends Controller {
         $this->view("add-property-page", []);
     }
 
-    public function update() {
-        $this->view("update-property-page", []);
+    public function update($propertyNum = 0) {
+        $this->view("update-property-page", ["pn" => $propertyNum]);
     }
 
-    public function delete() {
-        $this->view("delete-property-page", []);
+    public function delete($propertyNum = 0) {
+        $this->view("delete-property-page", ["pn" => $propertyNum]);
     }
 }

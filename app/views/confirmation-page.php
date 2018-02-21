@@ -6,4 +6,6 @@ $userSigned = $user->isSignedIn();
 
 //if not logged in redirect to login page
 ifNotLoggedIn(BASE_LINK . 'usercontroller/signin', $userSigned);
+
+
 ?>

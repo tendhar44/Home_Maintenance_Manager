@@ -11,30 +11,28 @@ $userSigned = $user->isSignedIn();
 //if not logged in redirect to login page
 ifNotLoggedIn(BASE_LINK . 'usercontroller/signin', $userSigned);
 
-require_once("../app/models/Validation.php");
-require_once("../app/models/Task.php");
-
-$task = new Task();
-$task->addTask();
-
-$valid = new Validation();
-
 //define variable and set to empty
 $tname = "";
 $tdes = "";
 
 //validates the inputs
 if($_SERVER["REQUEST_METHOD"] == "POST") {
-$tname = $valid->checkInput($_POST["taskName"]);
-$tdes = $valid->checkInput($_POST["taskDes"]);
-}
-?>
+    require_once("../app/models/Validation.php");
+    $valid = new Validation();
 
-<?php
-echo "<h4>Your Input:</h4>";
-echo $tname;
-$_POST["taskDes"];
-echo "<br>";
-echo $tdes;
-echo "<br>";
-?>
+    $tname = $valid->checkInput($_POST["taskName"]);
+    $tdes = $valid->checkInput($_POST["taskDes"]);
+
+    require_once("../app/models/Task.php");
+
+    $task = new Task($tname, $tdes);
+    $task->addTask();
+
+    echo "<h4>Your Input:</h4>";
+    echo $task->getTaskName();
+    $_POST["taskDes"];
+    echo "<br>";
+    echo $tdes;
+    echo "<br>";
+}
+
