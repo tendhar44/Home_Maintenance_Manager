@@ -2,12 +2,12 @@
 <classpath>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="src" path="src/main/java"/>
-	<classpathentry kind="lib" path="/Users/josephmunson/Desktop/mysql-connector-java-5.1.45/mysql-connector-java-5.1.45-bin.jar"/>
-	<classpathentry kind="lib" path="/Users/josephmunson/Desktop/commons-email-1.5/commons-email-1.5-javadoc.jar"/>
-	<classpathentry kind="lib" path="/Users/josephmunson/Desktop/commons-email-1.5/commons-email-1.5-sources.jar"/>
-	<classpathentry kind="lib" path="/Users/josephmunson/Desktop/commons-email-1.5/commons-email-1.5-test-sources.jar"/>
-	<classpathentry kind="lib" path="/Users/josephmunson/Desktop/commons-email-1.5/commons-email-1.5-tests.jar"/>
-	<classpathentry kind="lib" path="/Users/josephmunson/Desktop/commons-email-1.5/commons-email-1.5.jar"/>
-	<classpathentry kind="lib" path="/Users/josephmunson/Desktop/javax.mail.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/josephmunson/Desktop/mysql-connector-java-5.1.45/mysql-connector-java-5.1.45-bin.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/josephmunson/Desktop/commons-email-1.5/commons-email-1.5-javadoc.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/josephmunson/Desktop/commons-email-1.5/commons-email-1.5-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/josephmunson/Desktop/commons-email-1.5/commons-email-1.5-test-sources.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/josephmunson/Desktop/commons-email-1.5/commons-email-1.5-tests.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/josephmunson/Desktop/commons-email-1.5/commons-email-1.5.jar"/>
+	<classpathentry exported="true" kind="lib" path="/Users/josephmunson/Desktop/javax.mail.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
