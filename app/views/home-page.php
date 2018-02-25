@@ -19,12 +19,16 @@ ifLoggedIn(BASE_LINK . 'homecontroller/home', $userSigned);
 
             <h2>Home Maintenance Manager</h2>
             <hr>
-            <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa.</p>
+            <h6>Create task and get email reminders. Sign up now.</h6>
 
+            <br>
             <p>
-                sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis,
-                ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec pede justo,
-                vel, aliquet nec, vulputate
+                This product is designed to help busy individual homeowners, property managers, and the elderly maintain
+                their home appliances such as furnaces, refrigerators, dryers, washers, etc. They can save time, managing
+                their home appliances efficiently. Customers can create the property in the system with related information.
+                Then the customer can manually enter data for each of their home appliances, accompanied by periodic
+                maintenance reminders, and the needed supplies to buy for maintenance, or periodic inspection. When the
+                time is due, the system will automatically notify customers with a message to remind the customers.
             </p>
             <br>
             <div class="col-xs-6 col-md-6">
@@ -33,7 +37,7 @@ ifLoggedIn(BASE_LINK . 'homecontroller/home', $userSigned);
             </div>
         </div>
         <div class="col-md-6">
-            <p>Lorem Ipsum</p>
+            <img src="../public/img/pic1.jpg" alt="picture of appliances">
         </div>
     </div>
 

@@ -20,13 +20,13 @@ ifNotLoggedIn(BASE_LINK . 'usercontroller/signin', $userSigned);
                 <ul>
                     <li>Once you create a property, you can add appliances to that property.</li>
                     <li>Then you can assign task to each of your appliances.</li>
-                    <li>We'll send you a reminder to your email, when task is almost due.</li>
+                    <li>We'll send you a reminder through email, when task is almost due.</li>
                 </ul>
             </p>
             <br>
             <div class="col-xs-6 col-md-6">
-                <h4><a class="btn btn-dark btn-block btn-lg" href='/home_maintenance_manager/public/propertycontroller'>View Properties</a></h4>
-                <h4><a class="btn btn-dark btn-block btn-lg" href='/home_maintenance_manager/public/propertycontroller/add'>Create a Property</a></h4>
+                <h4><a class="btn btn-dark btn-block btn-lg" href='/home_maintenance_manager/public/propertycontroller/<?php echo $_SESSION['userid']; ?>'>View Properties</a></h4>
+                <h4><a class="btn btn-dark btn-block btn-lg" href='/home_maintenance_manager/public/propertycontroller/add/<?php echo $_SESSION['userid'] ?>'>Create a Property</a></h4>
             </div>
         </div>
         <div class="col-md-6">

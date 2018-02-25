@@ -6,8 +6,6 @@ $userSigned = $user->isSignedIn();
 
 //if not logged in redirect to login page
 ifNotLoggedIn(BASE_LINK . 'usercontroller/signin', $userSigned);
-
-echo $data["an"];
 ?>
 
 <div class="container">
@@ -27,6 +25,5 @@ echo $data["an"];
 */
 if($_SERVER["REQUEST_METHOD"] == "POST") {
 $applianceID = $_SESSION['applianceid' . $data['an']];
-echo $applianceID;
 $appliance->updateAppliance($applianceID);
 }

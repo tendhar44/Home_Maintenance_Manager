@@ -7,12 +7,11 @@ $userSigned = $user->isSignedIn();
 //if not logged in redirect to login page
 ifNotLoggedIn(BASE_LINK . 'usercontroller/signin', $userSigned);
 
-echo $data["pn"];
-
 $propertyID = $_SESSION['propertyid' . $data['pn']];
-echo $propertyID;
 $property->deleteProperty($propertyID);
 echo "<br><br>";
 ?>
 
-<a href="/home_maintenance_manager/public/propertycontroller"><-- Back to Property List</a>
+<div class="container" id="info">
+<a href="/home_maintenance_manager/public/propertycontroller/<?php echo $_SESSION['userid']; ?>"><-- Back to Property List</a>
+</div>

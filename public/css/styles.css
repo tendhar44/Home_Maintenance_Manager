@@ -1,6 +1,32 @@
 html, body {
 }
 
+.dropdown:hover .dropdown-menu {
+	display: block;
+}
+
+.dropdown-menu {
+	margin-top: 0px;
+	background-color: #ffffff;
+	color: #586069;
+}
+
+.dropdown-menu a {
+	text-decoration: none;
+	background-color: #ffffff;
+	color: #586069;
+}
+
+.dropdown-menu a:hover {
+	text-decoration: none;
+	color: #9daf4e;
+}
+
+#wrenchPic {
+	height: 20px;
+	width: 20px;
+}
+
 .navbar{
 	padding: 0;
 	margin: 0;
@@ -11,8 +37,13 @@ label{
 	font-size: 18px;
 }
 
+#navbarSupportedContent{
+	padding-left: 650px;
+}
+
 #navbarSupportedContent a:hover {
-	border-bottom: 4px solid white;
+	/*border-bottom: 4px solid white;*/
+	color: white;
 }
 
 /* Add background color to footer */
@@ -51,4 +82,18 @@ label{
 /*change color of the asterisk */
 .reqAsk {
 	color: red;
+}
+
+.errorText {
+	color: red;
+}
+
+.stand-bttn-size {
+	height: 30px;
+	width: 80px;
+}
+
+.double-bttn-size {
+	height: 30px;
+	width: 100px;
 }

@@ -23,190 +23,14 @@ class Task {
         $this->database = $db;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * @param mixed $name
-     */
-    public function setName($name)
-    {
-        $this->name = $name;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDescription()
-    {
-        return $this->description;
-    }
-
-    /**
-     * @param mixed $description
-     */
-    public function setDescription($description)
-    {
-        $this->description = $description;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDueDate()
-    {
-        return $this->dueDate;
-    }
-
-    /**
-     * @param mixed $dueDate
-     */
-    public function setDueDate($dueDate)
-    {
-        $this->dueDate = $dueDate;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getType()
-    {
-        return $this->type;
-    }
-
-    /**
-     * @param mixed $type
-     */
-    public function setType($type)
-    {
-        $this->type = $type;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getLength()
-    {
-        return $this->length;
-    }
-
-    /**
-     * @param mixed $length
-     */
-    public function setLength($length)
-    {
-        $this->length = $length;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getReminder()
-    {
-        return $this->reminder;
-    }
-
-    /**
-     * @param mixed $reminder
-     */
-    public function setReminder($reminder)
-    {
-        $this->reminder = $reminder;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getComplete()
-    {
-        return $this->complete;
-    }
-
-    /**
-     * @param mixed $complete
-     */
-    public function setComplete($complete)
-    {
-        $this->complete = $complete;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getPicture()
-    {
-        return $this->picture;
-    }
-
-    /**
-     * @param mixed $picture
-     */
-    public function setPicture($picture)
-    {
-        $this->picture = $picture;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getUserId()
-    {
-        return $this->userId;
-    }
-
-    /**
-     * @param mixed $userId
-     */
-    public function setUserId($userId)
-    {
-        $this->userId = $userId;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getApplianceId()
-    {
-        return $this->applianceId;
-    }
-
-    /**
-     * @param mixed $applianceId
-     */
-    public function setApplianceId($applianceId)
-    {
-        $this->applianceId = $applianceId;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
-     * @param mixed $id
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-    }
-
     public function getListOfTasks($applianceId) {
         $taskNameArray = array();
         $taskDesArray = array();
         $appIdArray = array();
         $taskIdArray = array();
-        //$db_connection = $this->database;
-        $db_con = new DatabaseConnection();
-        $db_connection = $db_con->db_connect();
+        $db_connection = $this->database;
+        //$db_con = new DatabaseConnection();
+        //$db_connection = $db_con->db_connect();
 
         //attempt select query execution
         $sql_data = "SELECT * FROM task WHERE applianceid = '$applianceId'";
@@ -222,31 +46,114 @@ class Task {
 
         for($i = 0; $i < sizeof($taskNameArray); $i++) {
             if($appIdArray[$i] = $applianceId) {
-                echo $_SESSION['taskname' . $i] = $taskNameArray[$i];
-                "</a>";
-                echo " <a href='/home_maintenance_manager/public/taskcontroller/update/" . $i . "'>+Update</a> ";
-                echo " <a href='/home_maintenance_manager/public/taskcontroller/delete/" . $i . "'>+Delete</a>";
-                echo "<br><br>";
+                $_SESSION['taskname' . $i] = $taskNameArray[$i];
+                $_SESSION['taskdescription' . $i] = $taskDesArray[$i];
+                $_SESSION['taskid' . $i] = $taskIdArray[$i];
+                $_SESSION['applianceid' . $i] = $appIdArray[$i];
+
+    //display list of properties that can be collapse and un-collapse.
+    echo '
+    <div class="card">
+        <div class="card-header" id="headingOne">
+            <h5 class="mb-0">
+                <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo'. $i .'" aria-expanded="false" aria-controls="collapseTwo">
+                ' . $taskNameArray[$i] . '             
+                </a>
+            </h5>
+        </div><!-- close card-header -->
+              
+        <div id="collapseTwo'. $i .'" class="collapse" role="tabpanel" aria-labelledby="headingTwo">
+            <div class="card-body">
+              <div class="container-fluid">
+
+                  <div class="col-3">
+
+                  </div><!-- close col-3 -->
+                  
+                  <div class="col-7">
+                  Task ID#: 
+                        '
+                    . $taskIdArray[$i] .
+
+                    '
+                  </div><!-- close col-7 -->
+                  
+                  <div class="col-7">
+                  Description: 
+                        '
+                    . $taskDesArray[$i] .
+
+                    '
+                  </div><!-- close col-7 -->
+                  
+                  <br>
+                        
+                  <div class="row">
+                  <div class="col-1">
+                  </div>
+                  
+                  <div class="col-1">
+                  </div>
+                  
+                  <div class="col-1">
+                  </div>
+                  
+                  <div class="col-1">
+                  </div>
+                  
+                  <div class="col-1">
+                  </div>
+                  
+                  <div class="col-1">
+                  </div>
+                  
+                  <div class="col-1">
+                  </div>
+                  
+                  <div class="col-1">
+                  </div>
+                  
+                  <div class="col-1">
+                  </div>
+                  
+                  <div class="col-1">
+                  </div>
+
+                  <div class="col-1">
+                    <a href="/home_maintenance_manager/public/taskcontroller/update/'. $i .'"><button class="stand-bttn-size">
+                        Update
+                      </button></a>
+                  </div> 
+                      
+                  <div class="col-1">    
+                    <a href="/home_maintenance_manager/public/taskcontroller/delete/'. $i .'"><button class="stand-bttn-size">
+                        Delete
+                    </button></a>
+                  </div>
+
+                  </div><!-- close col-6 -->
+                  
+                </div><!-- close container fluid -->
+            </div><!-- close card body -->
+        </div><!-- close collapseOne -->
+    </div><!-- close card -->
+    ';//end echo
             }
         }
 
         for($i = 0; $i < sizeof($taskDesArray); $i++) {
-            $_SESSION['taskdescription' . $i] = $taskDesArray[$i];
+
         }
 
         for($i = 0; $i < sizeof($taskIdArray); $i++) {
-            $_SESSION['taskid' . $i] = $taskIdArray[$i];
+
         }
     }
 
 
     public function addTask() {
-        //require_once("../app/DatabaseConnection.php");
-
         $db_con = new DatabaseConnection();
         $db_connection = $db_con->db_connect();
-
-        //$db_connection = $this->database;
 
         $appId = $this->applianceId;
         $taskName = $this->name;
@@ -317,8 +224,17 @@ class Task {
         }
 
     }
-    public function deleteTask() {
+    public function deleteTask($id) {
+        $db_connection = $this->database;
 
+        // attempt insert query execution
+        $sql_data = "DELETE FROM task WHERE taskid = '$id'";
+
+        if($db_connection->query($sql_data) === true) {
+            echo "Successfully deleted your task!";
+        } else {
+            echo "We weren't able to delete your task. Please try again.";
+        }
     }
 
 }

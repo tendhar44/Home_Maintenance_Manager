@@ -1,4 +1,5 @@
 <?php
+
 ?>
 <!doctype html>
 <html lang="en">
@@ -16,29 +17,52 @@
 </head>
 <body>
 
-
-
 <nav class="navbar navbar-expand-sm navbar-dark" style="background-color: #343a40;">
+
+    <div class="container" id="info">
+
     <a class="navbar-brand" href="/home_maintenance_manager/public/homecontroller/home">HMM</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
+
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
         </ul>
         <ul class="navbar-nav">
             <li class="nav-item">
-                <a class="nav-link" href="/home_maintenance_manager/public/homecontroller/home">Home</a>
+                <a class="nav-link" href="/home_maintenance_manager/public/propertycontroller/<?php echo $_SESSION['userid']; ?>">View Properties</a>
             </li>
+        </ul>
+
+        <ul class="navbar-nav">
             <li class="nav-item">
-                <a class="nav-link" href="/home_maintenance_manager/public/propertycontroller">Property</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="/home_maintenance_manager/public/usercontroller/signout">Sign Out</a>
+                <a class="nav-link" href="/home_maintenance_manager/public/propertycontroller/add/<?php echo $_SESSION['userid']; ?>">+Add Property</a>
             </li>
         </ul>
     </div>
-</nav>
 
+    <div class="collapse navbar-collapse" id="navbarSupportedContent2">
+        <ul class="navbar-nav mr-auto">
+        </ul>
+        <ul class="navbar-nav">
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="">
+                    <img id="wrenchPic" src="/home_maintenance_manager/public/img/wrench.png" alt="wrench icon"><span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a style="font-size:14px; color:#586069;"> &nbsp; Signed in as <span style="font-weight:600;"><?php echo $_SESSION['username']; ?></span></a></li>
+                    <li><hr></li>
+                    <li><a href="/home_maintenance_manager/public/usercontroller/<?php echo $_SESSION['userid']; ?>">&nbsp; Your Profile</a></li>
+                    <li><a href="#">&nbsp; Setting</a></li>
+                    <li><a href="/home_maintenance_manager/public/usercontroller/signout">&nbsp; Sign Out</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+    </div>
+
+</nav>
 <br>
 <br>

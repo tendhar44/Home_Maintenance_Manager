@@ -20,6 +20,9 @@
 
 
 <nav class="navbar navbar-expand-sm navbar-dark" style="background-color: #292b2c;">
+
+    <div class="container" id="info">
+
     <a class="navbar-brand" href="/home_maintenance_manager/public/homecontroller">HMM</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
@@ -38,6 +41,8 @@
                 <a class="nav-link" href="/home_maintenance_manager/public/usercontroller/signup">Sign Up</a>
             </li>
         </ul>
+    </div>
+
     </div>
 </nav>
 

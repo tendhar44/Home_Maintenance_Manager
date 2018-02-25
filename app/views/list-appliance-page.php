@@ -7,18 +7,19 @@ $userSigned = $user->isSignedIn();
 //if not logged in redirect to login page
 ifNotLoggedIn(BASE_LINK . 'usercontroller/signin', $userSigned);
 
-//$propertyId = $data["proId"];
-
 if($_SERVER["REQUEST_METHOD"] == "POST") {
     $appliance->addAppliance();
 }
 ?>
 
-<br>
-<a href="/home_maintenance_manager/public/appliancecontroller/add/<?php echo $data['proId']; ?>">+ Add Appliance</a>
-
-<?php
-echo "<br><br>";
-
-$propertyId = $data["proId"];
-$appliance->getListOfAppliances($propertyId);
+<div class="container" id="info">
+    <h3>Appliance List</h3>
+    <br>
+    <a href="/home_maintenance_manager/public/appliancecontroller/add/<?php echo $data['proId']; ?>">+ Add Appliance</a>
+    <div id="list-property">
+        <?php
+            $propertyId = $data["proId"];
+            $appliance->getListOfAppliances($propertyId);
+        ?>
+    </div><!-- close list-property -->
+</div><!-- close container -->

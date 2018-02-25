@@ -17,10 +17,10 @@ ifLoggedIn(BASE_LINK . 'homecontroller', $userSigned);
                 <p>Not a member? <a class="hmm-links" href='/home_maintenance_manager/public/usercontroller/signup'>Sign Up</a></p>
                 <hr>
                 <div class="form-group">
-                    <input type="text" name="username" id="username" class="form-control input-lg" placeholder="User Name" tabindex="1">
+                    <input type="text" name="username" id="username" class="form-control input-lg" placeholder="User Name" tabindex="1" required>
                 </div>
                 <div class="form-group">
-                    <input type="password" name="password" id="password" class="form-control input-lg" placeholder="Password" tabindex="2">
+                    <input type="password" name="password" id="password" class="form-control input-lg" placeholder="Password" tabindex="2" required>
                 </div>
 
                 <div class="row">
@@ -29,30 +29,18 @@ ifLoggedIn(BASE_LINK . 'homecontroller', $userSigned);
             </form>
         </div>
     </div>
-
-<div>
-    <br><br><br><br>
-    * = required
-</div>
-
+    <br><br>
 </div>
 
 <?php
-require_once("../app/models/Validation.php");
-$valid = new Validation();
-
-//define variable and set to empty
-$username = "";
-$password = "";
-
-//validates the inputs
-if($_SERVER["REQUEST_METHOD"] == "POST") {
-    $username = $valid->checkInput($_POST["username"]);
-    $password = $valid->checkInput($_POST["password"]);
-}
 if(isset($_POST['submit'])) {
-    $user->signInUser($username, $password);
-    header('Location: /home_maintenance_manager/public');
-}
+    $username = $_POST["username"];
+    $password = $_POST["password"];
 
+    if($user->signInUser($username, $password)) {
+        header('Location: /home_maintenance_manager/public');
+    }else {
+        echo '<span class="errorText">' . $_SESSION['signInError'] . "</span>";
+    }
+}
 ?>

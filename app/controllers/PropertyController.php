@@ -5,12 +5,12 @@
  * Date:
  */
 class PropertyController extends Controller {
-    public function index (){
-        $this->view("list-property-page", []);
+    public function index ($userId = 0){
+        $this->view("list-property-page", ["uId" => $userId]);
     }
 
-    public function add() {
-        $this->view("add-property-page", []);
+    public function add($userId = 0) {
+        $this->view("add-property-page", ["uId" => $userId]);
     }
 
     public function update($propertyNum = 0) {
