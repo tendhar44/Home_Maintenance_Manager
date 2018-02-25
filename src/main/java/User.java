@@ -3,40 +3,18 @@ import java.util.Iterator;
 
 public class User {
 
-	private String id;
+	private int id;
 	private String username;
 	private String firstName;
 	private String lastName;
 	private String emailAddress;
-	private String[] tasks;
-	private int taskNumber;
 
-	// User constructor
-	public User(String id, String username, String firstName, String lastName, String emailAddress) {
+	public User(int id, String username, String firstName, String lastName, String emailAddress) {
 		this.id = id;
 		this.username = username;
 		this.firstName = firstName;
 		this.lastName = lastName;
 		this.emailAddress = emailAddress;
-		taskNumber = 0;
-	}
-
-	// return an iterator of the user tasks
-	public Iterator<String> getTasks() {
-		return Arrays.asList(tasks).iterator();
-	}
-
-	// adding a tasks to user list
-	public void addTasks(String task) {
-		if (tasks == null) {
-			tasks = new String[1];
-			tasks[taskNumber] = task;
-			taskNumber++;
-		} else if (taskNumber == tasks.length) {
-			// need code
-
-		}
-
 	}
 
 	public String getEmailAddress() {
@@ -71,12 +49,20 @@ public class User {
 		this.username = username;
 	}
 
-	public String getId() {
+	public int getId() {
 		return id;
 	}
 
-	public void setId(String id) {
+	public void setId(int id) {
 		this.id = id;
 	}
+
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", username=" + username + ", firstName=" + firstName + ", lastName=" + lastName
+				+ ", emailAddress=" + emailAddress + "]";
+	}
+	
+	
 
 }

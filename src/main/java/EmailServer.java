@@ -1,56 +1,39 @@
+import java.util.Scanner;
+
+import org.apache.commons.mail.*;
 
 public class EmailServer {
-
 	
-		public EmailServer () {
+	private final static String username = "joe.m723378@gmail.com";
+	private final static String password = "islandconstitutionsubjective";
+	private final static String hostName = "smtp.gmail.com";
+	private final static int smtpPort = 465;
+	private final static String from = "joe.m723378@gmail.com";
+	
 
-		//////// CODE BELOW IS FROM TUTORIAL POINT, USE IT AS REFERENCE////////////
-
-		// // Recipient's email ID needs to be mentioned.
-		// String to = "abcd@gmail.com";
-		//
-		// // Sender's email ID needs to be mentioned
-		// String from = "web@gmail.com";
-		//
-		// // Assuming you are sending email from localhost
-		// String host = "localhost";
-		//
-		// // Get system properties
-		// Properties properties = System.getProperties();
-		//
-		// // Setup mail server
-		// properties.setProperty("mail.smtp.host", host);
-		//
-		// // Get the default Session object.
-		// Session session = Session.getDefaultInstance(properties);
-		//
-		// try {
-		// // Create a default MimeMessage object.
-		// MimeMessage message = new MimeMessage(session);
-		//
-		// // Set From: header field of the header.
-		// message.setFrom(new InternetAddress(from));
-		//
-		// // Set To: header field of the header.
-		// message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
-		//
-		// // Set Subject: header field
-		// message.setSubject("This is the Subject Line!");
-		//
-		// // Now set the actual message
-		// message.setText("This is actual message");
-		//
-		// // Send message
-		// Transport.send(message);
-		// System.out.println("Sent message successfully....");
-		// } catch (MessagingException mex) {
-		// mex.printStackTrace();
-		// }
-		}
+	public EmailServer() {
 		
-		public boolean send(Email email) {
-			
+	}
+
+	public boolean send(ReminderEmail reminderEmail) {
+		
+		try {
+			Email email = new SimpleEmail();
+			email.setHostName(hostName);
+			email.setSmtpPort(smtpPort);
+			email.setAuthenticator(new DefaultAuthenticator(username, password));
+			email.setSSLOnConnect(true);
+			email.setFrom(from);
+			email.setSubject(reminderEmail.getSubject());
+			email.setMsg(reminderEmail.getText());
+			email.addTo(reminderEmail.getTo());
+			email.send();
+		} catch (EmailException ee) {
+			System.out.println(ee);
 			return false;
 		}
-	
+
+		return true;
+	}
+
 }

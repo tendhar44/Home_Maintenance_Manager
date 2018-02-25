@@ -1,66 +1,158 @@
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 
 public class ReminderDAO {
-
-	private final static String host = "jdbc:mysql://localhost/test";
+	
+	private final static String databaseName = "HomeMaintenanceManager";
+	private final static String host = "jdbc:mysql://localhost:3306/" + databaseName + "?autoReconnect=true&useSSL=false";
 	private final static String username = "root";
-	private final static String password = "";
-	private static Connection conconnection;
-	private Statement statement;
-	private ResultSet resultSet;
-
+	private final static String password = "hello";
 	
 	public ReminderDAO() {
-		connectToDatabase();
+		
 	}
 	
-	private void connectToDatabase() {
-
-		// Connecting to the database
+	private Connection getConnection() throws Exception {
+		Class.forName("com.mysql.jdbc.Driver");
+		return DriverManager.getConnection(host, username, password);
+	}
+	
+	public ArrayList<TaskRecord> getAllTaskRecords() {
+		ArrayList<TaskRecord> taskRecords = new ArrayList<TaskRecord>();
+		TaskRecord currentRecord;
+		
+		Connection conn = null;
+		Statement stmt = null;
+		ResultSet rs = null;
+			
 		try {
-			conconnection = DriverManager.getConnection(host, username, password);
-			System.out.println("Connection Object Created : " + conconnection);
+			conn = getConnection();
+			stmt = conn.createStatement();
+			String sql = "SELECT taskId, dueDate FROM Tasks";
+			rs = stmt.executeQuery(sql);
 
-			statement = conconnection.createStatement();
-			String sql = "";
-			resultSet = statement.executeQuery(sql);
-
-			while (resultSet.next()) {
-
+			while (rs.next()) {
+				int taskId = rs.getInt(1);
+				Date date = rs.getDate(2);
+				currentRecord = new TaskRecord(taskId, date);
+				
+				taskRecords.add(currentRecord);
 			}
 
-			conconnection.close();
+			conn.close();
 
-		} catch (SQLException ex) {
-			System.out.println(ex.getMessage());
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		
+		
+		return taskRecords;
+	}
+	
+	public User getUser(int userID) {
+		User user = null;
+		
+		Connection conn = null;
+		Statement stmt = null;
+		ResultSet rs = null;
+			
+		try {
+			conn = getConnection();
+			stmt = conn.createStatement();
+			String sql = "SELECT * FROM Users WHERE userId = " + userID;
+			rs = stmt.executeQuery(sql);
+
+			while (rs.next()) {
+				int id = rs.getInt(1);
+				String userName = rs.getString(3);
+				String firstName = rs.getString(5);
+				String lastName = rs.getString(6);
+				String email = rs.getString(7);
+				user = new User(id, userName, firstName, lastName, email);
+			}
+
+			conn.close();
+
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		
+		return user;
+	}
+	
+	public Task getTask(int taskID) {
+
+		Task task = null;
+		
+		Connection conn = null;
+		Statement stmt = null;
+		ResultSet rs = null;
+			
+		try {
+			conn = getConnection();
+			stmt = conn.createStatement();
+			String sql = "SELECT * FROM Tasks WHERE taskId = " + taskID;
+			rs = stmt.executeQuery(sql);
+
+			while (rs.next()) {
+				int id = rs.getInt(1);
+				int usrId = rs.getInt(3);
+				String name = rs.getString(4);
+				String description = rs.getString(5);
+				Date date = rs.getDate(7);
+				
+				task = new Task(id, usrId, name, description, date);
+			}
+
+			conn.close();
+
+		} catch (Exception e) {
+			System.out.println(e);
 		}
 
+		return task;
 	}
 	
-	public List<TaskRecord> getAllTaskRecords() {
+	public void updateTask(int taskID) {
 		
-		return null;
-	}
-	
-	public User getUser(String taskID) {
+		//update task by setting day 1 ahead of current date. This ensures only 1 reminder sent per day.
+		Date currentDate = new Date();
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(currentDate);
+		calendar.add(Calendar.DATE, 1);
 		
-		return null;
-	}
-	
-	public Task getTask(String taskID) {
+		Date tomorrow = calendar.getTime();
 		
-		return null;
-	}
-	
-	public boolean updateTask(String taskID) {
+		java.sql.Date sqlDate = new java.sql.Date(tomorrow.getTime());
 		
-		return false;
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+			
+		try {
+			conn = getConnection();
+			String sql = "UPDATE Tasks SET dueDate = ? WHERE taskId = ?";
+			
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setDate(1, sqlDate);
+			pstmt.setInt(2, taskID);
+			
+			pstmt.execute();
+
+			conn.close();
+
+		} catch (Exception e) {
+			System.out.println(e);
+		}
+		
+		
 	}
 	
 }
