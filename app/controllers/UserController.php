@@ -5,16 +5,16 @@
  * Date:
  */
 class UserController extends Controller {
-    public function index() {
-        $this->view("list-user-page", []);
+    public function index($userId = 0) {
+        $this->view("list-user-page", ["uId" => $userId]);
     }
 
     public function add() {
         $this->view("add-user-page", []);
     }
 
-    public function update() {
-        $this->view("update-user-page", []);
+    public function update($userId = 0) {
+        $this->view("update-user-page", ["uId" => $userId]);
     }
 
     public function delete() {

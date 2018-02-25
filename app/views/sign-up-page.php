@@ -4,7 +4,7 @@ require_once('../app/config/config.php');
 require_once('../app/functions.php');
 $userSigned = $user->isSignedIn();
 
-//if not logged in redirect to login page
+//if logged in redirect to home page
 ifLoggedIn(BASE_LINK . 'homecontroller', $userSigned);
 
 ?>
@@ -49,18 +49,17 @@ ifLoggedIn(BASE_LINK . 'homecontroller', $userSigned);
             </form>
         </div>
     </div>
-
-    <div>
-        <br><br><br><br>
-        * = required
-    </div>
+        <br><br>
 </div>
 <?php
 if(isset($_POST['submit'])) {
-    $user->signUpUser();
-    header('Location: /home_maintenance_manager/public');
+    if($user->signUpUser()) {
+        header('Location: /home_maintenance_manager/public/usercontroller/signin');
+    }else {
+        echo '<span class="errorText">' . $_SESSION['userNameError'] . "</span>";
+        echo '<span class="errorText">' . $_SESSION['emailError'] . "</span>";
+    }
 }
-
 ?>
 
 
