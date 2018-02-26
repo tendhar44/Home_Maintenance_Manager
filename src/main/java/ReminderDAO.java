@@ -10,10 +10,10 @@ import java.util.Date;
 
 public class ReminderDAO {
 	
-	private final static String databaseName = "HomeMaintenanceManager";
+	private final static String databaseName = "home_main_db";
 	private final static String host = "jdbc:mysql://localhost:3306/" + databaseName + "?autoReconnect=true&useSSL=false";
 	private final static String username = "root";
-	private final static String password = "hello";
+	private final static String password = "";
 	
 	public ReminderDAO() {
 		

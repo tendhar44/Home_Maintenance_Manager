@@ -16,6 +16,7 @@ ifNotLoggedIn(BASE_LINK . 'public/usercontroller/signin', $userSigned);
     <form action="/Home_Maintenance_Manager/public/propertycontroller/<?php echo $data['uId']; ?>" method="post">
         Property Name: <input type="text" name="propertyname">
         Address: <input type="text" name="address">
+        Description: <input type="text" name="propertydes">
         <input type="hidden" name="ownerid" value="<?php echo $data['uId']; ?>">
         <input type="submit" value="Submit">
     </form>

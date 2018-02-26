@@ -17,8 +17,8 @@ class UserController extends Controller {
         $this->view("update-user-page", ["uId" => $userId]);
     }
 
-    public function delete() {
-        $this->view("delete-user-page", []);
+    public function delete($userId = 0) {
+        $this->view("delete-user-page", ["uId" => $userId]);
     }
 
     public function signIn() {

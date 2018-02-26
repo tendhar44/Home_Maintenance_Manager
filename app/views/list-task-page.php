@@ -12,20 +12,18 @@ $tdes = "";
 
 //validates the inputs
 if($_SERVER["REQUEST_METHOD"] == "POST") {
-    //require_once("../app/models/Validation.php");
-    //$valid = new Validation();
-
-    $tname = $valid->checkInput($_POST["taskName"]);
-    $tdes = $valid->checkInput($_POST["taskDes"]);
-
-    //require_once("../app/models/Task.php");
     $task->addTask();
 }
 ?>
-<br>
 
 <div class="container" id="info">
-    <h3>Appliance List</h3>
+    <a href="/home_maintenance_manager/public">Home</a>
+    >
+    <a href="/home_maintenance_manager/public/propertycontroller/<?php echo $_SESSION['userid'] ?>">Property</a>
+    >
+    <a href="/home_maintenance_manager/public/appliancecontroller/<?php echo $_SESSION['propertyid' . $data["proNum"]] ?>">Appliance</a>
+    <br><br>
+    <h3>Task List</h3>
     <br>
     <a href="/home_maintenance_manager/public/taskcontroller/add/<?php echo $data['appId']; ?>">+ Add Task</a>
     <div id="list-property">

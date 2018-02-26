@@ -6,11 +6,14 @@
  */
 class Appliance {
     private $database;
+    private $valid;
+
     protected $name;
     protected $model;
     protected $picture;
 
-    public function __construct($db) {
+    public function __construct($db, $valid) {
+        $this->valid = $valid;
         $this->database = $db;
     }
 
@@ -19,31 +22,54 @@ class Appliance {
         $appliance_model = (isset($_POST['applianceModel'])) ? $_POST['applianceModel'] : '';
         $propertyId = (isset($_POST['propertyId'])) ? $_POST['propertyId'] : '';
 
-        $sql_data = "INSERT INTO appliance (appliancename, model, propertyid) VALUES ('$appliance_name', '$appliance_model', '$propertyId')";
 
-        $db_connection = $this->database;
+        if($this->valid->checkApplianceName($appliance_name, $propertyId)) {
+            $sql_data = "INSERT INTO appliances (appliancename, model) VALUES ('$appliance_name', '$appliance_model')";
+            $sql_data2 = "INSERT INTO propertyappliancebridge (propertyid, applianceid) VALUES ('$propertyId', LAST_INSERT_ID())";
 
-        if($db_connection->query($sql_data) === true) {
-            echo "Successfully added your appliance!";
-        } else {
-            echo "We weren't able to add your appliance. Please try again.";
+            $db_connection = $this->database;
+
+            if ($db_connection->query($sql_data) === true && $db_connection->query($sql_data2) === true) {
+                echo "Successfully added your appliance!";
+            } else {
+                echo "We weren't able to add your appliance. Please try again.";
+            }
+        }else {
+            echo "The appliance name should be unique.";
         }
     }
 
-    public function updateAppliance($id) {
+    public function updateAppliance($id, $originalAppName) {
         $db_con = new DatabaseConnection();
         $db_connection = $db_con->db_connect();
 
         $applianceName = (isset($_POST['applianceName'])) ? $_POST['applianceName'] : '';
         $model = (isset($_POST['applianceModel'])) ? $_POST['applianceModel'] : '';
+        $appNameFlag = false;
 
-        // attempt insert query execution
-        $sql_data = "UPDATE appliance SET appliancename='$applianceName', model='$model' WHERE applianceid = '$id'";
+        //if name is altered, check if name is unique
+        if($originalAppName != $applianceName){
+            //if name is unique, precede to update, if not don't update.
+            if($this->valid->checkApplianceName($applianceName)) {
+                $appNameFlag = true;
+            }
+            //name wasn't altered, so precede to update.
+        }else{
+            $appNameFlag = true;
+        }
 
-        if($db_connection->query($sql_data) === true) {
-            echo "Successfully updated your appliance!";
-        } else {
-            echo "We weren't able to update your appliance. Please try again.";
+        if($appNameFlag) {
+
+            // attempt insert query execution
+            $sql_data = "UPDATE appliances SET appliancename='$applianceName', model='$model' WHERE applianceid = '$id'";
+
+            if ($db_connection->query($sql_data) === true) {
+                echo "Successfully updated your appliance!";
+            } else {
+                echo "We weren't able to update your appliance. Please try again.";
+            }
+        }else {
+            echo "The appliance name should be unique.";
         }
     }
 
@@ -51,7 +77,7 @@ class Appliance {
         $db_connection = $this->database;
 
         // attempt insert query execution
-        $sql_data = "DELETE FROM appliance WHERE applianceid = '$id'";
+        $sql_data = "DELETE FROM appliances WHERE applianceid = '$id'";
 
         if($db_connection->query($sql_data) === true) {
             echo "Successfully deleted your appliance!";
@@ -68,7 +94,7 @@ class Appliance {
         $db_connection = $this->database;
 
         //attempt select query execution
-        $sql_data = "SELECT * FROM appliance WHERE propertyid = '$propertyId'";
+        $sql_data = "SELECT a.applianceid, a.appliancename, a.model, pa.propertyid FROM appliances a JOIN propertyappliancebridge pa ON a.applianceid = pa.applianceid WHERE pa.propertyid = '$propertyId'";
 
         $userData = $db_connection->query($sql_data);
 

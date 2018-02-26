@@ -6,6 +6,7 @@
  */
 class Task {
     private $database;
+    private $valid;
 
     protected $name;
     protected $description;
@@ -19,7 +20,8 @@ class Task {
     protected $applianceId;
     protected $id;
 
-    public function __construct($db) {
+    public function __construct($db, $valid) {
+        $this->valid = $valid;
         $this->database = $db;
     }
 
@@ -28,12 +30,18 @@ class Task {
         $taskDesArray = array();
         $appIdArray = array();
         $taskIdArray = array();
+        $taskRepeatArray = array();
+        $taskDueDateArray = array();
+        $taskCompleteArray = array();
+        $taskIntervalDayArray = array();
+        $taskFirstReminderDateArray = array();
+        $taskReminderIntervalArray = array();
+
+
         $db_connection = $this->database;
-        //$db_con = new DatabaseConnection();
-        //$db_connection = $db_con->db_connect();
 
         //attempt select query execution
-        $sql_data = "SELECT * FROM task WHERE applianceid = '$applianceId'";
+        $sql_data = "SELECT taskid, taskname, description, applianceid, repeattask, duedate, complete, intervaldays, firstreminderdate, reminderinterval FROM tasks WHERE applianceid = '$applianceId'";
 
         $userData = $db_connection->query($sql_data);
 
@@ -42,6 +50,12 @@ class Task {
             $taskNameArray[] = $row['taskname'];
             $taskDesArray[] = $row['description'];
             $appIdArray[] = $row['applianceid'];
+            $taskRepeatArray[] = $row['repeattask'];
+            $taskDueDateArray[] = $row['duedate'];
+            $taskCompleteArray[] = $row['complete'];
+            $taskIntervalDayArray[] = $row['intervaldays'];
+            $taskFirstReminderDateArray[] = $row['firstreminderdate'];
+            $taskReminderIntervalArray[] = $row['reminderinterval'];
         }
 
         for($i = 0; $i < sizeof($taskNameArray); $i++) {
@@ -50,6 +64,13 @@ class Task {
                 $_SESSION['taskdescription' . $i] = $taskDesArray[$i];
                 $_SESSION['taskid' . $i] = $taskIdArray[$i];
                 $_SESSION['applianceid' . $i] = $appIdArray[$i];
+                $_SESSION['repeattask' . $i] = $taskRepeatArray[$i];
+                $_SESSION['duedate' . $i] = $taskDueDateArray[$i];
+                $_SESSION['complete' . $i] = $taskCompleteArray[$i];
+                $_SESSION['intervaldays' . $i] = $taskIntervalDayArray[$i];
+                $_SESSION['firstreminderdate' . $i] = $taskFirstReminderDateArray[$i];
+                $_SESSION['reminderinterval' . $i] = $taskReminderIntervalArray[$i];
+
 
     //display list of properties that can be collapse and un-collapse.
     echo '
@@ -84,6 +105,54 @@ class Task {
                     . $taskDesArray[$i] .
 
                     '
+                  </div><!-- close col-7 -->
+                  
+                  <div class="col-7">
+                  Repeat Task: 
+                        '
+                    . $taskRepeatArray[$i] .
+
+        '
+                  </div><!-- close col-7 -->
+                  
+                  <div class="col-7">
+                  Due Date: 
+                        '
+                    . $taskDueDateArray[$i] .
+
+        '
+                  </div><!-- close col-7 -->
+                  
+                  <div class="col-7">
+                  Complete: 
+                        '
+                    . $taskCompleteArray[$i] .
+
+        '
+                  </div><!-- close col-7 -->
+                  
+                  <div class="col-7">
+                  Interval Day: 
+                        '
+                    . $taskIntervalDayArray[$i] .
+
+        '
+                  </div><!-- close col-7 -->
+                  
+                  <div class="col-7">
+                  First Reminder Date: 
+                        '
+                    . $taskFirstReminderDateArray[$i] .
+
+        '
+                  </div><!-- close col-7 -->
+                  
+                  <div class="col-7">
+                  Reminder Interval Days: 
+                        '
+                    . $taskReminderIntervalArray[$i] .
+
+        '
                   </div><!-- close col-7 -->
                   
                   <br>
@@ -140,14 +209,6 @@ class Task {
     ';//end echo
             }
         }
-
-        for($i = 0; $i < sizeof($taskDesArray); $i++) {
-
-        }
-
-        for($i = 0; $i < sizeof($taskIdArray); $i++) {
-
-        }
     }
 
 
@@ -155,26 +216,30 @@ class Task {
         $db_con = new DatabaseConnection();
         $db_connection = $db_con->db_connect();
 
-        $appId = $this->applianceId;
-        $taskName = $this->name;
-        $description = $this->description;
-
         $appId = (isset($_POST['appId'])) ? $_POST['appId'] : '';
         $taskName = (isset($_POST['taskName'])) ? $_POST['taskName'] : '';
         $description = (isset($_POST['taskDes'])) ? $_POST['taskDes'] : '';
-        /*$duedate = (isset($_POST['taskDue'])) ? $_POST['taskDue'] : '';
-        $repeattask = (isset($_POST['repeattask'])) ? $_POST['repeattask'] : '';
-        $repeatlength = (isset($_POST['taskLength'])) ? $_POST['taskLength'] : '';
+        $userid = (isset($_POST['userId'])) ? $_POST['userId'] : '';
+        $duedate = (isset($_POST['taskDue'])) ? $_POST['taskDue'] : '';
+        $repeattask = (isset($_POST['repeatTask'])) ? $_POST['repeatTask'] : '';
+        $repeatlength = (isset($_POST['intervalDay'])) ? $_POST['intervalDay'] : '';
         $firstreminderdate = (isset($_POST['taskReminder'])) ? $_POST['taskReminder'] : '';
-        $complete = (isset($_POST['taskCompleteStatus'])) ? $_POST['taskCompleteStatus'] : '';*/
+        $complete = (isset($_POST['taskComplete'])) ? $_POST['taskComplete'] : '';
+        $reminderinterval = (isset($_POST['reminderInterval'])) ? $_POST['reminderInterval'] : '';
 
-        // attempt insert query execution
-        $sql_data = "INSERT INTO task (taskname, description, applianceid) VALUES ('$taskName', '$description', '$appId')";
+        if($this->valid->checkTaskName($taskName)){
 
-        if($db_connection->query($sql_data) === true) {
-            echo "Successfully added your task!";
-        } else {
-            echo "We weren't able to add your task. Please try again.";
+            // attempt insert query execution
+            $sql_data = "INSERT INTO tasks (applianceid, taskname, description, userid, repeattask, duedate, complete, intervaldays, firstreminderdate, reminderinterval ) VALUES ('$appId', '$taskName', '$description', '$userid', '$repeattask', '$duedate', '$complete', '$repeatlength', '$firstreminderdate', '$reminderinterval')";
+
+            if($db_connection->query($sql_data) === true) {
+                echo "Successfully added your task!";
+            }else {
+                echo "We weren't able to add your task. Please try again.";
+            }
+
+        }else{
+            echo "The task name should be unique.";
         }
     }
 
@@ -183,7 +248,7 @@ class Task {
         $db_connection = $this->database;
 
         //attempt select query execution
-        $sql_data = "SELECT * FROM task WHERE taskid = '$id'";
+        $sql_data = "SELECT * FROM tasks WHERE taskid = '$id'";
 
         $userData = $db_connection->query($sql_data);
 
@@ -215,7 +280,7 @@ class Task {
         $description = $_POST['taskDes'];
 
         // attempt insert query execution
-        $sql_data = "UPDATE task SET taskname='$taskName', description='$description' WHERE taskid = '$id'";
+        $sql_data = "UPDATE tasks SET taskname='$taskName', description='$description' WHERE taskid = '$id'";
 
         if($db_connection->query($sql_data) === true) {
             echo "Successfully updated your task!";
@@ -228,7 +293,7 @@ class Task {
         $db_connection = $this->database;
 
         // attempt insert query execution
-        $sql_data = "DELETE FROM task WHERE taskid = '$id'";
+        $sql_data = "DELETE FROM tasks WHERE taskid = '$id'";
 
         if($db_connection->query($sql_data) === true) {
             echo "Successfully deleted your task!";

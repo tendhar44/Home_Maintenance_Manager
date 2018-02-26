@@ -5,8 +5,9 @@ $userSigned = $user->isSignedIn();
 
 //if not logged in redirect to login page
 ifNotLoggedIn(BASE_LINK . 'usercontroller/signin', $userSigned);
-?>
 
-<div class="container" id="info">
-
-</div>
+$userID = $data['uId'];
+echo $data['uId'];
+$user->deleteUser($userID);
+$user->signOutUser();
+header('Location: /home_maintenance_manager/public');

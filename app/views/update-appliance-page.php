@@ -25,5 +25,7 @@ ifNotLoggedIn(BASE_LINK . 'usercontroller/signin', $userSigned);
 */
 if($_SERVER["REQUEST_METHOD"] == "POST") {
 $applianceID = $_SESSION['applianceid' . $data['an']];
-$appliance->updateAppliance($applianceID);
+$applianceName = $_SESSION['appliancename' . $data["an"]];
+
+$appliance->updateAppliance($applianceID, $applianceName);
 }

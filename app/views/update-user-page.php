@@ -9,6 +9,10 @@ ifNotLoggedIn(BASE_LINK . 'usercontroller/signin', $userSigned);
 ?>
 
 <div class="container">
+    <a href="/home_maintenance_manager/public">Home</a>
+    >
+    <a href="/home_maintenance_manager/public/usercontroller/<?php echo $_SESSION['userid'] ?>">Profile</a>
+    <br><br>
     <form action="" method="post">
         <table>
             <tr>
@@ -65,7 +69,7 @@ ifNotLoggedIn(BASE_LINK . 'usercontroller/signin', $userSigned);
             </tr>
             <tr>
                 <td>Password:&nbsp;</td>
-                <td><input type="text" name="password" value="<?php echo preg_replace("|.|","*",$_SESSION['password']);?>"></td>
+                <td><input type="password" name="password" value="<?php echo $_SESSION['password']; ?>"></td>
             </tr>
             <tr>
                 <td></td>

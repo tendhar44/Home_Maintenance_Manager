@@ -12,6 +12,8 @@ ifNotLoggedIn(BASE_LINK . 'usercontroller/signin', $userSigned);
     <h3>Property Owner Information</h3>
     <br>
     <a href="/home_maintenance_manager/public/usercontroller/update/<?php echo $data['uId']; ?>">+Update Profile</a>
+    <br>
+    <a href="/home_maintenance_manager/public/usercontroller/delete/<?php echo $data['uId']; ?>">+Close Account</a>
     <br><br>
     <table class="table table-hover">
         <tbody>

@@ -24,7 +24,9 @@ ifNotLoggedIn(BASE_LINK . 'usercontroller/signin', $userSigned);
  * Property ID $data['pn'] is passed from PropertyController class.
  * 'pn' is array of different property ID.
  */
+$propertyName =  $_SESSION['propertyname' . $data['pn']];
 if($_SERVER["REQUEST_METHOD"] == "POST") {
     $propertyID = $_SESSION['propertyid' . $data['pn']];
-    $property->updateProperty($propertyID);
+
+    $property->updateProperty($propertyID, $propertyName);
 }

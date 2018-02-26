@@ -66,9 +66,11 @@ class User {
         $db_connection = $this->database;
 
         //attempt select query execution
-        $sql_data = "SELECT * FROM user WHERE username = '$username'";
+        $sql_data = "SELECT userid, username, password, firstname, lastname, email FROM users WHERE username = '$username'";
+
 
         $userData = $db_connection->query($sql_data);
+        //var_dump($userData['username']);
 
         return $userData->fetch_assoc();
     }
@@ -94,7 +96,7 @@ class User {
         $pw = mysqli_real_escape_string($db_connection, $password);
 
         // attempt insert query execution
-        $sql_data = "UPDATE user SET firstname='$fn', lastname='$ln', email='$em', password='$pw' WHERE userid = '$userid'";
+        $sql_data = "UPDATE users SET firstname='$fn', lastname='$ln', email='$em', password='$pw' WHERE userid = '$userid'";
 
         if($db_connection->query($sql_data) === true) {
             echo "Successfully updated your profile!";
@@ -103,7 +105,17 @@ class User {
         }
     }
 
-    public function deleteUser() {
+    public function deleteUser($userid) {
+        $db_connection = $this->database;
+
+        // attempt insert query execution
+        $sql_data = "DELETE FROM users WHERE userid = '$userid'";
+
+        if($db_connection->query($sql_data) === true) {
+            echo "Successfully deleted your account!";
+        } else {
+            echo "We weren't able to delete your account. Please try again.";
+        }
 
     }
 
@@ -140,6 +152,7 @@ class User {
 
             $row = $this->getUser($username);
 
+            var_dump($row['username']);
             //if username and password matches then let user log in
             if($username == $row['username'] && $password == $row['password']) {
                 $_SESSION['loggedin'] = true;
@@ -198,7 +211,7 @@ class User {
 
         if($authenticity){
             // attempt insert query execution
-            $sql_data = "INSERT INTO user (username, password, email, firstname, lastname) VALUES ('$username', '$password', '$email', '$firstname', '$lastname')";
+            $sql_data = "INSERT INTO users (username, password, email, firstname, lastname) VALUES ('$username', '$password', '$email', '$firstname', '$lastname')";
 
             $db_connection->query($sql_data);
 

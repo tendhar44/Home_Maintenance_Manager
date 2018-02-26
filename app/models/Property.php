@@ -6,6 +6,7 @@
  */
 class Property {
     private $database;
+    private $valid;
 
     protected $id;
     protected $name;
@@ -14,7 +15,8 @@ class Property {
     protected $picture;
     protected $ownerid;
 
-    public function __construct($db) {
+    public function __construct($db, $valid) {
+        $this->valid = $valid;
         $this->database = $db;
     }
 
@@ -24,17 +26,23 @@ class Property {
         $property_name = (isset($_POST['propertyname'])) ? $_POST['propertyname'] : '';
         $property_address = (isset($_POST['address'])) ? $_POST['address'] : '';
         $user_id = (isset($_POST['ownerid'])) ? $_POST['ownerid'] : '';
+        $property_des = (isset($_POST['propertydes'])) ? $_POST['propertydes'] : '';
 
         $pn = mysqli_real_escape_string($db_connection, $property_name);
         $add = mysqli_real_escape_string($db_connection, $property_address);
         $uid = mysqli_real_escape_string($db_connection, $user_id);
+        $pd = mysqli_real_escape_string($db_connection, $property_des);
 
-        $sql_data = "INSERT INTO property (propertyname, address, ownerid) VALUES ('$pn', '$add', '$uid')";
+        if($this->valid->checkPropertyName($pn, $uid)) {
+            $sql_data = "INSERT INTO properties (ownerid, propertyname, description, address) VALUES ('$uid', '$pn', '$pd', '$add')";
 
-        if($db_connection->query($sql_data) === true) {
-            echo "Successfully added your property!";
-        } else {
-            echo "We weren't able to add your property. Please try again.";
+            if ($db_connection->query($sql_data) === true) {
+                echo "Successfully added your property!";
+            } else {
+                echo "We weren't able to add your property. Please try again.";
+            }
+        }else {
+            echo "The property name should be unique.";
         }
     }
 
@@ -46,7 +54,7 @@ class Property {
         $db_connection = $this->database;
 
         //attempt select query execution
-        $sql_data = "SELECT * FROM property WHERE ownerid = '$userid'";
+        $sql_data = "SELECT propertyid, propertyname, description, address FROM properties WHERE ownerid = '$userid'";
 
         $userData = $db_connection->query($sql_data);
 
@@ -162,14 +170,14 @@ class Property {
         $db_connection = $this->database;
 
         //attempt select query execution
-        $sql_data = "SELECT * FROM property WHERE propertyname = '$name'";
+        $sql_data = "SELECT * FROM properties WHERE propertyname = '$name'";
 
         $userData = $db_connection->query($sql_data);
 
         return $userData->fetch_assoc();
     }
 
-    public function updateProperty($id) {
+    public function updateProperty($id, $originalProName) {
         $db_con = new DatabaseConnection();
         $db_connection = $db_con->db_connect();
 
@@ -186,14 +194,31 @@ class Property {
 
         $pn = mysqli_real_escape_string($db_connection, $propertyName);
         $add = mysqli_real_escape_string($db_connection, $address);
+        $proNameFlag = false;
 
-        // attempt insert query execution
-        $sql_data = "UPDATE property SET propertyname='$pn', address='$add' WHERE propertyid = '$id'";
+            //if name is altered, check if name is unique
+            if($originalProName != $propertyName){
+                //if name is unique, precede to update, if not don't update.
+                if($this->valid->checkPropertyName($pn)) {
+                    $proNameFlag = true;
+                }
+                //name wasn't altered, so precede to update.
+            }else{
+                $proNameFlag = true;
+            }
 
-        if($db_connection->query($sql_data) === true) {
-            echo "Successfully updated your property!";
-        } else {
-            echo "We weren't able to update your property. Please try again.";
+            if($proNameFlag){
+            // attempt insert query execution
+            $sql_data = "UPDATE properties SET propertyname='$pn', address='$add' WHERE propertyid = '$id'";
+
+            if ($db_connection->query($sql_data) === true) {
+                $_SESSION[$propertyName] = $propertyName;
+                echo "Successfully updated your property!";
+            } else {
+                echo "We weren't able to update your property. Please try again.";
+            }
+        }else {
+            echo "The property name should be unique.";
         }
     }
 
@@ -201,7 +226,7 @@ class Property {
         $db_connection = $this->database;
 
         // attempt insert query execution
-        $sql_data = "DELETE FROM property WHERE propertyid = '$id'";
+        $sql_data = "DELETE FROM properties WHERE propertyid = '$id'";
 
         if($db_connection->query($sql_data) === true) {
             echo "Successfully deleted your property!";

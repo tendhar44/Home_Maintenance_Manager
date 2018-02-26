@@ -30,6 +30,6 @@ $valid = new Validation($db);
 
 //create new User object
 $user = new User($db, $valid);
-$property = new Property($db);
-$appliance = new Appliance($db);
-$task = new Task($db);
+$property = new Property($db, $valid);
+$appliance = new Appliance($db, $valid);
+$task = new Task($db, $valid);
