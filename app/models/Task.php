@@ -93,66 +93,76 @@ class Task {
                   
                   <div class="col-7">
                   Task ID#: 
-                        '
+                    <span style="font-weight:600">
+                    '
                     . $taskIdArray[$i] .
 
                     '
+                    </span>
                   </div><!-- close col-7 -->
                   
                   <div class="col-7">
                   Description: 
-                        '
+                    <span style="font-weight:600">
+                    '
                     . $taskDesArray[$i] .
 
                     '
+                    </span>
                   </div><!-- close col-7 -->
                   
                   <div class="col-7">
                   Repeat Task: 
-                        '
+                    <span style="font-weight:600">
+                    '
                     . $taskRepeatArray[$i] .
-
-        '
+                    '
+                    </span>
                   </div><!-- close col-7 -->
                   
                   <div class="col-7">
                   Due Date: 
-                        '
+                    <span style="font-weight:600">
+                    '
                     . $taskDueDateArray[$i] .
-
-        '
+                    '
+                    </span>
                   </div><!-- close col-7 -->
                   
                   <div class="col-7">
                   Complete: 
-                        '
+                    <span style="font-weight:600">
+                    '
                     . $taskCompleteArray[$i] .
-
-        '
+                    '
+                    </span>
                   </div><!-- close col-7 -->
                   
                   <div class="col-7">
                   Interval Day: 
-                        '
+                    <span style="font-weight:600">
+                    '
                     . $taskIntervalDayArray[$i] .
-
-        '
+                    '
+                    </span>
                   </div><!-- close col-7 -->
                   
                   <div class="col-7">
                   First Reminder Date: 
-                        '
+                    <span style="font-weight:600">
+                    '
                     . $taskFirstReminderDateArray[$i] .
-
-        '
+                    '
+                    </span>
                   </div><!-- close col-7 -->
                   
                   <div class="col-7">
                   Reminder Interval Days: 
-                        '
+                    <span style="font-weight:600">
+                    '
                     . $taskReminderIntervalArray[$i] .
-
-        '
+                    '
+                    </span>
                   </div><!-- close col-7 -->
                   
                   <br>
@@ -213,8 +223,7 @@ class Task {
 
 
     public function addTask() {
-        $db_con = new DatabaseConnection();
-        $db_connection = $db_con->db_connect();
+        $db_connection = $this->database;
 
         $appId = (isset($_POST['appId'])) ? $_POST['appId'] : '';
         $taskName = (isset($_POST['taskName'])) ? $_POST['taskName'] : '';
@@ -227,10 +236,13 @@ class Task {
         $complete = (isset($_POST['taskComplete'])) ? $_POST['taskComplete'] : '';
         $reminderinterval = (isset($_POST['reminderInterval'])) ? $_POST['reminderInterval'] : '';
 
+        $tn = mysqli_real_escape_string($db_connection, $taskName);
+        $des = mysqli_real_escape_string($db_connection, $description);
+
         if($this->valid->checkTaskName($taskName)){
 
             // attempt insert query execution
-            $sql_data = "INSERT INTO tasks (applianceid, taskname, description, userid, repeattask, duedate, complete, intervaldays, firstreminderdate, reminderinterval ) VALUES ('$appId', '$taskName', '$description', '$userid', '$repeattask', '$duedate', '$complete', '$repeatlength', '$firstreminderdate', '$reminderinterval')";
+            $sql_data = "INSERT INTO tasks (applianceid, taskname, description, userid, repeattask, duedate, complete, intervaldays, firstreminderdate, reminderinterval ) VALUES ('$appId', '$tn', '$des', '$userid', '$repeattask', '$duedate', '$complete', '$repeatlength', '$firstreminderdate', '$reminderinterval')";
 
             if($db_connection->query($sql_data) === true) {
                 echo "Successfully added your task!";
@@ -256,25 +268,7 @@ class Task {
     }
 
     public function updateTask($id) {
-        //require_once("../app/DatabaseConnection.php");
-
-        $db_con = new DatabaseConnection();
-        $db_connection = $db_con->db_connect();
-
-        //$db_connection = $this->database;
-
-        //$appId = $this->applianceId;
-        //$taskName = $this->name;
-        //$description = $this->description;
-
-        //$appId = (isset($_POST['appId'])) ? $_POST['appId'] : '';
-        //$taskName = (isset($_POST['taskName'])) ? $_POST['taskName'] : '';
-        //$description = (isset($_POST['taskDes'])) ? $_POST['taskDes'] : '';
-        /*$duedate = (isset($_POST['taskDue'])) ? $_POST['taskDue'] : '';
-        $repeattask = (isset($_POST['repeattask'])) ? $_POST['repeattask'] : '';
-        $repeatlength = (isset($_POST['taskLength'])) ? $_POST['taskLength'] : '';
-        $firstreminderdate = (isset($_POST['taskReminder'])) ? $_POST['taskReminder'] : '';
-        $complete = (isset($_POST['taskCompleteStatus'])) ? $_POST['taskCompleteStatus'] : '';*/
+        $db_connection = $this->database;
 
         $taskName = $_POST['taskName'];
         $description = $_POST['taskDes'];

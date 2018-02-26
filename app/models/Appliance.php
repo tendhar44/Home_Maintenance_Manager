@@ -18,16 +18,18 @@ class Appliance {
     }
 
     public function addAppliance() {
+        $db_connection = $this->database;
+
         $appliance_name = (isset($_POST['applianceName'])) ? $_POST['applianceName'] : '';
         $appliance_model = (isset($_POST['applianceModel'])) ? $_POST['applianceModel'] : '';
         $propertyId = (isset($_POST['propertyId'])) ? $_POST['propertyId'] : '';
 
+        $an = mysqli_real_escape_string($db_connection, $appliance_name);
+        $mo = mysqli_real_escape_string($db_connection, $appliance_model);
 
         if($this->valid->checkApplianceName($appliance_name, $propertyId)) {
-            $sql_data = "INSERT INTO appliances (appliancename, model) VALUES ('$appliance_name', '$appliance_model')";
+            $sql_data = "INSERT INTO appliances (appliancename, model) VALUES ('$an', '$mo')";
             $sql_data2 = "INSERT INTO propertyappliancebridge (propertyid, applianceid) VALUES ('$propertyId', LAST_INSERT_ID())";
-
-            $db_connection = $this->database;
 
             if ($db_connection->query($sql_data) === true && $db_connection->query($sql_data2) === true) {
                 echo "Successfully added your appliance!";
@@ -45,6 +47,9 @@ class Appliance {
 
         $applianceName = (isset($_POST['applianceName'])) ? $_POST['applianceName'] : '';
         $model = (isset($_POST['applianceModel'])) ? $_POST['applianceModel'] : '';
+
+        $an = mysqli_real_escape_string($db_connection, $applianceName);
+        $mo = mysqli_real_escape_string($db_connection, $model);
         $appNameFlag = false;
 
         //if name is altered, check if name is unique
@@ -61,7 +66,7 @@ class Appliance {
         if($appNameFlag) {
 
             // attempt insert query execution
-            $sql_data = "UPDATE appliances SET appliancename='$applianceName', model='$model' WHERE applianceid = '$id'";
+            $sql_data = "UPDATE appliances SET appliancename='$an', model='$mo' WHERE applianceid = '$id'";
 
             if ($db_connection->query($sql_data) === true) {
                 echo "Successfully updated your appliance!";
@@ -135,18 +140,22 @@ class Appliance {
                   
                   <div class="col-7">
                   Appliance ID#: 
-                        '
+                    <span style="font-weight:600">
+                    '
                     . $appIdArray[$i] .
 
                     '
+                    </span>
                   </div><!-- close col-7 -->
                   
                   <div class="col-7">
                   Model: 
-                        '
+                    <span style="font-weight:600">
+                    '
                     . $appModelArray[$i] .
 
                     '
+                    </span>
                   </div><!-- close col-7 -->
                   
                   <br>

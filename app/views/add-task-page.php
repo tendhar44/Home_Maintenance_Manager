@@ -30,7 +30,7 @@ ifNotLoggedIn(BASE_LINK . 'usercontroller/signin', $userSigned);
         Task Due Date: <br> <input type="date" name="taskDue"><br><br>
 
         <!-- one time task = 0, and repeat task = 1 -->
-        Repeat Task: <br> <input type="radio" name="repeattask" value="1">&nbsp Yes
+        Repeat Task: <br> <input type="radio" name="repeatTask" value="1">&nbsp Yes
         <br><input type="radio" name="repeatTask" value="0" checked="checked">&nbsp No<br><br>
         Interval Days:<br> <input type="number" name="intervalDay" value="1"><br><br>
         Task Reminder Date:<br> <input type="date" name="taskReminder"><br><br>

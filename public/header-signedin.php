@@ -54,7 +54,7 @@
                     <li><a style="font-size:14px; color:#586069;"> &nbsp; Signed in as <span style="font-weight:600;"><?php echo $_SESSION['username']; ?></span></a></li>
                     <li><hr></li>
                     <li><a href="/home_maintenance_manager/public/usercontroller/<?php echo $_SESSION['userid']; ?>">&nbsp; Your Profile</a></li>
-                    <li><a href="#">&nbsp; Setting</a></li>
+                    <!--<li><a href="#">&nbsp; Setting</a></li>-->
                     <li><a href="/home_maintenance_manager/public/usercontroller/signout">&nbsp; Sign Out</a></li>
                 </ul>
             </li>
