@@ -5,7 +5,7 @@
 3. In browser type - http://localhost/dashboard/
 4. Click on tab - phpMyAdmin
 5. Click on tab - Import
-6. Upload SQL file - home_main_manager.sql
+6. Upload SQL file - home_main_db.sql
 7. Go to directory - C:/xampp/htdocs/ or wherever xampp was installed
 8. And put the project folder in there - C:/xampp/htdocs/home_maintenance_manager
 9. Then to view our webapp goto - localhost/home_maintenance_manager/public
