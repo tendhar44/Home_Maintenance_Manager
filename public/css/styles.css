@@ -97,3 +97,133 @@ label{
 	height: 30px;
 	width: 100px;
 }
+
+
+
+/**
+Start of calendar style
+ */
+/*Calendar Top Nav*/
+div#calendar{
+	margin: 0 auto;
+	padding: 0;
+	width: 602px;
+	font-family: 'Source Sans Pro', sans-serif;
+}
+
+div#calendar div.box{
+	position:relative;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 40px;
+	background-color: #292b2c;
+}
+
+div#calendar div.header{
+	line-height: 40px;
+	vertical-align: middle;
+	position: absolute;
+	left: 11px;
+	top: 0;
+	width: 582px;
+	height: 40px;
+	text-align: center;
+}
+
+div#calendar div.header a.prev,div#calendar div.header a.next{
+	position: absolute;
+	top: 0;
+	height: 17px;
+	display: block;
+	cursor: pointer;
+	text-decoration: none;
+	color: #ffffff;
+}
+
+div#calendar div.header span.title{
+	color: #ffffff;
+	font-size: 18px;
+}
+
+
+div#calendar div.header a.prev{
+	left: 0;
+}
+
+div#calendar div.header a.next{
+	right: 0;
+}
+
+
+
+
+/*Calendar Content Cells*/
+div#calendar div.box-content{
+	border: 1px solid #ffffff ;
+	border-top: none;
+}
+
+
+
+div#calendar ul.label{
+	float: left;
+	margin: 0px;
+	padding: 0px;
+	margin-top: 5px;
+	margin-left: 5px;
+}
+
+div#calendar ul.label li{
+	margin: 0;
+	padding: 0;
+	margin-right: 5px;
+	float: left;
+	list-style-type: none;
+	width: 80px;
+	height: 40px;
+	line-height: 40px;
+	vertical-align: middle;
+	text-align: center;
+	color: #000000;
+	font-size: 15px;
+	background-color: transparent;
+}
+
+
+div#calendar ul.dates{
+	float: left;
+	margin: 0;
+	padding: 0;
+	margin-left: 5px;
+	margin-bottom: 5px;
+}
+
+/*overall width = width+padding-right*/
+div#calendar ul.dates li{
+	margin: 0;
+	padding: 0;
+	margin-right: 5px;
+	margin-top: 5px;
+	line-height: 20px;
+	vertical-align: top;
+	float: left;
+	list-style-type: none;
+	width: 80px;
+	height: 80px;
+	font-size: 12px;
+	background-color: bisque;
+	color: #000000;
+	text-align: left;
+}
+
+:focus{
+	outline: none;
+}
+
+div.clear{
+	clear: both;
+}
+/**
+End of calendar style
+ */

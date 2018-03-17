@@ -38,9 +38,11 @@ class Validation {
         return $this->uniqueInput($query);
     }
 
-    public function checkApplianceName($appName){
+    public function checkApplianceName($appID, $appName, $proID){
         if($this->checkInput($appName) == '') return false;
-        $query = sprintf("select appliancename from appliances where appliancename ='$appName'");
+        $query = sprintf("
+            SELECT a.appliancename FROM appliances a JOIN propertyappliancebridge pa ON a.applianceid = pa.applianceid WHERE pa.propertyid = '$proID' and a.applianceid = '$appID' and a.appliancename = '$appName'
+            ");
         return $this->uniqueInput($query);
     }
 
@@ -54,6 +56,7 @@ class Validation {
         $result = $this->db_connection->query($query);
 
         if (!$result)
+            echo "cannot connect to the database";
             return false;
         if (mysqli_num_rows($result)>0)
             return false;

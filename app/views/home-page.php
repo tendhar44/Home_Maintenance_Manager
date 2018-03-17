@@ -4,15 +4,7 @@
  * Date:
  */
 
-require_once('../app/config/config.php');
-require_once('../app/functions.php');
-$userSigned = $user->isSignedIn();
-
-//if not logged in redirect to login page
-ifLoggedIn(BASE_LINK . 'homecontroller/home', $userSigned);
-
 ?>
-
 <div class="container">
     <div class="row">
         <div class="col-md-6">

@@ -1,16 +1,3 @@
-<?php
-
-require_once('../app/config/config.php');
-require_once('../app/functions.php');
-$userSigned = $user->isSignedIn();
-
-//if not logged in redirect to login page
-ifNotLoggedIn(BASE_LINK . 'usercontroller/signin', $userSigned);
-
-if($_SERVER["REQUEST_METHOD"] == "POST") {
-    $appliance->addAppliance();
-}
-?>
 
 <div class="container" id="info">
     <a href="/home_maintenance_manager/public">Home</a>
@@ -23,7 +10,7 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
     <div id="list-property">
         <?php
             $propertyId = $data["proId"];
-            $appliance->getListOfAppliances($propertyId);
+            echo $_SESSION['outputCotent'];
         ?>
     </div><!-- close list-property -->
 </div><!-- close container -->

@@ -1,12 +1,6 @@
 <?php
-require_once('../app/config/config.php');
-require_once('../app/functions.php');
-$userSigned = $user->isSignedIn();
 
-//if not logged in redirect to login page
-ifLoggedIn(BASE_LINK . 'homecontroller', $userSigned);
 ?>
-
 
 <div class="container">
     <div class="row">
@@ -31,16 +25,3 @@ ifLoggedIn(BASE_LINK . 'homecontroller', $userSigned);
     </div>
     <br><br>
 </div>
-
-<?php
-if(isset($_POST['submit'])) {
-    $username = $_POST["username"];
-    $password = $_POST["password"];
-
-    if($user->signInUser($username, $password)) {
-        header('Location: /home_maintenance_manager/public');
-    }else {
-        echo '<span class="errorText">' . $_SESSION['signInError'] . "</span>";
-    }
-}
-?>

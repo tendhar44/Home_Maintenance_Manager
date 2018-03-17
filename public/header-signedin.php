@@ -40,6 +40,12 @@
                 <a class="nav-link" href="/home_maintenance_manager/public/propertycontroller/add/<?php echo $_SESSION['userid']; ?>">+Add Property</a>
             </li>
         </ul>
+
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" href="/home_maintenance_manager/public/calendarcontroller">Calendar</a>
+            </li>
+        </ul>
     </div>
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent2">

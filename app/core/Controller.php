@@ -5,15 +5,25 @@
  * Date:
  */
 class Controller {
-    public function model($model){
-        require_once "../app/models/" . $model . ".php";
+	
+	protected $model;
 
-        //model that was passed in, now return as object
-        return new $model();
+    public function __construct() {
+    	$this->model = new Model;
     }
 
-    public function view($view, $data = []) {
+    protected function view($view, $data = []) {
+
+        require_once('../app/config/config.php');
         require_once "../app/views/" . $view . ".php";
+    }
+
+    protected function notSignedIn(){
+        require_once('../app/config/config.php');
+        if (!$this->model->getAccountManagement()->isSignedIn()) {
+            header('Location: ' . BASE_LINK);
+            exit();
+        }
     }
 
 }

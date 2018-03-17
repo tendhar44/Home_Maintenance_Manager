@@ -1,12 +1,4 @@
-<?php
 
-require_once('../app/config/config.php');
-require_once('../app/functions.php');
-$userSigned = $user->isSignedIn();
-
-//if not logged in redirect to login page
-ifNotLoggedIn(BASE_LINK . 'usercontroller/signin', $userSigned);
-?>
 
 <div class="container">
     <a href="/home_maintenance_manager/public">Home</a>
@@ -24,8 +16,3 @@ ifNotLoggedIn(BASE_LINK . 'usercontroller/signin', $userSigned);
     </form>
 </div>
 
-<?php
-if($_SERVER["REQUEST_METHOD"] == "POST") {
-    $taskID = $_SESSION['taskid' . $data['tn']];
-    $task->updateTask($taskID);
-}

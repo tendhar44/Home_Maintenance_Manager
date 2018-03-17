@@ -9,6 +9,7 @@ class App {
     protected $controller = "homecontroller";
     protected $method = "index";
     protected $params = [];
+    protected $model;
 
     /**
      * App constructor.
@@ -19,6 +20,9 @@ class App {
      */
     public function __construct() {
        $url = $this->parseUrl();
+
+       require_once "../app/core/Model.php";
+       $this->model = new Model();
 
        //if file exist in controllers
        if(file_exists("../app/controllers/" . $url[0] . ".php")) {
