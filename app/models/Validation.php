@@ -38,10 +38,10 @@ class Validation {
         return $this->uniqueInput($query);
     }
 
-    public function checkApplianceName($appID, $appName, $proID){
+    public function checkApplianceName($appName, $proID){
         if($this->checkInput($appName) == '') return false;
         $query = sprintf("
-            SELECT a.appliancename FROM appliances a JOIN propertyappliancebridge pa ON a.applianceid = pa.applianceid WHERE pa.propertyid = '$proID' and a.applianceid = '$appID' and a.appliancename = '$appName'
+            SELECT a.appliancename FROM appliances a JOIN propertyappliancebridge pa ON a.applianceid = pa.applianceid WHERE pa.propertyid = '$proID' and a.appliancename = '$appName'
             ");
         return $this->uniqueInput($query);
     }

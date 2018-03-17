@@ -5,12 +5,13 @@
  * Date:
  */
 class PropertyController extends Controller {
+
     public function index ($userId = 0){
         
-        $proManagement =  $this->model->getPropertyManagement();
         $this->notSignedIn();
+        $proManagement = $this->model->getPropertyManagement();
         if($_SERVER["REQUEST_METHOD"] == "POST") {
-            $proManagement->addProperty();
+            $this->proManagement->addProperty();
         }
         $_SESSION['outputCotent'] = $proManagement->getListOfProperties($_SESSION['userid']); 
         $this->view("list-property-page", ["uId" => $userId]);
@@ -18,11 +19,14 @@ class PropertyController extends Controller {
 
     public function add($userId = 0) {
         $this->notSignedIn();
+
         $this->view("add-property-page", ["uId" => $userId]);
+
     }
 
     public function update($propertyNum = 0) {
         $this->notSignedIn();
+        $proManagement = $this->model->getPropertyManagement();
         $this->view("update-property-page", ["pn" => $propertyNum]);
 
         /**
@@ -35,12 +39,13 @@ class PropertyController extends Controller {
 
         if($_SERVER["REQUEST_METHOD"] == "POST") {
             $propertyID = $_SESSION['propertyid' . $propertyNum];
-            $property->updateProperty($propertyID, $propertyName);
+            $this->proManagement->updateProperty($propertyID, $propertyName);
         }
     }
 
     public function delete($propertyNum = 0) {
         $this->notSignedIn();
+        $proManagement = $this->model->getPropertyManagement();
         $this->view("delete-property-page", ["pn" => $propertyNum]);
     }
 }
