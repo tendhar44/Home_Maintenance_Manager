@@ -155,16 +155,11 @@ div#calendar div.header a.next{
 	right: 0;
 }
 
-
-
-
 /*Calendar Content Cells*/
 div#calendar div.box-content{
 	border: 1px solid #ffffff ;
 	border-top: none;
 }
-
-
 
 div#calendar ul.label{
 	float: left;

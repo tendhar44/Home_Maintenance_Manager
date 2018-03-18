@@ -13,6 +13,7 @@ require_once('../app/models/ApplianceManagement.php');
 require_once('../app/models/TaskManagement.php');
 require_once('../app/databaseConnection.php');
 require_once('../app/models/Validation.php');
+require_once('../app/models/Calendar.php');
 
 
 
@@ -29,6 +30,7 @@ class Model {
     private $propertyManagement;
     private $applianceManagement;
     private $taskManagement;
+    private $calendar;
 
     public function __construct() {
         //create new database connection object
@@ -41,6 +43,7 @@ class Model {
         $this->propertyManagement = new PropertyManagement($db, $valid);
         $this->applianceManagement = new ApplianceManagement($db, $valid);
         $this->taskManagement = new TaskManagement($db, $valid);
+        $this->calendar = new Calendar();
 
     }
 
@@ -55,6 +58,9 @@ class Model {
     }
     public function getTaskManagement(){
       return $this->taskManagement;
+    }
+    public function getCalendar(){
+        return $this->calendar;
     }
 
 
