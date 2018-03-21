@@ -23,6 +23,7 @@ class PropertyController extends Controller {
 
     public function update($propertyNum = 0) {
         $this->notSignedIn();
+        $proManagement =  $this->model->getPropertyManagement();
         $this->view("update-property-page", ["pn" => $propertyNum]);
 
         /**
@@ -35,7 +36,7 @@ class PropertyController extends Controller {
 
         if($_SERVER["REQUEST_METHOD"] == "POST") {
             $propertyID = $_SESSION['propertyid' . $propertyNum];
-            $property->updateProperty($propertyID, $propertyName);
+            $proManagement->updateProperty($propertyID, $propertyName);
         }
     }
 

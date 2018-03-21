@@ -32,10 +32,11 @@ class TaskController extends Controller {
     public function update($taskNum = 0) {
         $this->notSignedIn();
         $this->view("update-task-page", ["tn" => $taskNum]);
+        $taskManagement =  $this->model->getTaskManagement();
 
         if($_SERVER["REQUEST_METHOD"] == "POST") {
             $taskID = $_SESSION['taskid' . $taskNum];
-            $task->updateTask($taskID);
+            $taskManagement->updateTask($taskID);
         }
     }
 
@@ -44,4 +45,11 @@ class TaskController extends Controller {
         $this->view("delete-task-page", ["tn" => $taskNum]);
     }
 
+    //list all task of user regardless of property
+    public function listAll($userId = 0) {
+        $this->notSignedIn();
+        $taskManagement =  $this->model->getTaskManagement();
+        $_SESSION['outputCotent'] = $taskManagement->listAllTask(); 
+        $this->view("listAll-task-page", ["userid" => $userId]);
+    }
 }

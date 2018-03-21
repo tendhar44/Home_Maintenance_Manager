@@ -24,9 +24,8 @@ class ApplianceController extends Controller {
 
     public function update($applianceNum = 0) {
         $this->notSignedIn();
-        $appManagement =  $this->model->getApplianceManagement();
-
         $this->view("update-appliance-page", ["an" => $applianceNum]);
+        $appManagement =  $this->model->getApplianceManagement();
 
         /**
         * If form is submitted as post method, update appliance method is called.
