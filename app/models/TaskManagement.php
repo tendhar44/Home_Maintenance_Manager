@@ -299,6 +299,7 @@ class TaskManagement {
           return $output;
     }
 
+    //display a list of all task pertain to login user
     public function listAllTask(){
 
         $taskNameArray = array();
@@ -313,13 +314,18 @@ class TaskManagement {
         $taskFirstReminderDateArray = array();
         $taskReminderIntervalArray = array();
 
+        $userid = $_SESSION['userid'];// getting the current login user id
 
         //attempt select query execution
-        $sql_data = "SELECT taskid, taskname, description, applianceid, repeattask, duedate, complete, intervaldays, firstreminderdate, reminderinterval FROM tasks WHERE applianceid = '$applianceId'";
+        $sql_data = "SELECT taskid, taskname, description, applianceid, repeattask, duedate, complete, intervaldays, firstreminderdate, reminderinterval FROM tasks WHERE userId = '$userid' ";
 
-        $userData = $this->conn->query($sql_data);
+        $result = $this->conn->query($sql_data);
 
-        while ($row = $userData->fetch_assoc()) {
+        if($result === FALSE) { 
+            die(mysql_error()); // handle mysql error and stoping the function
+        }
+
+        while ($row = $result->fetch_assoc()) {
             $taskIdArray[] = $row['taskid'];
             $taskNameArray[] = $row['taskname'];
             $taskDesArray[] = $row['description'];
@@ -345,7 +351,7 @@ class TaskManagement {
                 $_SESSION['intervaldays' . $i] = $taskIntervalDayArray[$i];
                 $_SESSION['firstreminderdate' . $i] = $taskFirstReminderDateArray[$i];
                 $_SESSION['reminderinterval' . $i] = $taskReminderIntervalArray[$i];
-                
+
     //display list of properties that can be collapse and un-collapse.
     echo '
     <div class="card">
