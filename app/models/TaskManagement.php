@@ -13,6 +13,56 @@ class TaskManagement {
         $this->conn = $db_con;
     }
 
+    public function getTasksById($taskNum) {
+        $taskNameArray = array();
+        $taskDesArray = array();
+        $appIdArray = array();
+        $taskIdArray = array();
+        $taskRepeatArray = array();
+        $taskDueDateArray = array();
+        $taskCompleteArray = array();
+        $taskIntervalDayArray = array();
+        $taskFirstReminderDateArray = array();
+        $taskReminderIntervalArray = array();
+
+        //attempt select query execution
+        $sql_data = "SELECT taskid, taskname, description, applianceid, repeattask, duedate, complete, intervaldays, firstreminderdate, reminderinterval FROM tasks WHERE taskid = '$taskNum'";
+
+        $userData = $this->conn->query($sql_data);
+
+        ob_start();
+
+        while ($row = $userData->fetch_assoc()) {
+            $taskIdArray[] = $row['taskid'];
+            $taskNameArray[] = $row['taskname'];
+            $taskDesArray[] = $row['description'];
+            $appIdArray[] = $row['applianceid'];
+            $taskRepeatArray[] = $row['repeattask'];
+            $taskDueDateArray[] = $row['duedate'];
+            $taskCompleteArray[] = $row['complete'];
+            $taskIntervalDayArray[] = $row['intervaldays'];
+            $taskFirstReminderDateArray[] = $row['firstreminderdate'];
+            $taskReminderIntervalArray[] = $row['reminderinterval'];
+        }
+
+        echo
+            'Task ID: <span style="font-weight:600">' . $taskIdArray[0] . '</span><br>' .
+            'Task Name: <span style="font-weight:600">' . $taskNameArray[0] . '</span><br>' .
+            'Descriptions: <span style="font-weight:600">' . $taskDesArray[0] . '</span><br>' .
+            'Appliance ID: <span style="font-weight:600">' . $appIdArray[0] . '</span><br>' .
+            'Task Repeat: <span style="font-weight:600">' . $taskRepeatArray[0] . '</span><br>' .
+            'Due Date: <span style="font-weight:600">' . $taskDueDateArray[0] . '</span><br>' .
+            'Completion: <span style="font-weight:600">' . $taskCompleteArray[0] . '</span><br>' .
+            'Task Interval Day: <span style="font-weight:600">' . $taskIntervalDayArray[0] . '</span><br>' .
+            'Task Reminder Date: <span style="font-weight:600">' . $taskFirstReminderDateArray[0] . '</span><br>' .
+            'Task Reminder Interval: <span style="font-weight:600">' . $taskReminderIntervalArray[0] . '</span><br>'
+            ;
+
+        $output = ob_get_contents();
+        ob_end_clean();
+
+        return $output;
+    }
 
     public function addTask() {
         $appId = (isset($_POST['appId'])) ? $_POST['appId'] : '';
@@ -241,6 +291,9 @@ class TaskManagement {
                         
                   <div class="row">
                   <div class="col-1">
+                    <a href="/home_maintenance_manager/public/taskcontroller/task/'. $taskIdArray[$i] .'"><button>
+                        Details
+                      </button></a>
                   </div>
                   
                   <div class="col-1">

@@ -43,7 +43,7 @@ class Model {
         $this->propertyManagement = new PropertyManagement($db, $valid);
         $this->applianceManagement = new ApplianceManagement($db, $valid);
         $this->taskManagement = new TaskManagement($db, $valid);
-        $this->calendar = new Calendar();
+        $this->calendar = new Calendar($db, $valid);
 
     }
 

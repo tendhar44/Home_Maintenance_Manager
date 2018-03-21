@@ -26,4 +26,8 @@ class Controller {
         }
     }
 
+    protected function getCurrentMonth(){
+        return date("n");
+    }
+
 }

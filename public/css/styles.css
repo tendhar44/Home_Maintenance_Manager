@@ -98,8 +98,6 @@ label{
 	width: 100px;
 }
 
-
-
 /**
 Start of calendar style
  */
@@ -194,7 +192,6 @@ div#calendar ul.dates{
 	margin-bottom: 5px;
 }
 
-/*overall width = width+padding-right*/
 div#calendar ul.dates li{
 	margin: 0;
 	padding: 0;

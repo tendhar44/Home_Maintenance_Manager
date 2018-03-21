@@ -21,6 +21,14 @@ class TaskController extends Controller {
         $this->view("add-task-page", ["appId" => $applianceId, "proNum" => $propertyNum]);
     }
 
+    public function task($taskNum = 0, $apppNum = 0) {
+        $this->notSignedIn();
+        $taskManagement =  $this->model->getTaskManagement();
+
+        $_SESSION['taskDetailCotent'] = $taskManagement->getTasksById($taskNum);
+        $this->view("single-task-page", ["tn" => $taskNum, "aan" => $apppNum]);
+    }
+
     public function update($taskNum = 0) {
         $this->notSignedIn();
         $this->view("update-task-page", ["tn" => $taskNum]);
