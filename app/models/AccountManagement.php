@@ -71,10 +71,10 @@ class AccountManagement {
         $_SESSION['email'] = $email;
         $_SESSION['password'] = $password;
 
-        $fn = mysqli_real_escape_string($db_connection, $firstname);
-        $ln = mysqli_real_escape_string($db_connection, $lastname);
-        $em = mysqli_real_escape_string($db_connection, $email);
-        $pw = mysqli_real_escape_string($db_connection, $password);
+        $fn = mysqli_real_escape_string($this->conn, $firstname);
+        $ln = mysqli_real_escape_string($this->conn, $lastname);
+        $em = mysqli_real_escape_string($this->conn, $email);
+        $pw = mysqli_real_escape_string($this->conn, $password);
 
         // attempt insert query execution
         $sql_data = "UPDATE users SET firstname='$fn', lastname='$ln', email='$em', password='$pw' WHERE userid = '$userid'";
@@ -168,11 +168,11 @@ class AccountManagement {
         $email = (isset($_POST['email'])) ? $_POST['email'] : '';
         $password = (isset($_POST['password'])) ? $_POST['password'] : '';
 
-        $username = mysqli_real_escape_string($db_connection, $username);
-        $firstname = mysqli_real_escape_string($db_connection, $firstname);
-        $lastname = mysqli_real_escape_string($db_connection, $lastname);
-        $email = mysqli_real_escape_string($db_connection, $email);
-        $password = mysqli_real_escape_string($db_connection, $password);
+        $username = mysqli_real_escape_string($this->conn, $username);
+        $firstname = mysqli_real_escape_string($this->conn, $firstname);
+        $lastname = mysqli_real_escape_string($this->conn, $lastname);
+        $email = mysqli_real_escape_string($this->conn, $email);
+        $password = mysqli_real_escape_string($this->conn, $password);
 
         // var_dump($username);
         // var_dump($firstname);
@@ -193,9 +193,11 @@ class AccountManagement {
         if($email == ''){
             $_SESSION['emailError'] = 'Please enter an Email address';
             $authenticity = false;
-        }else if(!$this->valid->checkEmail($email)){
+        }else{
+            if(!$this->valid->checkEmail($email)){
             $_SESSION['emailError'] = 'Email address is taken';
             $authenticity = false;
+            }
         }
 
         
@@ -206,8 +208,7 @@ class AccountManagement {
             // attempt insert query execution
             $sql_data = "INSERT INTO users (userTypeId, username, password, email, firstname, lastname) VALUES (1, '$username', '$password', '$email', '$firstname', '$lastname')";
 
-            if($this->conn->query($sql_data)){                
-                $this->signInUser($username, $password);
+            if($this->conn->query($sql_data)){       
                 return true;
             }
         }
