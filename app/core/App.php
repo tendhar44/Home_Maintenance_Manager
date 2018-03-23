@@ -24,6 +24,11 @@ class App {
        require_once "../app/core/Model.php";
        $this->model = new Model();
 
+           // var_dump($url[0]);
+           // var_dump($url[1]);
+           // var_dump($url[2]);
+           // var_dump($url[3]);
+
        //if file exist in controllers
        if(file_exists("../app/controllers/" . $url[0] . ".php")) {
            $this->controller = $url[0];

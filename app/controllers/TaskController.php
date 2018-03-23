@@ -5,20 +5,23 @@
  * Date:
  */
 class TaskController extends Controller {
-    public function index($applianceId = 0, $propertyNum = 0) {
+    public function index($propertyNum = 0, $applianceId = 0) {
         $this->notSignedIn();
+
+        // var_dump($propertyNum);
+        // var_dump($applianceId);
+
         $taskManagement =  $this->model->getTaskManagement();
-        $this->notSignedIn();
-        if($_SERVER["REQUEST_METHOD"] == "POST") {
-            $taskManagement->addTask();
+        if($_SERVER["REQUEST_METHOD"] == "POST") {            
+            $taskManagement->addTask($applianceId, $propertyNum);
         }
         $_SESSION['outputCotent'] = $taskManagement->getListOfTasks($applianceId); 
         $this->view("list-task-page", ["appId" => $applianceId, "proNum" => $propertyNum]);
     }
 
-    public function add($applianceId = 0, $propertyNum = 0) {
+    public function add($propertyNum = 0, $applianceId = 0) {
         $this->notSignedIn();
-        $this->view("add-task-page", ["appId" => $applianceId, "proNum" => $propertyNum]);
+        $this->view("add-task-page", ["proNum" => $propertyNum, "appId" => $applianceId]);
     }
 
     public function task($taskNum = 0, $apppNum = 0) {
