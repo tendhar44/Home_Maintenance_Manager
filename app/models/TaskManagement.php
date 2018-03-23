@@ -384,56 +384,59 @@ class TaskManagement {
     public function listAllTask(){
 
         $taskNameArray = array();
+        $propertyApplianceIdArray = array();
         $taskDesArray = array();
-        $proIdArray = array();
-        $appIdArray = array();
         $taskIdArray = array();
         $taskRepeatArray = array();
         $taskDueDateArray = array();
         $taskCompleteArray = array();
         $taskIntervalDayArray = array();
-        $taskFirstReminderDateArray = array();
+        $taskReminderDateArray = array();
         $taskReminderIntervalArray = array();
 
-        $userid = $_SESSION['userid'];// getting the current login user id
-
+        $userid = $_SESSION['userid'];
         //attempt select query execution
-        $sql_data = "SELECT taskid, taskname, description, applianceid, repeattask, duedate, complete, intervaldays, firstreminderdate, reminderinterval FROM tasks WHERE userId = '$userid' ";
+        $stmt = "SELECT taskid, propertyApplianceId, taskname, description, repeatTask, duedate, complete, intervalDays, reminderdate, reminderinterval 
+            FROM tasks 
+            WHERE (userid = '$userid') and (logDelete IS NULL or logDelete = 0)";
 
-        $result = $this->conn->query($sql_data);
+        $result = $this->conn->query($stmt);
 
         if($result === FALSE) { 
+            echo "Failed to retrive tasks";
             return;
         }
 
         while ($row = $result->fetch_assoc()) {
             $taskIdArray[] = $row['taskid'];
+            $propertyApplianceIdArray[] = $row['propertyApplianceId'];
             $taskNameArray[] = $row['taskname'];
             $taskDesArray[] = $row['description'];
-            $appIdArray[] = $row['applianceid'];
-            $taskRepeatArray[] = $row['repeattask'];
+            $taskRepeatArray[] = $row['repeatTask'];
             $taskDueDateArray[] = $row['duedate'];
             $taskCompleteArray[] = $row['complete'];
-            $taskIntervalDayArray[] = $row['intervaldays'];
-            $taskFirstReminderDateArray[] = $row['firstreminderdate'];
+            $taskIntervalDayArray[] = $row['intervalDays'];
+            $taskReminderDateArray[] = $row['reminderdate'];
             $taskReminderIntervalArray[] = $row['reminderinterval'];
         }
+
 
         ob_start();
 
         for($i = 0; $i < sizeof($taskNameArray); $i++) {
                 $_SESSION['taskname' . $i] = $taskNameArray[$i];
+                $_SESSION['propertyApplianceId' . $i] = $propertyApplianceIdArray[$i];
                 $_SESSION['taskdescription' . $i] = $taskDesArray[$i];
                 $_SESSION['taskid' . $i] = $taskIdArray[$i];
-                $_SESSION['applianceid' . $i] = $appIdArray[$i];
                 $_SESSION['repeattask' . $i] = $taskRepeatArray[$i];
                 $_SESSION['duedate' . $i] = $taskDueDateArray[$i];
                 $_SESSION['complete' . $i] = $taskCompleteArray[$i];
                 $_SESSION['intervaldays' . $i] = $taskIntervalDayArray[$i];
-                $_SESSION['firstreminderdate' . $i] = $taskFirstReminderDateArray[$i];
+                $_SESSION['taskReminderDate' . $i] = $taskReminderDateArray[$i];
                 $_SESSION['reminderinterval' . $i] = $taskReminderIntervalArray[$i];
 
-    //display list of properties that can be collapse and un-collapse.
+
+    //display list of task that can be collapse and un-collapse.
     echo '
     <div class="card">
         <div class="card-header" id="headingOne">
@@ -451,17 +454,7 @@ class TaskManagement {
                   <div class="col-3">
 
                   </div><!-- close col-3 -->
-                  
-                  <div class="col-7">
-                  Task ID#: 
-                    <span style="font-weight:600">
-                    '
-                    . $taskIdArray[$i] .
-
-                    '
-                    </span>
-                  </div><!-- close col-7 -->
-                  
+                                    
                   <div class="col-7">
                   Description: 
                     <span style="font-weight:600">
@@ -512,7 +505,7 @@ class TaskManagement {
                   First Reminder Date: 
                     <span style="font-weight:600">
                     '
-                    . $taskFirstReminderDateArray[$i] .
+                    . $taskReminderDateArray[$i] .
                     '
                     </span>
                   </div><!-- close col-7 -->
@@ -530,6 +523,9 @@ class TaskManagement {
                         
                   <div class="row">
                   <div class="col-1">
+                    <a href="/home_maintenance_manager/public/taskcontroller/task/'. $taskIdArray[$i] .'"><button>
+                        Details
+                      </button></a>
                   </div>
                   
                   <div class="col-1">
@@ -578,8 +574,6 @@ class TaskManagement {
         </div><!-- close collapseOne -->
     </div><!-- close card -->
     ';//end echo
-
-
         
         }
           $output = ob_get_contents();
