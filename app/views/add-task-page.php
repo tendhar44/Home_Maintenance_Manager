@@ -5,15 +5,15 @@
     >
     <a href="/home_maintenance_manager/public/propertycontroller/<?php echo $_SESSION['userid'] ?>">Property</a>
     >
-    <a href="/home_maintenance_manager/public/appliancecontroller/<?php echo $_SESSION['propertyid' . $data["proNum"]] ?> ">Appliance</a>
+    <a href="/home_maintenance_manager/public/appliancecontroller/<?php echo $data["proNum"] ?> ">Appliance</a>
     >
-    <a href="/home_maintenance_manager/public/taskcontroller/<?php echo $_SESSION['propertyid' . $data["proNum"]] ?>/<?php echo $data["appId"] ?>">Task</a>
+    <a href="/home_maintenance_manager/public/taskcontroller/<?php echo $data["proNum"] ?>/<?php echo $data["appId"] ?>">Task</a>
     <br><br>
 
     <h3>Create A Task</h3>
     <hr>
     <br>
-    <form id="addTaskForm" action="/Home_Maintenance_Manager/public/taskcontroller/<?php echo $_SESSION['propertyid' . $data["proNum"]] ?>/<?php echo $data['appId']; ?>" method="post">
+    <form id="addTaskForm" action="/Home_Maintenance_Manager/public/taskcontroller/<?php echo $data["proNum"] ?>/<?php echo $data['appId']; ?>" method="post">
         Task Name: <span class="reqAsk">*</span><br> <input type="text" name="taskName" required><br><br>
         Task Due Date: <br> <input type="date" name="taskDue"><br><br>
 

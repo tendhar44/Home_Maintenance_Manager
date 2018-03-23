@@ -8,9 +8,6 @@ class TaskController extends Controller {
     public function index($propertyNum = 0, $applianceId = 0) {
         $this->notSignedIn();
 
-        // var_dump($propertyNum);
-        // var_dump($applianceId);
-
         $taskManagement =  $this->model->getTaskManagement();
         if($_SERVER["REQUEST_METHOD"] == "POST") {            
             $taskManagement->addTask($applianceId, $propertyNum);
