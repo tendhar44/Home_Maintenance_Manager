@@ -16,7 +16,14 @@ class UserController extends Controller {
 
     public function update($userId = 0) {
         $this->notSignedIn();
+        $accManagement = $this->model->getAccountManagement();
         $this->view("update-user-page", ["uId" => $userId]);
+
+        // call update 
+        if($_SERVER["REQUEST_METHOD"] == "POST") {
+            $userID = $_SESSION['userid'];
+            $accManagement->updateUser($userID);
+        }
     }
 
     public function delete($userId = 0) {

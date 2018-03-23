@@ -78,10 +78,3 @@
         </table>
     </form>
 </div>
-
-<?php
-
-if($_SERVER["REQUEST_METHOD"] == "POST") {
-    $userID = $_SESSION['userid'];
-    $user->updateUser($userID);
-}
