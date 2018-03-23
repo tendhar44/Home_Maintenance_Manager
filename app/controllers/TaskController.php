@@ -15,7 +15,7 @@ class TaskController extends Controller {
         if($_SERVER["REQUEST_METHOD"] == "POST") {            
             $taskManagement->addTask($applianceId, $propertyNum);
         }
-        $_SESSION['outputCotent'] = $taskManagement->getListOfTasks($applianceId); 
+        $_SESSION['outputCotent'] = $taskManagement->getListOfTasks($propertyNum, $applianceId); 
         $this->view("list-task-page", ["appId" => $applianceId, "proNum" => $propertyNum]);
     }
 

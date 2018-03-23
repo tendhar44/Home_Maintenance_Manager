@@ -178,38 +178,42 @@ class TaskManagement {
     }
 
     // get the list of task for an appliance
-    public function getListOfTasks($applianceId) {
+    public function getListOfTasks($proID, $appID) {
         $taskNameArray = array();
+        $propertyApplianceIdArray = array();
         $taskDesArray = array();
-        $appIdArray = array();
         $taskIdArray = array();
         $taskRepeatArray = array();
         $taskDueDateArray = array();
         $taskCompleteArray = array();
         $taskIntervalDayArray = array();
-        $taskFirstReminderDateArray = array();
+        $taskReminderDateArray = array();
         $taskReminderIntervalArray = array();
 
+        $proAppID = $this->getPropertyApplianceID($proID,$appID);
 
         //attempt select query execution
-        $sql_data = "SELECT taskid, taskname, description, applianceid, repeattask, duedate, complete, intervaldays, firstreminderdate, reminderinterval FROM tasks WHERE applianceid = '$applianceId'";
+        $sql_data = "SELECT taskid, propertyApplianceId, taskname, description, repeatTask, duedate, complete, intervalDays, reminderdate, reminderinterval 
+            FROM tasks 
+            WHERE (propertyApplianceId = '$proAppID') and (logDelete IS NULL or logDelete = 0)";
 
         $result = $this->conn->query($sql_data);
 
         if($result === FALSE) { 
+            echo "Failed to retrive tasks";
             return;
         }
 
         while ($row = $result->fetch_assoc()) {
             $taskIdArray[] = $row['taskid'];
+            $propertyApplianceIdArray[] = $row['propertyApplianceId'];
             $taskNameArray[] = $row['taskname'];
             $taskDesArray[] = $row['description'];
-            $appIdArray[] = $row['applianceid'];
-            $taskRepeatArray[] = $row['repeattask'];
+            $taskRepeatArray[] = $row['repeatTask'];
             $taskDueDateArray[] = $row['duedate'];
             $taskCompleteArray[] = $row['complete'];
-            $taskIntervalDayArray[] = $row['intervaldays'];
-            $taskFirstReminderDateArray[] = $row['firstreminderdate'];
+            $taskIntervalDayArray[] = $row['intervalDays'];
+            $taskReminderDateArray[] = $row['reminderdate'];
             $taskReminderIntervalArray[] = $row['reminderinterval'];
         }
 
@@ -217,14 +221,14 @@ class TaskManagement {
 
         for($i = 0; $i < sizeof($taskNameArray); $i++) {
                 $_SESSION['taskname' . $i] = $taskNameArray[$i];
+                $_SESSION['propertyApplianceId' . $i] = $propertyApplianceIdArray[$i];
                 $_SESSION['taskdescription' . $i] = $taskDesArray[$i];
                 $_SESSION['taskid' . $i] = $taskIdArray[$i];
-                $_SESSION['applianceid' . $i] = $appIdArray[$i];
                 $_SESSION['repeattask' . $i] = $taskRepeatArray[$i];
                 $_SESSION['duedate' . $i] = $taskDueDateArray[$i];
                 $_SESSION['complete' . $i] = $taskCompleteArray[$i];
                 $_SESSION['intervaldays' . $i] = $taskIntervalDayArray[$i];
-                $_SESSION['firstreminderdate' . $i] = $taskFirstReminderDateArray[$i];
+                $_SESSION['taskReminderDate' . $i] = $taskReminderDateArray[$i];
                 $_SESSION['reminderinterval' . $i] = $taskReminderIntervalArray[$i];
 
 
@@ -246,17 +250,7 @@ class TaskManagement {
                   <div class="col-3">
 
                   </div><!-- close col-3 -->
-                  
-                  <div class="col-7">
-                  Task ID#: 
-                    <span style="font-weight:600">
-                    '
-                    . $taskIdArray[$i] .
-
-                    '
-                    </span>
-                  </div><!-- close col-7 -->
-                  
+                                    
                   <div class="col-7">
                   Description: 
                     <span style="font-weight:600">
@@ -307,7 +301,7 @@ class TaskManagement {
                   First Reminder Date: 
                     <span style="font-weight:600">
                     '
-                    . $taskFirstReminderDateArray[$i] .
+                    . $taskReminderDateArray[$i] .
                     '
                     </span>
                   </div><!-- close col-7 -->
