@@ -22,7 +22,7 @@ class ApplianceController extends Controller {
         $this->view("add-appliance-page", ["proId" => $propertyId]);
     }
 
-    public function update($applianceNum = 0) {
+    public function update($applianceID = 0) {
         $this->notSignedIn();
         $this->view("update-appliance-page", ["an" => $applianceNum]);
         $appManagement =  $this->model->getApplianceManagement();
@@ -30,14 +30,9 @@ class ApplianceController extends Controller {
         /**
         * If form is submitted as post method, update appliance method is called.
         * Appliance ID is passed as parameter in the update appliance method.
-        * Appliance ID $data['an'] is passed from ApplianceController class.
-        * 'an' is array of different appliance ID.
         */
         if($_SERVER["REQUEST_METHOD"] == "POST") {
-        $applianceID = $_SESSION['applianceid' . $applianceNum];
-        $applianceName = $_SESSION['appliancename' . $applianceNum];
-
-        $appManagement->updateAppliance($applianceID, $applianceName);
+            $appManagement->updateAppliance($applianceID);
         }
     }
 

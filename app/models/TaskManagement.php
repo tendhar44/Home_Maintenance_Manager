@@ -80,6 +80,22 @@ class TaskManagement {
         return $row['propertyApplianceId'];
     }
 
+    // get the propertyAppliance id from existing task
+    private function getExistTaskPropAppID($taskID){
+        if ($taskID == NULL){
+            return NULL;
+        }
+        $stmt = "select propertyApplianceId from tasks where taskid = '$taskID'";
+
+        $result = $this->conn->query($stmt);
+        if($result === FALSE || $result->num_rows != 1) { 
+            return NULL;
+        }
+        $row = $result->fetch_assoc();
+        // var_dump($row['propertyApplianceId']);
+        return $row['propertyApplianceId'];        
+    }
+
     public function addTask() {
         $appId = (isset($_POST['appId'])) ? $_POST['appId'] : NULL;
         $proId = (isset($_POST['proId'])) ? $_POST['proId'] : NULL;
@@ -162,12 +178,14 @@ class TaskManagement {
         $taskName = mysqli_real_escape_string($this->conn, $taskName);
         $description = mysqli_real_escape_string($this->conn, $description);
 
+        $propAppId = $this->getExistTaskPropAppID($id);
+
         $orginalTaskName = $this->getTaskName($id);
         $flag = false;
         //if name is altered, check if name is unique
         if($orginalTaskName != $taskName){
             //if name is unique, precede to update, if not don't update.
-            if(!$this->valid->checkTaskName($id, $applianceName, $propertyId)) {
+            if(!$this->valid->checkTaskName($id, $propAppId)) {
                 $flag = true;
             }
             //name wasn't altered, so precede to update.

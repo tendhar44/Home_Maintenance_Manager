@@ -34,16 +34,17 @@ class Validation {
         return $this->uniqueInput($query);
     }
 
-    public function checkTaskName($taskName){
+    public function checkTaskName($taskName, $propAppID){
         if($this->checkInput($taskName) == '') return false;
-        $query = sprintf("select taskname from tasks where taskname ='$taskName'");
+        $query = sprintf("SELECT taskname from tasks t
+            INNER JOIN propertyApplianceBridge p ON p.propertyApplianceId = t.propertyApplianceId WHERE taskname ='$taskName'");
         return $this->uniqueInput($query);
     }
 
     public function checkApplianceName($appName, $proID){
         if($this->checkInput($appName) == '') return false;
         $query = sprintf("
-            SELECT a.appliancename FROM appliances a JOIN propertyappliancebridge pa ON a.applianceid = pa.applianceid WHERE pa.propertyid = '$proID' and a.appliancename = '$appName'
+            SELECT a.appliancename FROM appliances a INNER JOIN propertyappliancebridge pa ON a.applianceid = pa.applianceid WHERE pa.propertyid = '$proID' and a.appliancename = '$appName'
             ");
         return $this->uniqueInput($query);
     }

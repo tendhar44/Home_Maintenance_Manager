@@ -106,7 +106,7 @@ class PropertyManagement {
         $prodesarray = array();
 
         //attempt select query execution
-        $sql_data = "SELECT propertyid, propertyname, description, address FROM properties WHERE ownerid = '$userid' AND logDelete = '0'";
+        $sql_data = "SELECT propertyid, propertyname, description, address FROM properties WHERE ownerid = '$userid' AND (logDelete IS NULL or logDelete = 0)";
 
         $userData = $this->conn->query($sql_data);
 

@@ -38,18 +38,34 @@ class ApplianceManagement {
         }
     }
 
-    public function updateAppliance($id, $originalAppName) {
+    //getting appliance name from database by appliance id
+    private function getApplianceName($applianceId){
+        if($taskId == NULL){
+            return NULL;
+        }
+        $stmt = "SELECT taskname from tasks where taskid = '$taskId'";
+        $result = $this->conn->query($stmt);
+        if ($result->num_rows != 1) {
+            return NULL;
+        }
+        $row = $result->fetch_assoc();
+        var_dump($row['taskname']);
+        return $row['taskname'];
+    }
+
+    public function updateAppliance($id) {
         $applianceName = (isset($_POST['applianceName'])) ? $_POST['applianceName'] : '';
         $model = (isset($_POST['applianceModel'])) ? $_POST['applianceModel'] : '';
-        $propertyId = (isset($_POST['propertyId'])) ? $_POST['propertyId'] : '';
 
         $applianceName = mysqli_real_escape_string($this->conn, $applianceName);
         $model = mysqli_real_escape_string($this->conn, $model);
+
+        $originalAppName = $this->getApplianceName($id);
         $appNameFlag = false;
         //if name is altered, check if name is unique
         if($originalAppName != $applianceName){
             //if name is unique, precede to update, if not don't update.
-            if(!$this->valid->checkApplianceName($id, $applianceName, $propertyId)) {
+            if(!$this->valid->checkApplianceName($id, $propertyId)) {
                 $appNameFlag = true;
             }
             //name wasn't altered, so precede to update.
@@ -87,7 +103,7 @@ class ApplianceManagement {
         $propertyIdArray = array();
         $appIdArray = array();
         //attempt select query execution
-        $sql_data = "SELECT a.applianceid, a.appliancename, pa.propertyid FROM appliances a JOIN propertyappliancebridge pa ON a.applianceid = pa.applianceid WHERE pa.propertyid = '$propertyId' AND a.logDelete = '0'";
+        $sql_data = "SELECT a.applianceid, a.appliancename, pa.propertyid FROM appliances a JOIN propertyappliancebridge pa ON a.applianceid = pa.applianceid WHERE pa.propertyid = '$propertyId' AND (logDelete IS NULL or logDelete = 0)";
 
         $userData = $this->conn->query($sql_data);
 
