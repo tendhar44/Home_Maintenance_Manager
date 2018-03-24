@@ -42,7 +42,10 @@ class TaskController extends Controller {
 
     public function delete($taskNum = 0) {
         $this->notSignedIn();
+        $taskManagement =  $this->model->getTaskManagement();
         $this->view("delete-task-page", ["tn" => $taskNum]);
+
+        $taskManagement->deleteTask($taskNum);
     }
 
     //list all task of user regardless of property

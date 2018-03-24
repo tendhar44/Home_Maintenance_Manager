@@ -35,13 +35,16 @@ public class ReminderDAO {
 		try {
 			conn = getConnection();
 			stmt = conn.createStatement();
-			String sql = "SELECT taskId, dueDate FROM Tasks";
+			String sql = "SELECT taskId, dueDate, reminderDate, reminderInterval FROM Tasks";
 			rs = stmt.executeQuery(sql);
 
 			while (rs.next()) {
 				int taskId = rs.getInt(1);
-				Date date = rs.getDate(2);
-				currentRecord = new TaskRecord(taskId, date);
+				Date dueDate = rs.getDate(2);
+				Date reminderDate = rs.getDate(3);
+				int reminderInterval = rs.getInt(4);
+				
+				currentRecord = new TaskRecord(taskId, dueDate, reminderDate, reminderInterval);
 				
 				taskRecords.add(currentRecord);
 			}
@@ -120,24 +123,30 @@ public class ReminderDAO {
 		return task;
 	}
 	
-	public void updateTask(int taskID) {
+	public void updateTask(int taskID, int interval) {
 		
-		//update task by setting day 1 ahead of current date. This ensures only 1 reminder sent per day.
+		//validate interval
+		if(interval < 1) {
+			interval = 1;
+		}
+		
+		//update task by setting day an interval length number of days ahead of current date. 
+		//This ensures only 1 reminder sent per day.
 		Date currentDate = new Date();
 		Calendar calendar = Calendar.getInstance();
 		calendar.setTime(currentDate);
-		calendar.add(Calendar.DATE, 1);
+		calendar.add(Calendar.DATE, interval);
 		
-		Date tomorrow = calendar.getTime();
+		Date updatedDate = calendar.getTime();
 		
-		java.sql.Date sqlDate = new java.sql.Date(tomorrow.getTime());
+		java.sql.Date sqlDate = new java.sql.Date(updatedDate.getTime());
 		
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 			
 		try {
 			conn = getConnection();
-			String sql = "UPDATE Tasks SET dueDate = ? WHERE taskId = ?";
+			String sql = "UPDATE Tasks SET reminderDate = ? WHERE taskId = ?";
 			
 			
 			pstmt = conn.prepareStatement(sql);

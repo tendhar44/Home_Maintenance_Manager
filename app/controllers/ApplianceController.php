@@ -43,7 +43,10 @@ class ApplianceController extends Controller {
 
     public function delete($applianceNum = 0) {
         $this->notSignedIn();
+        $appManagement =  $this->model->getApplianceManagement();
         $this->view("delete-appliance-page", ["an" => $applianceNum]);
+
+        $appManagement->deleteAppliance($applianceNum);
     }
 
 }

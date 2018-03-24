@@ -86,7 +86,9 @@ class PropertyManagement {
 
     public function deleteProperty($id) {
         // attempt insert query execution
-        $sql_data = "DELETE FROM properties WHERE propertyid = '$id'";
+        //$sql_data = "DELETE FROM properties WHERE propertyid = '$id'";
+        $sql_data = "UPDATE properties SET logDelete = '1' WHERE propertyid = '$id'";
+
         if($this->conn->query($sql_data) === true) {
             echo "Successfully deleted your property!";
         } else {
@@ -104,7 +106,7 @@ class PropertyManagement {
         $prodesarray = array();
 
         //attempt select query execution
-        $sql_data = "SELECT propertyid, propertyname, description, address FROM properties WHERE ownerid = '$userid'";
+        $sql_data = "SELECT propertyid, propertyname, description, address FROM properties WHERE ownerid = '$userid' AND logDelete = '0'";
 
         $userData = $this->conn->query($sql_data);
 
@@ -211,13 +213,13 @@ class PropertyManagement {
                   </div>
 
                   <div class="col-1">
-                    <a href="/home_maintenance_manager/public/propertycontroller/update/'. $i .'"><button class="stand-bttn-size">
+                    <a href="/home_maintenance_manager/public/propertycontroller/update/'. $proidarray[$i] .'"><button class="stand-bttn-size">
                         Update
                       </button></a>
                   </div> 
                       
                   <div class="col-1">    
-                    <a href="/home_maintenance_manager/public/propertycontroller/delete/'. $i .'"><button class="stand-bttn-size">
+                    <a href="/home_maintenance_manager/public/propertycontroller/delete/'. $proidarray[$i] .'"><button class="stand-bttn-size">
                         Delete
                     </button></a>
                   </div>

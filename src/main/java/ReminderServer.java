@@ -13,8 +13,10 @@ public class ReminderServer extends Thread {
 	
 	public void run() {
 		while(true) {
+			//get every task
 			ArrayList<TaskRecord> records = dao.getAllTaskRecords();
 			
+			//get the current date
 			Date currentDate = new Date();
 			Calendar calendar = Calendar.getInstance();
 			calendar.setTime(currentDate);
@@ -23,9 +25,16 @@ public class ReminderServer extends Thread {
 			int year1 = calendar.get(Calendar.YEAR);
 			
 			
+			//check each task record to see if it is due
 			for(TaskRecord record : records) {
-				Date otherDate = record.getDate();
-				calendar.setTime(otherDate);
+				Date reminderDate = record.getReminderDate();
+				
+				if (reminderDate == null || reminderDate.before(currentDate)) {
+					reminderDate = record.getDueDate();
+				} 
+				
+				//convert to calendar
+				calendar.setTime(reminderDate);
 				int day2 = calendar.get(Calendar.DAY_OF_MONTH);
 				int month2 = calendar.get(Calendar.MONTH);
 				int year2 = calendar.get(Calendar.YEAR);
@@ -37,7 +46,7 @@ public class ReminderServer extends Thread {
 					Task task = dao.getTask(taskId);
 					User user = dao.getUser(task.getUserId());
 					this.sendReminder(user, task);
-					dao.updateTask(taskId);
+					dao.updateTask(taskId, record.getReminderInterval());
 				}
 			}
 			

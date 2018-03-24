@@ -71,7 +71,8 @@ class ApplianceManagement {
 
     public function deleteAppliance($id) {
         // attempt insert query execution
-        $sql_data = "DELETE FROM appliances WHERE applianceid = '$id'";
+        //$sql_data = "DELETE FROM appliances WHERE applianceid = '$id'";
+        $sql_data = "UPDATE appliances SET logDelete='1' WHERE applianceid = '$id'";
 
         if($this->conn->query($sql_data) === true) {
             echo "Successfully deleted your appliance!";
@@ -86,7 +87,7 @@ class ApplianceManagement {
         $propertyIdArray = array();
         $appIdArray = array();
         //attempt select query execution
-        $sql_data = "SELECT a.applianceid, a.appliancename, pa.propertyid FROM appliances a JOIN propertyappliancebridge pa ON a.applianceid = pa.applianceid WHERE pa.propertyid = '$propertyId'";
+        $sql_data = "SELECT a.applianceid, a.appliancename, pa.propertyid FROM appliances a JOIN propertyappliancebridge pa ON a.applianceid = pa.applianceid WHERE pa.propertyid = '$propertyId' AND a.logDelete = '0'";
 
         $userData = $this->conn->query($sql_data);
 
@@ -175,13 +176,13 @@ class ApplianceManagement {
                   </div>
 
                   <div class="col-1">
-                    <a href="/home_maintenance_manager/public/appliancecontroller/update/'. $i .'"><button class="stand-bttn-size">
+                    <a href="/home_maintenance_manager/public/appliancecontroller/update/'. $appIdArray[$i] .'"><button class="stand-bttn-size">
                         Update
                       </button></a>
                   </div> 
                       
                   <div class="col-1">    
-                    <a href="/home_maintenance_manager/public/appliancecontroller/delete/'. $i .'"><button class="stand-bttn-size">
+                    <a href="/home_maintenance_manager/public/appliancecontroller/delete/'. $appIdArray[$i] .'"><button class="stand-bttn-size">
                         Delete
                     </button></a>
                   </div>

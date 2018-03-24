@@ -206,9 +206,9 @@ class AccountManagement {
 
         if($authenticity){
             // attempt insert query execution
-            $sql_data = "INSERT INTO users (userTypeId, username, password, email, firstname, lastname) VALUES (1, '$username', '$password', '$email', '$firstname', '$lastname')";
+            $sql_data = "INSERT INTO users (userTypeId, username, password, email, firstname, lastname, logdelete) VALUES (1, '$username', '$password', '$email', '$firstname', '$lastname', '0')";
 
-            if($this->conn->query($sql_data)){       
+            if($this->conn->query($sql_data)){
                 return true;
             }
         }

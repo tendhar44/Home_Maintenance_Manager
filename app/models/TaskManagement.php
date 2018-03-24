@@ -82,7 +82,7 @@ class TaskManagement {
         if($this->valid->checkTaskName($taskName)){
 
             // attempt insert query execution
-            $sql_data = "INSERT INTO tasks (applianceid, taskname, description, userid, repeattask, duedate, complete, intervaldays, firstreminderdate, reminderinterval ) VALUES ('$appId', '$tn', '$des', '$userid', '$repeattask', '$duedate', '$complete', '$repeatlength', '$firstreminderdate', '$reminderinterval')";
+            $sql_data = "INSERT INTO tasks (propertyApplianceId, taskname, description, userid, repeattask, duedate, complete, intervaldays, reminderdate, reminderinterval ) VALUES ('$appId', '$tn', '$des', '$userid', '$repeattask', '$duedate', '$complete', '$repeatlength', '$firstreminderdate', '$reminderinterval')";
 
             if($this->conn->query($sql_data) === true) {
                 echo "Successfully added your task!";
@@ -138,7 +138,8 @@ class TaskManagement {
     }
     public function deleteTask($id) {
         // attempt insert query execution
-        $sql_data = "DELETE FROM tasks WHERE taskid = '$id'";
+        //$sql_data = "DELETE FROM tasks WHERE taskid = '$id'";
+        $sql_data = "UPDATE tasks SET logDelete = '1' WHERE taskid = '$id'";
 
         if($this->conn->query($sql_data) === true) {
             echo "Successfully deleted your task!";
@@ -162,7 +163,7 @@ class TaskManagement {
 
 
         //attempt select query execution
-        $sql_data = "SELECT taskid, taskname, description, applianceid, repeattask, duedate, complete, intervaldays, firstreminderdate, reminderinterval FROM tasks WHERE applianceid = '$applianceId'";
+        $sql_data = "SELECT taskid, taskname, description, propertyApplianceId, repeattask, duedate, complete, intervaldays, reminderdate, reminderinterval FROM tasks WHERE propertyApplianceId = '$applianceId' AND logDelete = '0'";
 
         $userData = $this->conn->query($sql_data);
 
@@ -170,12 +171,12 @@ class TaskManagement {
             $taskIdArray[] = $row['taskid'];
             $taskNameArray[] = $row['taskname'];
             $taskDesArray[] = $row['description'];
-            $appIdArray[] = $row['applianceid'];
+            $appIdArray[] = $row['propertyApplianceId'];
             $taskRepeatArray[] = $row['repeattask'];
             $taskDueDateArray[] = $row['duedate'];
             $taskCompleteArray[] = $row['complete'];
             $taskIntervalDayArray[] = $row['intervaldays'];
-            $taskFirstReminderDateArray[] = $row['firstreminderdate'];
+            $taskFirstReminderDateArray[] = $row['reminderdate'];
             $taskReminderIntervalArray[] = $row['reminderinterval'];
         }
 
@@ -324,13 +325,13 @@ class TaskManagement {
                   </div>
 
                   <div class="col-1">
-                    <a href="/home_maintenance_manager/public/taskcontroller/update/'. $i .'"><button class="stand-bttn-size">
+                    <a href="/home_maintenance_manager/public/taskcontroller/update/'. $taskIdArray[$i] .'"><button class="stand-bttn-size">
                         Update
                       </button></a>
                   </div> 
                       
                   <div class="col-1">    
-                    <a href="/home_maintenance_manager/public/taskcontroller/delete/'. $i .'"><button class="stand-bttn-size">
+                    <a href="/home_maintenance_manager/public/taskcontroller/delete/'. $taskIdArray[$i] .'"><button class="stand-bttn-size">
                         Delete
                     </button></a>
                   </div>

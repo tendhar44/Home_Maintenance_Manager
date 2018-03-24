@@ -11,18 +11,15 @@ import java.util.Date;
 public class TaskRecord {
 	
 	private int taskID;
-	private Date date;
-	private boolean isSent;
+	private Date dueDate;
+	private Date reminderDate;
+	private int reminderInterval;
 	
-	public TaskRecord(int taskID, Date date) {
+	public TaskRecord(int taskID, Date dueDate, Date reminderDate, int reminderInterval) {
 		this.taskID = taskID;
-		this.date = date;
-	}
-	
-	public TaskRecord(int taskID, Date date, boolean isSent) {
-		this.taskID = taskID;
-		this.date = date;
-		this.isSent = isSent;
+		this.dueDate = dueDate;
+		this.reminderDate = reminderDate;
+		this.reminderInterval = reminderInterval;
 	}
 	
 	public int getTaskID() {
@@ -33,25 +30,28 @@ public class TaskRecord {
 		this.taskID = taskID;
 	}
 
-	public Date getDate() {
-		return date;
+	public Date getDueDate() {
+		return dueDate;
 	}
 
-	public void setDate(Date date) {
-		this.date = date;
+	public void setDueDate(Date dueDate) {
+		this.dueDate = dueDate;
 	}
 
-	public boolean isSent() {
-		return isSent;
+	public Date getReminderDate() {
+		return reminderDate;
 	}
 
-	public void setSent(boolean isSent) {
-		this.isSent = isSent;
+	public void setReminderDate(Date reminderDate) {
+		this.reminderDate = reminderDate;
 	}
 
-	@Override
-	public String toString() {
-		return "TaskRecord [taskID=" + taskID + ", date=" + date + "]";
+	public int getReminderInterval() {
+		return reminderInterval;
+	}
+
+	public void setReminderInterval(int reminderInterval) {
+		this.reminderInterval = reminderInterval;
 	}
 
 	
