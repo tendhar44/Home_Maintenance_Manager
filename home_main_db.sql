@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 28, 2018 at 10:53 PM
+-- Generation Time: Mar 24, 2018 at 09:33 PM
 -- Server version: 10.1.21-MariaDB
 -- PHP Version: 5.6.30
 
@@ -29,19 +29,53 @@ SET time_zone = "+00:00";
 CREATE TABLE `appliances` (
   `applianceId` int(11) NOT NULL,
   `applianceName` varchar(255) DEFAULT NULL,
-  `model` varchar(255) NOT NULL
+  `logDelete` tinyint(1) DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `appliances`
 --
 
-INSERT INTO `appliances` (`applianceId`, `applianceName`, `model`) VALUES
-(1, 'my car', 'ry43'),
-(2, 'Washing Machine', 'tt32'),
-(3, 'Stove', 'edd32'),
-(4, 'tv set', ''),
-(5, 'test3', 'rtt5');
+INSERT INTO `appliances` (`applianceId`, `applianceName`, `logDelete`) VALUES
+(1, 'Kitchen Sink', 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `groups`
+--
+
+CREATE TABLE `groups` (
+  `groupId` int(11) NOT NULL,
+  `groupOwnerId` int(11) NOT NULL,
+  `groupName` varchar(100) DEFAULT NULL,
+  `logDelete` tinyint(1) DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `imageobjectbridge`
+--
+
+CREATE TABLE `imageobjectbridge` (
+  `imageId` int(11) NOT NULL,
+  `objectId` int(11) NOT NULL,
+  `objectType` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `images`
+--
+
+CREATE TABLE `images` (
+  `imageId` int(11) NOT NULL,
+  `imageFile` mediumblob NOT NULL,
+  `alternateText` varchar(255) DEFAULT NULL,
+  `logDelete` tinyint(1) DEFAULT '0'
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -54,17 +88,17 @@ CREATE TABLE `properties` (
   `ownerid` int(11) NOT NULL,
   `propertyName` varchar(255) DEFAULT NULL,
   `description` varchar(255) DEFAULT NULL,
-  `address` varchar(255) DEFAULT NULL
+  `address` varchar(255) DEFAULT NULL,
+  `logDelete` tinyint(1) DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `properties`
 --
 
-INSERT INTO `properties` (`propertyId`, `ownerid`, `propertyName`, `description`, `address`) VALUES
-(4, 1, 'my house', '3223st ave ne', '3223st ave sw'),
-(5, 1, 'tenzins house', 'black house', '232st ave se'),
-(6, 1, 'Vacation House', 'big house', '2342st ave se');
+INSERT INTO `properties` (`propertyId`, `ownerid`, `propertyName`, `description`, `address`, `logDelete`) VALUES
+(1, 11, 'Tenzins House', 'Orange house', '2323st ave ne', 0),
+(2, 11, 'test344', 'idjsfjs', '343st ave', 1);
 
 -- --------------------------------------------------------
 
@@ -73,6 +107,7 @@ INSERT INTO `properties` (`propertyId`, `ownerid`, `propertyName`, `description`
 --
 
 CREATE TABLE `propertyappliancebridge` (
+  `propertyApplianceId` int(11) NOT NULL,
   `propertyId` int(11) NOT NULL,
   `applianceId` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -81,12 +116,31 @@ CREATE TABLE `propertyappliancebridge` (
 -- Dumping data for table `propertyappliancebridge`
 --
 
-INSERT INTO `propertyappliancebridge` (`propertyId`, `applianceId`) VALUES
-(4, 1),
-(5, 2),
-(6, 3),
-(5, 4),
-(4, 5);
+INSERT INTO `propertyappliancebridge` (`propertyApplianceId`, `propertyId`, `applianceId`) VALUES
+(1, 1, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `propertygroupbridge`
+--
+
+CREATE TABLE `propertygroupbridge` (
+  `groupId` int(11) NOT NULL,
+  `propertyId` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `taskhistory`
+--
+
+CREATE TABLE `taskhistory` (
+  `taskId` int(11) NOT NULL,
+  `taskSequence` int(11) NOT NULL,
+  `userID` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -96,7 +150,7 @@ INSERT INTO `propertyappliancebridge` (`propertyId`, `applianceId`) VALUES
 
 CREATE TABLE `tasks` (
   `taskId` int(11) NOT NULL,
-  `applianceId` int(11) NOT NULL,
+  `propertyApplianceId` int(11) NOT NULL,
   `userId` int(11) NOT NULL,
   `taskName` varchar(255) DEFAULT NULL,
   `description` varchar(255) DEFAULT NULL,
@@ -104,22 +158,29 @@ CREATE TABLE `tasks` (
   `dueDate` date DEFAULT NULL,
   `Complete` tinyint(1) DEFAULT NULL,
   `intervalDays` int(11) DEFAULT NULL,
-  `firstReminderDate` date DEFAULT NULL,
-  `reminderInterval` int(11) DEFAULT NULL
+  `ReminderDate` date DEFAULT NULL,
+  `reminderInterval` int(11) DEFAULT NULL,
+  `logDelete` tinyint(1) DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `tasks`
 --
 
-INSERT INTO `tasks` (`taskId`, `applianceId`, `userId`, `taskName`, `description`, `repeatTask`, `dueDate`, `Complete`, `intervalDays`, `firstReminderDate`, `reminderInterval`) VALUES
-(5, 1, 1, 'fix the car radio', 'black radio', 0, '2018-02-28', 0, 2, '2018-02-27', 1),
-(8, 3, 1, 'fix the stove', 'dwfew', 0, '2018-02-28', 0, 1, '2018-02-27', 1),
-(9, 3, 1, 'fix left stove', 'wdewfw', 0, '2018-02-28', 0, 1, '2018-02-27', 1),
-(10, 3, 1, 'fix the right stove', 'fsafs', 0, '2018-02-28', 0, 1, '2018-02-27', 1),
-(11, 1, 1, 'fix the red car', 'fsadfasf', 0, '2018-02-28', 0, 1, '2018-02-28', 1),
-(12, 1, 1, 'fix blue car', 'dgsdgsd', 0, '2018-02-28', 0, 1, '2018-02-28', 1),
-(15, 2, 1, 'fix the washer', 'sdsfsd', 0, '2018-02-28', 0, 1, '2018-02-28', 1);
+INSERT INTO `tasks` (`taskId`, `propertyApplianceId`, `userId`, `taskName`, `description`, `repeatTask`, `dueDate`, `Complete`, `intervalDays`, `ReminderDate`, `reminderInterval`, `logDelete`) VALUES
+(1, 1, 11, 'clean the kitchen sink', 'fafwafafafafdsfeeeex edwdw', 0, '2018-03-28', 0, 1, '2018-03-26', 1, 0),
+(2, 1, 11, 'test98', 'sdfdsfsdfsfsf', 0, '2018-03-24', 0, 1, '2018-03-25', 1, 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `usergroupbridge`
+--
+
+CREATE TABLE `usergroupbridge` (
+  `userId` int(11) NOT NULL,
+  `groupId` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -130,19 +191,20 @@ INSERT INTO `tasks` (`taskId`, `applianceId`, `userId`, `taskName`, `description
 CREATE TABLE `users` (
   `userId` int(11) NOT NULL,
   `userTypeId` int(11) NOT NULL,
-  `userName` varchar(255) DEFAULT NULL,
+  `userName` varchar(255) NOT NULL,
   `passWord` varchar(255) DEFAULT NULL,
   `firstName` varchar(255) DEFAULT NULL,
   `lastName` varchar(255) DEFAULT NULL,
-  `email` varchar(255) DEFAULT NULL
+  `email` varchar(255) DEFAULT NULL,
+  `logDelete` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`userId`, `userTypeId`, `userName`, `passWord`, `firstName`, `lastName`, `email`) VALUES
-(1, 0, 'tenzin44', '11111', 'Tenzin', 'Dhargye', 'tendhar44@gmail.com');
+INSERT INTO `users` (`userId`, `userTypeId`, `userName`, `passWord`, `firstName`, `lastName`, `email`, `logDelete`) VALUES
+(11, 1, 'tenzin44', '11111', 'Tenzin', 'Dhargye', 'tendhar44@gmail.com', 0);
 
 -- --------------------------------------------------------
 
@@ -156,6 +218,13 @@ CREATE TABLE `usertype` (
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
+-- Dumping data for table `usertype`
+--
+
+INSERT INTO `usertype` (`userTypeId`, `userTypeDescription`) VALUES
+(1, 'property owner');
+
+--
 -- Indexes for dumped tables
 --
 
@@ -164,6 +233,25 @@ CREATE TABLE `usertype` (
 --
 ALTER TABLE `appliances`
   ADD PRIMARY KEY (`applianceId`);
+
+--
+-- Indexes for table `groups`
+--
+ALTER TABLE `groups`
+  ADD PRIMARY KEY (`groupId`),
+  ADD KEY `groupOwnerId` (`groupOwnerId`);
+
+--
+-- Indexes for table `imageobjectbridge`
+--
+ALTER TABLE `imageobjectbridge`
+  ADD KEY `imageId` (`imageId`);
+
+--
+-- Indexes for table `images`
+--
+ALTER TABLE `images`
+  ADD PRIMARY KEY (`imageId`);
 
 --
 -- Indexes for table `properties`
@@ -176,22 +264,45 @@ ALTER TABLE `properties`
 -- Indexes for table `propertyappliancebridge`
 --
 ALTER TABLE `propertyappliancebridge`
+  ADD PRIMARY KEY (`propertyApplianceId`),
   ADD KEY `propertyId` (`propertyId`),
   ADD KEY `applianceId` (`applianceId`);
+
+--
+-- Indexes for table `propertygroupbridge`
+--
+ALTER TABLE `propertygroupbridge`
+  ADD KEY `groupId` (`groupId`),
+  ADD KEY `propertyId` (`propertyId`);
+
+--
+-- Indexes for table `taskhistory`
+--
+ALTER TABLE `taskhistory`
+  ADD PRIMARY KEY (`taskId`,`taskSequence`),
+  ADD KEY `userID` (`userID`);
 
 --
 -- Indexes for table `tasks`
 --
 ALTER TABLE `tasks`
   ADD PRIMARY KEY (`taskId`),
-  ADD KEY `applianceId` (`applianceId`),
+  ADD KEY `propertyApplianceId` (`propertyApplianceId`),
   ADD KEY `userId` (`userId`);
+
+--
+-- Indexes for table `usergroupbridge`
+--
+ALTER TABLE `usergroupbridge`
+  ADD KEY `userId` (`userId`),
+  ADD KEY `groupId` (`groupId`);
 
 --
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`userId`),
+  ADD UNIQUE KEY `userName` (`userName`),
   ADD KEY `userTypeId` (`userTypeId`);
 
 --
@@ -208,30 +319,57 @@ ALTER TABLE `usertype`
 -- AUTO_INCREMENT for table `appliances`
 --
 ALTER TABLE `appliances`
-  MODIFY `applianceId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `applianceId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+--
+-- AUTO_INCREMENT for table `groups`
+--
+ALTER TABLE `groups`
+  MODIFY `groupId` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT for table `images`
+--
+ALTER TABLE `images`
+  MODIFY `imageId` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `properties`
 --
 ALTER TABLE `properties`
-  MODIFY `propertyId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `propertyId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+--
+-- AUTO_INCREMENT for table `propertyappliancebridge`
+--
+ALTER TABLE `propertyappliancebridge`
+  MODIFY `propertyApplianceId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `tasks`
 --
 ALTER TABLE `tasks`
-  MODIFY `taskId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `taskId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `userId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `userId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 --
 -- AUTO_INCREMENT for table `usertype`
 --
 ALTER TABLE `usertype`
-  MODIFY `userTypeId` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `userTypeId` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- Constraints for dumped tables
 --
+
+--
+-- Constraints for table `groups`
+--
+ALTER TABLE `groups`
+  ADD CONSTRAINT `groups_ibfk_1` FOREIGN KEY (`groupOwnerId`) REFERENCES `users` (`userId`);
+
+--
+-- Constraints for table `imageobjectbridge`
+--
+ALTER TABLE `imageobjectbridge`
+  ADD CONSTRAINT `imageobjectbridge_ibfk_1` FOREIGN KEY (`imageId`) REFERENCES `images` (`imageId`);
 
 --
 -- Constraints for table `properties`
@@ -247,11 +385,38 @@ ALTER TABLE `propertyappliancebridge`
   ADD CONSTRAINT `propertyappliancebridge_ibfk_2` FOREIGN KEY (`applianceId`) REFERENCES `appliances` (`applianceId`);
 
 --
+-- Constraints for table `propertygroupbridge`
+--
+ALTER TABLE `propertygroupbridge`
+  ADD CONSTRAINT `propertygroupbridge_ibfk_1` FOREIGN KEY (`groupId`) REFERENCES `groups` (`groupId`),
+  ADD CONSTRAINT `propertygroupbridge_ibfk_2` FOREIGN KEY (`propertyId`) REFERENCES `properties` (`propertyId`);
+
+--
+-- Constraints for table `taskhistory`
+--
+ALTER TABLE `taskhistory`
+  ADD CONSTRAINT `taskhistory_ibfk_1` FOREIGN KEY (`taskId`) REFERENCES `tasks` (`taskId`),
+  ADD CONSTRAINT `taskhistory_ibfk_2` FOREIGN KEY (`userID`) REFERENCES `users` (`userId`);
+
+--
 -- Constraints for table `tasks`
 --
 ALTER TABLE `tasks`
-  ADD CONSTRAINT `tasks_ibfk_1` FOREIGN KEY (`applianceId`) REFERENCES `appliances` (`applianceId`),
+  ADD CONSTRAINT `tasks_ibfk_1` FOREIGN KEY (`propertyApplianceId`) REFERENCES `propertyappliancebridge` (`propertyApplianceId`),
   ADD CONSTRAINT `tasks_ibfk_2` FOREIGN KEY (`userId`) REFERENCES `users` (`userId`);
+
+--
+-- Constraints for table `usergroupbridge`
+--
+ALTER TABLE `usergroupbridge`
+  ADD CONSTRAINT `usergroupbridge_ibfk_1` FOREIGN KEY (`userId`) REFERENCES `users` (`userId`),
+  ADD CONSTRAINT `usergroupbridge_ibfk_2` FOREIGN KEY (`groupId`) REFERENCES `groups` (`groupId`);
+
+--
+-- Constraints for table `users`
+--
+ALTER TABLE `users`
+  ADD CONSTRAINT `users_ibfk_1` FOREIGN KEY (`userTypeId`) REFERENCES `usertype` (`userTypeId`);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
