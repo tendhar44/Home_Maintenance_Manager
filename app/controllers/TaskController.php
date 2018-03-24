@@ -48,8 +48,9 @@ class TaskController extends Controller {
     //list all task of user regardless of property
     public function listAll($userId = 0) {
         $this->notSignedIn();
+        $associativeData = $this->model->getAssociatedData();
         $taskManagement =  $this->model->getTaskManagement();
         $_SESSION['outputCotent'] = $taskManagement->listAllTask(); 
-        $this->view("listAll-task-page", ["userid" => $userId]);
+        $this->view("listAll-task-page", ["userid" => $userId, "dropDownData" => $associativeData]);
     }
 }
