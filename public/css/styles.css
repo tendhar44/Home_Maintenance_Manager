@@ -98,6 +98,13 @@ label{
 	width: 100px;
 }
 
+/*Create task form*/
+#taskForm {
+	display: none;
+	border-style: solid;
+	margin: 10px 10px 10px 10px;
+}
+
 /**
 Start of calendar style
  */
@@ -152,6 +159,7 @@ div#calendar div.header a.prev{
 div#calendar div.header a.next{
 	right: 0;
 }
+
 
 /*Calendar Content Cells*/
 div#calendar div.box-content{

@@ -5,20 +5,20 @@
  * Date:
  */
 class TaskController extends Controller {
-    public function index($applianceId = 0, $propertyNum = 0) {
+    public function index($propertyNum = 0, $applianceId = 0) {
         $this->notSignedIn();
+
         $taskManagement =  $this->model->getTaskManagement();
-        $this->notSignedIn();
-        if($_SERVER["REQUEST_METHOD"] == "POST") {
+        if($_SERVER["REQUEST_METHOD"] == "POST") {            
             $taskManagement->addTask();
         }
-        $_SESSION['outputCotent'] = $taskManagement->getListOfTasks($applianceId); 
+        $_SESSION['outputCotent'] = $taskManagement->getListOfTasks($propertyNum, $applianceId); 
         $this->view("list-task-page", ["appId" => $applianceId, "proNum" => $propertyNum]);
     }
 
-    public function add($applianceId = 0, $propertyNum = 0) {
+    public function add($propertyNum = 0, $applianceId = 0) {
         $this->notSignedIn();
-        $this->view("add-task-page", ["appId" => $applianceId, "proNum" => $propertyNum]);
+        $this->view("add-task-page", ["proNum" => $propertyNum, "appId" => $applianceId]);
     }
 
     public function task($taskNum = 0, $apppNum = 0) {
@@ -52,7 +52,15 @@ class TaskController extends Controller {
     public function listAll($userId = 0) {
         $this->notSignedIn();
         $taskManagement =  $this->model->getTaskManagement();
+
+        // var_dump($_POST);
+
+        if($_SERVER["REQUEST_METHOD"] == "POST") {            
+            $taskManagement->addTask();
+        }
+
+        $associativeData = $this->model->getAssociatedData();
         $_SESSION['outputCotent'] = $taskManagement->listAllTask(); 
-        $this->view("listAll-task-page", ["userid" => $userId]);
+        $this->view("listAll-task-page", ["userid" => $userId, "dropDownData" => $associativeData]);
     }
 }

@@ -180,7 +180,8 @@ class PropertyManagement {
                         
                   <div class="row">
                   <div class="col-1">
-                    <a href="/home_maintenance_manager/public/appliancecontroller/'. $proidarray[$i] .'"><button>
+                    <a href="/home_maintenance_manager/public/appliancecontroller/'. $proidarray[$i] .'">
+                      <button>
                         View Devices
                       </button></a>
                   </div>
@@ -213,6 +214,7 @@ class PropertyManagement {
                   </div>
 
                   <div class="col-1">
+
                     <a href="/home_maintenance_manager/public/propertycontroller/update/'. $proidarray[$i] .'"><button class="stand-bttn-size">
                         Update
                       </button></a>

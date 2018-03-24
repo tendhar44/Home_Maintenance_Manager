@@ -64,30 +64,65 @@ class TaskManagement {
         return $output;
     }
 
+    //get the propertyAppliance id from PropertyApplianceBridge table
+    private function getPropertyApplianceID($proID, $appID){
+        if ($appID == NULL || $proID == NULL){
+            return NULL;
+        }
+        $stmt = "select propertyApplianceId from PropertyApplianceBridge where propertyId = '$proID' and applianceId = '$appID'";
+
+        $result = $this->conn->query($stmt);
+        if($result === FALSE || $result->num_rows != 1) { 
+            return NULL;
+        }
+        $row = $result->fetch_assoc();
+        // var_dump($row['propertyApplianceId']);
+        return $row['propertyApplianceId'];
+    }
+
     public function addTask() {
-        $appId = (isset($_POST['appId'])) ? $_POST['appId'] : '';
+        $appId = (isset($_POST['appId'])) ? $_POST['appId'] : NULL;
+        $proId = (isset($_POST['proId'])) ? $_POST['proId'] : NULL;
+        $proAppID = (isset($_POST['proAppID'])) ? $_POST['proAppID'] : NULL;
+
+        // var_dump($appId);
+        // var_dump($proId);
+
         $taskName = (isset($_POST['taskName'])) ? $_POST['taskName'] : '';
         $description = (isset($_POST['taskDes'])) ? $_POST['taskDes'] : '';
-        $userid = (isset($_POST['userId'])) ? $_POST['userId'] : '';
-        $duedate = (isset($_POST['taskDue'])) ? $_POST['taskDue'] : '';
+        $userid = $_SESSION['userid'];
+        $duedate = (isset($_POST['taskDue'])) ? $_POST['taskDue'] : NULL;
         $repeattask = (isset($_POST['repeatTask'])) ? $_POST['repeatTask'] : '';
-        $repeatlength = (isset($_POST['intervalDay'])) ? $_POST['intervalDay'] : '';
-        $firstreminderdate = (isset($_POST['taskReminder'])) ? $_POST['taskReminder'] : '';
+        $repeatlength = (isset($_POST['intervalDay'])) ? $_POST['intervalDay'] : 0;
+        $reminderdate = (isset($_POST['taskReminder'])) ? $_POST['taskReminder'] : NULL;
         $complete = (isset($_POST['taskComplete'])) ? $_POST['taskComplete'] : '';
-        $reminderinterval = (isset($_POST['reminderInterval'])) ? $_POST['reminderInterval'] : '';
+        $reminderinterval = (isset($_POST['reminderInterval'])) ? $_POST['reminderInterval'] : NULL;
+
+        // die($duedate);
 
         $tn = mysqli_real_escape_string($this->conn, $taskName);
         $des = mysqli_real_escape_string($this->conn, $description);
 
         if($this->valid->checkTaskName($taskName)){
+            if ($proAppID == NULL){
+                $proAppID = $this->getPropertyApplianceID($proId, $appId);   
+            }
+            if($proAppID == NULL){
+                echo "Failed to retrive bridge id of property and appliance";
+                return;
+            }
 
             // attempt insert query execution
-            $sql_data = "INSERT INTO tasks (propertyApplianceId, taskname, description, userid, repeattask, duedate, complete, intervaldays, reminderdate, reminderinterval ) VALUES ('$appId', '$tn', '$des', '$userid', '$repeattask', '$duedate', '$complete', '$repeatlength', '$firstreminderdate', '$reminderinterval')";
+            $sql_data = "
+                INSERT INTO tasks (propertyApplianceId, taskname, description, userid, repeattask, duedate, complete, intervaldays, reminderdate, reminderinterval ) 
+
+                VALUES ('$proAppID', '$tn', '$des', '$userid', '$repeattask', '$duedate', '$complete', '$repeatlength', '$reminderdate', '$reminderinterval')";
 
             if($this->conn->query($sql_data) === true) {
                 echo "Successfully added your task!";
             }else {
                 echo "We weren't able to add your task. Please try again.";
+                 // die(mysqli_error($this->conn));
             }
 
         }else{
@@ -148,35 +183,56 @@ class TaskManagement {
         }
     }
 
-
-    public function getListOfTasks($applianceId) {
+    // get the list of task for an appliance
+    public function getListOfTasks($proID, $appID) {
         $taskNameArray = array();
+        $propertyApplianceIdArray = array();
         $taskDesArray = array();
-        $appIdArray = array();
         $taskIdArray = array();
         $taskRepeatArray = array();
         $taskDueDateArray = array();
         $taskCompleteArray = array();
         $taskIntervalDayArray = array();
-        $taskFirstReminderDateArray = array();
+        $taskReminderDateArray = array();
         $taskReminderIntervalArray = array();
 
+        $proAppID = $this->getPropertyApplianceID($proID,$appID);
 
         //attempt select query execution
+<<<<<<< HEAD
         $sql_data = "SELECT taskid, taskname, description, propertyApplianceId, repeattask, duedate, complete, intervaldays, reminderdate, reminderinterval FROM tasks WHERE propertyApplianceId = '$applianceId' AND logDelete = '0'";
+=======
+        $sql_data = "SELECT taskid, propertyApplianceId, taskname, description, repeatTask, duedate, complete, intervalDays, reminderdate, reminderinterval 
+            FROM tasks 
+            WHERE (propertyApplianceId = '$proAppID') and (logDelete IS NULL or logDelete = 0)";
+>>>>>>> d62ab214c681f29b3c9c9a9ededc7e416a11d22e
 
-        $userData = $this->conn->query($sql_data);
+        $result = $this->conn->query($sql_data);
 
-        while ($row = $userData->fetch_assoc()) {
+        if($result === FALSE) { 
+            echo "Failed to retrive tasks";
+            return;
+        }
+
+        while ($row = $result->fetch_assoc()) {
             $taskIdArray[] = $row['taskid'];
+            $propertyApplianceIdArray[] = $row['propertyApplianceId'];
             $taskNameArray[] = $row['taskname'];
             $taskDesArray[] = $row['description'];
+<<<<<<< HEAD
             $appIdArray[] = $row['propertyApplianceId'];
             $taskRepeatArray[] = $row['repeattask'];
             $taskDueDateArray[] = $row['duedate'];
             $taskCompleteArray[] = $row['complete'];
             $taskIntervalDayArray[] = $row['intervaldays'];
             $taskFirstReminderDateArray[] = $row['reminderdate'];
+=======
+            $taskRepeatArray[] = $row['repeatTask'];
+            $taskDueDateArray[] = $row['duedate'];
+            $taskCompleteArray[] = $row['complete'];
+            $taskIntervalDayArray[] = $row['intervalDays'];
+            $taskReminderDateArray[] = $row['reminderdate'];
+>>>>>>> d62ab214c681f29b3c9c9a9ededc7e416a11d22e
             $taskReminderIntervalArray[] = $row['reminderinterval'];
         }
 
@@ -184,18 +240,18 @@ class TaskManagement {
 
         for($i = 0; $i < sizeof($taskNameArray); $i++) {
                 $_SESSION['taskname' . $i] = $taskNameArray[$i];
+                $_SESSION['propertyApplianceId' . $i] = $propertyApplianceIdArray[$i];
                 $_SESSION['taskdescription' . $i] = $taskDesArray[$i];
                 $_SESSION['taskid' . $i] = $taskIdArray[$i];
-                $_SESSION['applianceid' . $i] = $appIdArray[$i];
                 $_SESSION['repeattask' . $i] = $taskRepeatArray[$i];
                 $_SESSION['duedate' . $i] = $taskDueDateArray[$i];
                 $_SESSION['complete' . $i] = $taskCompleteArray[$i];
                 $_SESSION['intervaldays' . $i] = $taskIntervalDayArray[$i];
-                $_SESSION['firstreminderdate' . $i] = $taskFirstReminderDateArray[$i];
+                $_SESSION['taskReminderDate' . $i] = $taskReminderDateArray[$i];
                 $_SESSION['reminderinterval' . $i] = $taskReminderIntervalArray[$i];
 
 
-    //display list of properties that can be collapse and un-collapse.
+    //display list of task that can be collapse and un-collapse.
     echo '
     <div class="card">
         <div class="card-header" id="headingOne">
@@ -213,17 +269,7 @@ class TaskManagement {
                   <div class="col-3">
 
                   </div><!-- close col-3 -->
-                  
-                  <div class="col-7">
-                  Task ID#: 
-                    <span style="font-weight:600">
-                    '
-                    . $taskIdArray[$i] .
-
-                    '
-                    </span>
-                  </div><!-- close col-7 -->
-                  
+                                    
                   <div class="col-7">
                   Description: 
                     <span style="font-weight:600">
@@ -274,7 +320,7 @@ class TaskManagement {
                   First Reminder Date: 
                     <span style="font-weight:600">
                     '
-                    . $taskFirstReminderDateArray[$i] .
+                    . $taskReminderDateArray[$i] .
                     '
                     </span>
                   </div><!-- close col-7 -->
@@ -357,56 +403,59 @@ class TaskManagement {
     public function listAllTask(){
 
         $taskNameArray = array();
+        $propertyApplianceIdArray = array();
         $taskDesArray = array();
-        $proIdArray = array();
-        $appIdArray = array();
         $taskIdArray = array();
         $taskRepeatArray = array();
         $taskDueDateArray = array();
         $taskCompleteArray = array();
         $taskIntervalDayArray = array();
-        $taskFirstReminderDateArray = array();
+        $taskReminderDateArray = array();
         $taskReminderIntervalArray = array();
 
-        $userid = $_SESSION['userid'];// getting the current login user id
-
+        $userid = $_SESSION['userid'];
         //attempt select query execution
-        $sql_data = "SELECT taskid, taskname, description, applianceid, repeattask, duedate, complete, intervaldays, firstreminderdate, reminderinterval FROM tasks WHERE userId = '$userid' ";
+        $stmt = "SELECT taskid, propertyApplianceId, taskname, description, repeatTask, duedate, complete, intervalDays, reminderdate, reminderinterval 
+            FROM tasks 
+            WHERE (userid = '$userid') and (logDelete IS NULL or logDelete = 0)";
 
-        $result = $this->conn->query($sql_data);
+        $result = $this->conn->query($stmt);
 
         if($result === FALSE) { 
-            die(mysql_error()); // handle mysql error and stoping the function
+            echo "Failed to retrive tasks";
+            return;
         }
 
         while ($row = $result->fetch_assoc()) {
             $taskIdArray[] = $row['taskid'];
+            $propertyApplianceIdArray[] = $row['propertyApplianceId'];
             $taskNameArray[] = $row['taskname'];
             $taskDesArray[] = $row['description'];
-            $appIdArray[] = $row['applianceid'];
-            $taskRepeatArray[] = $row['repeattask'];
+            $taskRepeatArray[] = $row['repeatTask'];
             $taskDueDateArray[] = $row['duedate'];
             $taskCompleteArray[] = $row['complete'];
-            $taskIntervalDayArray[] = $row['intervaldays'];
-            $taskFirstReminderDateArray[] = $row['firstreminderdate'];
+            $taskIntervalDayArray[] = $row['intervalDays'];
+            $taskReminderDateArray[] = $row['reminderdate'];
             $taskReminderIntervalArray[] = $row['reminderinterval'];
         }
+
 
         ob_start();
 
         for($i = 0; $i < sizeof($taskNameArray); $i++) {
                 $_SESSION['taskname' . $i] = $taskNameArray[$i];
+                $_SESSION['propertyApplianceId' . $i] = $propertyApplianceIdArray[$i];
                 $_SESSION['taskdescription' . $i] = $taskDesArray[$i];
                 $_SESSION['taskid' . $i] = $taskIdArray[$i];
-                $_SESSION['applianceid' . $i] = $appIdArray[$i];
                 $_SESSION['repeattask' . $i] = $taskRepeatArray[$i];
                 $_SESSION['duedate' . $i] = $taskDueDateArray[$i];
                 $_SESSION['complete' . $i] = $taskCompleteArray[$i];
                 $_SESSION['intervaldays' . $i] = $taskIntervalDayArray[$i];
-                $_SESSION['firstreminderdate' . $i] = $taskFirstReminderDateArray[$i];
+                $_SESSION['taskReminderDate' . $i] = $taskReminderDateArray[$i];
                 $_SESSION['reminderinterval' . $i] = $taskReminderIntervalArray[$i];
 
-    //display list of properties that can be collapse and un-collapse.
+
+    //display list of task that can be collapse and un-collapse.
     echo '
     <div class="card">
         <div class="card-header" id="headingOne">
@@ -424,17 +473,7 @@ class TaskManagement {
                   <div class="col-3">
 
                   </div><!-- close col-3 -->
-                  
-                  <div class="col-7">
-                  Task ID#: 
-                    <span style="font-weight:600">
-                    '
-                    . $taskIdArray[$i] .
-
-                    '
-                    </span>
-                  </div><!-- close col-7 -->
-                  
+                                    
                   <div class="col-7">
                   Description: 
                     <span style="font-weight:600">
@@ -485,7 +524,7 @@ class TaskManagement {
                   First Reminder Date: 
                     <span style="font-weight:600">
                     '
-                    . $taskFirstReminderDateArray[$i] .
+                    . $taskReminderDateArray[$i] .
                     '
                     </span>
                   </div><!-- close col-7 -->
@@ -503,6 +542,9 @@ class TaskManagement {
                         
                   <div class="row">
                   <div class="col-1">
+                    <a href="/home_maintenance_manager/public/taskcontroller/task/'. $taskIdArray[$i] .'"><button>
+                        Details
+                      </button></a>
                   </div>
                   
                   <div class="col-1">
@@ -551,8 +593,6 @@ class TaskManagement {
         </div><!-- close collapseOne -->
     </div><!-- close card -->
     ';//end echo
-
-
         
         }
           $output = ob_get_contents();

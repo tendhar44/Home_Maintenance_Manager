@@ -143,7 +143,7 @@ class ApplianceManagement {
                         
                   <div class="row">
                   <div class="col-1">
-                    <a href="/home_maintenance_manager/public/taskcontroller/'. $appIdArray[$i] .'"><button>
+                    <a href="/home_maintenance_manager/public/taskcontroller/'. $propertyIdArray[$i] .'/'. $appIdArray[$i].'"><button>
                         View Task
                       </button></a>
                   </div>
