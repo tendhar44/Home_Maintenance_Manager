@@ -26,7 +26,7 @@ class TaskManagement {
         $taskReminderIntervalArray = array();
 
         //attempt select query execution
-        $sql_data = "SELECT taskid, taskname, description, applianceid, repeattask, duedate, complete, intervaldays, firstreminderdate, reminderinterval FROM tasks WHERE taskid = '$taskNum'";
+        $sql_data = "SELECT taskid, propertyApplianceId, taskname, description, repeatTask, duedate, complete, intervalDays, reminderdate, reminderinterval FROM tasks WHERE taskid = '$taskNum'";
 
         $userData = $this->conn->query($sql_data);
 
@@ -36,12 +36,12 @@ class TaskManagement {
             $taskIdArray[] = $row['taskid'];
             $taskNameArray[] = $row['taskname'];
             $taskDesArray[] = $row['description'];
-            $appIdArray[] = $row['applianceid'];
-            $taskRepeatArray[] = $row['repeattask'];
+            $appIdArray[] = $row['propertyApplianceId'];
+            $taskRepeatArray[] = $row['repeatTask'];
             $taskDueDateArray[] = $row['duedate'];
             $taskCompleteArray[] = $row['complete'];
-            $taskIntervalDayArray[] = $row['intervaldays'];
-            $taskFirstReminderDateArray[] = $row['firstreminderdate'];
+            $taskIntervalDayArray[] = $row['intervalDays'];
+            $taskFirstReminderDateArray[] = $row['reminderdate'];
             $taskReminderIntervalArray[] = $row['reminderinterval'];
         }
 
