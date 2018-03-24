@@ -214,13 +214,9 @@ class TaskManagement {
         $proAppID = $this->getPropertyApplianceID($proID,$appID);
 
         //attempt select query execution
-<<<<<<< HEAD
-        $sql_data = "SELECT taskid, taskname, description, propertyApplianceId, repeattask, duedate, complete, intervaldays, reminderdate, reminderinterval FROM tasks WHERE propertyApplianceId = '$applianceId' AND logDelete = '0'";
-=======
         $sql_data = "SELECT taskid, propertyApplianceId, taskname, description, repeatTask, duedate, complete, intervalDays, reminderdate, reminderinterval 
             FROM tasks 
             WHERE (propertyApplianceId = '$proAppID') and (logDelete IS NULL or logDelete = 0)";
->>>>>>> d62ab214c681f29b3c9c9a9ededc7e416a11d22e
 
         $result = $this->conn->query($sql_data);
 
@@ -234,20 +230,11 @@ class TaskManagement {
             $propertyApplianceIdArray[] = $row['propertyApplianceId'];
             $taskNameArray[] = $row['taskname'];
             $taskDesArray[] = $row['description'];
-<<<<<<< HEAD
-            $appIdArray[] = $row['propertyApplianceId'];
-            $taskRepeatArray[] = $row['repeattask'];
-            $taskDueDateArray[] = $row['duedate'];
-            $taskCompleteArray[] = $row['complete'];
-            $taskIntervalDayArray[] = $row['intervaldays'];
-            $taskFirstReminderDateArray[] = $row['reminderdate'];
-=======
             $taskRepeatArray[] = $row['repeatTask'];
             $taskDueDateArray[] = $row['duedate'];
             $taskCompleteArray[] = $row['complete'];
             $taskIntervalDayArray[] = $row['intervalDays'];
             $taskReminderDateArray[] = $row['reminderdate'];
->>>>>>> d62ab214c681f29b3c9c9a9ededc7e416a11d22e
             $taskReminderIntervalArray[] = $row['reminderinterval'];
         }
 
