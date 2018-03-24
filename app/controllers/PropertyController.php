@@ -35,8 +35,7 @@ class PropertyController extends Controller {
         $propertyName =  $_SESSION['propertyname' . $propertyNum];
 
         if($_SERVER["REQUEST_METHOD"] == "POST") {
-            $propertyID = $_SESSION['propertyid' . $propertyNum];
-            $proManagement->updateProperty($propertyID, $propertyName);
+            $proManagement->updateProperty($propertyNum, $propertyName);
         }
     }
 

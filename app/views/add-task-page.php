@@ -15,7 +15,7 @@
     <br>
     <form id="addTaskForm" action="/Home_Maintenance_Manager/public/taskcontroller/<?php echo $data["proNum"] ?>/<?php echo $data['appId']; ?>" method="post">
         Task Name: <span class="reqAsk">*</span><br> <input type="text" name="taskName" required><br><br>
-        Task Due Date: <br> <input type="date" name="taskDue"><br><br>
+        Task Due Date: <br> <input type="date" name="taskDue" required><br><br>
 
         <!-- one time task = 0, and repeat task = 1 -->
         Repeat Task: <br> <input type="radio" name="repeatTask" value="1">&nbsp; Yes
