@@ -42,6 +42,9 @@ class PropertyController extends Controller {
 
     public function delete($propertyNum = 0) {
         $this->notSignedIn();
+        $proManagement =  $this->model->getPropertyManagement();
         $this->view("delete-property-page", ["pn" => $propertyNum]);
+
+        $proManagement->deleteProperty($propertyNum);
     }
 }
