@@ -10,7 +10,7 @@ class TaskController extends Controller {
 
         $taskManagement =  $this->model->getTaskManagement();
         if($_SERVER["REQUEST_METHOD"] == "POST") {            
-            $taskManagement->addTask($applianceId, $propertyNum);
+            $taskManagement->addTask();
         }
         $_SESSION['outputCotent'] = $taskManagement->getListOfTasks($propertyNum, $applianceId); 
         $this->view("list-task-page", ["appId" => $applianceId, "proNum" => $propertyNum]);
@@ -48,8 +48,15 @@ class TaskController extends Controller {
     //list all task of user regardless of property
     public function listAll($userId = 0) {
         $this->notSignedIn();
-        $associativeData = $this->model->getAssociatedData();
         $taskManagement =  $this->model->getTaskManagement();
+
+        // var_dump($_POST);
+
+        if($_SERVER["REQUEST_METHOD"] == "POST") {            
+            $taskManagement->addTask();
+        }
+
+        $associativeData = $this->model->getAssociatedData();
         $_SESSION['outputCotent'] = $taskManagement->listAllTask(); 
         $this->view("listAll-task-page", ["userid" => $userId, "dropDownData" => $associativeData]);
     }

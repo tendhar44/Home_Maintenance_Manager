@@ -80,29 +80,33 @@ class TaskManagement {
         return $row['propertyApplianceId'];
     }
 
-    public function addTask($appId, $proId) {
-        // $appId = (isset($_POST['appId'])) ? $_POST['appId'] : NULL;
-        // $proId = (isset($_POST['proNum'])) ? $_POST['proNum'] : NULL;
+    public function addTask() {
+        $appId = (isset($_POST['appId'])) ? $_POST['appId'] : NULL;
+        $proId = (isset($_POST['proId'])) ? $_POST['proId'] : NULL;
+        $proAppID = (isset($_POST['proAppID'])) ? $_POST['proAppID'] : NULL;
 
         // var_dump($appId);
         // var_dump($proId);
 
         $taskName = (isset($_POST['taskName'])) ? $_POST['taskName'] : '';
         $description = (isset($_POST['taskDes'])) ? $_POST['taskDes'] : '';
-        $userid = (isset($_POST['userId'])) ? $_POST['userId'] : '';
-        $duedate = (isset($_POST['taskDue'])) ? $_POST['taskDue'] : '';
+        $userid = $_SESSION['userid'];
+        $duedate = (isset($_POST['taskDue'])) ? $_POST['taskDue'] : NULL;
         $repeattask = (isset($_POST['repeatTask'])) ? $_POST['repeatTask'] : '';
         $repeatlength = (isset($_POST['intervalDay'])) ? $_POST['intervalDay'] : 0;
         $reminderdate = (isset($_POST['taskReminder'])) ? $_POST['taskReminder'] : NULL;
         $complete = (isset($_POST['taskComplete'])) ? $_POST['taskComplete'] : '';
         $reminderinterval = (isset($_POST['reminderInterval'])) ? $_POST['reminderInterval'] : NULL;
 
+        // die($duedate);
+
         $tn = mysqli_real_escape_string($this->conn, $taskName);
         $des = mysqli_real_escape_string($this->conn, $description);
 
         if($this->valid->checkTaskName($taskName)){
-
-            $proAppID = $this->getPropertyApplianceID($proId, $appId);
+            if ($proAppID == NULL){
+                $proAppID = $this->getPropertyApplianceID($proId, $appId);   
+            }
             if($proAppID == NULL){
                 echo "Failed to retrive bridge id of property and appliance";
                 return;
@@ -114,10 +118,12 @@ class TaskManagement {
 
                 VALUES ('$proAppID', '$tn', '$des', '$userid', '$repeattask', '$duedate', '$complete', '$repeatlength', '$reminderdate', '$reminderinterval')";
 
+
             if($this->conn->query($sql_data) === true) {
                 echo "Successfully added your task!";
             }else {
                 echo "We weren't able to add your task. Please try again.";
+                 // die(mysqli_error($this->conn));
             }
 
         }else{

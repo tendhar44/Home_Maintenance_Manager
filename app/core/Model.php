@@ -90,6 +90,4 @@ class Model {
         return $associativeArray;
     }
 
-
-
 }
