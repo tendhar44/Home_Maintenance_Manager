@@ -88,11 +88,11 @@ class TaskManagement {
         // var_dump($appId);
         // var_dump($proId);
 
-        $taskName = (isset($_POST['taskName'])) ? $_POST['taskName'] : '';
-        $description = (isset($_POST['taskDes'])) ? $_POST['taskDes'] : '';
+        $taskName = (isset($_POST['taskName'])) ? $_POST['taskName'] : NULL;
+        $description = (isset($_POST['taskDes'])) ? $_POST['taskDes'] : NULL;
         $userid = $_SESSION['userid'];
         $duedate = (isset($_POST['taskDue'])) ? $_POST['taskDue'] : NULL;
-        $repeattask = (isset($_POST['repeatTask'])) ? $_POST['repeatTask'] : '';
+        $repeattask = (isset($_POST['repeatTask'])) ? $_POST['repeatTask'] : 0;
         $repeatlength = (isset($_POST['intervalDay'])) ? $_POST['intervalDay'] : 0;
         $reminderdate = (isset($_POST['taskReminder'])) ? $_POST['taskReminder'] : NULL;
         $complete = (isset($_POST['taskComplete'])) ? $_POST['taskComplete'] : '';
@@ -141,14 +141,29 @@ class TaskManagement {
         return $userData->fetch_assoc();
     }
 
-    public function updateTask($id, $orginalTaskName) {
+    //getting task name from database by task id
+    private function getTaskName($taskId){
+        if($taskId == NULL){
+            return NULL;
+        }
+        $stmt = "SELECT taskname from tasks where taskid = '$taskId'";
+        $result = $this->conn->query($stmt);
+        if ($result->num_rows != 1) {
+            return NULL;
+        }
+        $row = $result->fetch_assoc();
+        var_dump($row['taskname']);
+        return $row['taskname'];
+    }
+
+    public function updateTask($id) {
         $taskName = (isset($_POST['taskName'])) ? $_POST['taskName'] : '';
         $description = (isset($_POST['taskDes'])) ? $_POST['taskDes'] : '';
 
         $taskName = mysqli_real_escape_string($this->conn, $taskName);
         $description = mysqli_real_escape_string($this->conn, $description);
 
-
+        $orginalTaskName = $this->getTaskName($id);
         $flag = false;
         //if name is altered, check if name is unique
         if($orginalTaskName != $taskName){
@@ -562,13 +577,13 @@ class TaskManagement {
                   </div>
 
                   <div class="col-1">
-                    <a href="/home_maintenance_manager/public/taskcontroller/update/'. $i .'"><button class="stand-bttn-size">
+                    <a href="/home_maintenance_manager/public/taskcontroller/update/'. $taskIdArray[$i] .'"><button class="stand-bttn-size">
                         Update
                       </button></a>
                   </div> 
                       
                   <div class="col-1">    
-                    <a href="/home_maintenance_manager/public/taskcontroller/delete/'. $i .'"><button class="stand-bttn-size">
+                    <a href="/home_maintenance_manager/public/taskcontroller/delete/'. $taskIdArray[$i] .'"><button class="stand-bttn-size">
                         Delete
                     </button></a>
                   </div>
