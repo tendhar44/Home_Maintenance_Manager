@@ -70,11 +70,11 @@
 			<div class="form-group">
 				<label class="control-label col-sm-4" for="taskDes">Description:</label>
 				<div class="col-sm-12">
-					 <textarea name="taskDes" class="form-control" id="taskDes"></textarea>
+					<textarea name="taskDes" class="form-control" id="taskDes"></textarea>
 				</div>
 			</div>
 
-        	<input type="hidden" name="taskComplete" value="0">
+			<input type="hidden" name="taskComplete" value="0">
 			
 			<div class="form-group"> 
 				<div class="col-sm-offset-2 col-sm-10">
@@ -89,7 +89,6 @@
 	</div><!-- close list-property -->
 </div><!-- close container -->
 
-<script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
 
 <script>
 $(function() {

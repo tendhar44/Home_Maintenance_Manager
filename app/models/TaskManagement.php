@@ -119,14 +119,16 @@ class TaskManagement {
         $tn = mysqli_real_escape_string($this->conn, $taskName);
         $des = mysqli_real_escape_string($this->conn, $description);
 
-        if($this->valid->checkTaskName($taskName)){
-            if ($proAppID == NULL){
-                $proAppID = $this->getPropertyApplianceID($proId, $appId);   
-            }
-            if($proAppID == NULL){
-                echo "Failed to retrive bridge id of property and appliance";
-                return;
-            }
+        
+        if ($proAppID == NULL){
+            $proAppID = $this->getPropertyApplianceID($proId, $appId);   
+        }
+        if($proAppID == NULL){
+            echo "Failed to retrive bridge id of property and appliance";
+            return;
+        }
+
+        if($this->valid->checkTaskName($taskName, $proAppID)){
 
             // attempt insert query execution
             $sql_data = "
