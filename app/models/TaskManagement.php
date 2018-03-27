@@ -173,8 +173,9 @@ class TaskManagement {
 
     public function updateTask($id) {
         $taskName = (isset($_POST['taskName'])) ? $_POST['taskName'] : NULL;
+        var_dump($_POST);
 
-        if ($taskname == NULL){
+        if ($taskName == NULL){
             echo "Name can't be empty";
             return;
         }
@@ -184,14 +185,16 @@ class TaskManagement {
         $taskName = mysqli_real_escape_string($this->conn, $taskName);
         $description = mysqli_real_escape_string($this->conn, $description);
 
-        $propAppId = $this->getExistTaskPropAppID($id);
+        // could use either of the two methods below to get property appliance id
+        // $propAppId = $this->getExistTaskPropAppID($id);
+        $propAppId = (isset($_POST['propAppId'])) ? $_POST['propAppId'] : NULL;
 
         $orginalTaskName = $this->getTaskName($id);
         $flag = false;
         //if name is altered, check if name is unique
         if($orginalTaskName != $taskName){
             //if name is unique, precede to update, if not don't update.
-            if(!$this->valid->checkTaskName($id, $propAppId)) {
+            if($this->valid->checkTaskName($id, $propAppId)) {
                 $flag = true;
             }
             //name wasn't altered, so precede to update.
@@ -228,9 +231,12 @@ public function getListOfTasks($proID, $appID) {
     $proAppID = $this->getPropertyApplianceID($proID,$appID);
 
         //attempt select query execution
-    $sql_data = "SELECT taskid, propertyApplianceId, taskname, description, repeatTask, duedate, complete, intervalDays, reminderdate, reminderinterval 
-    FROM tasks 
-    WHERE (propertyApplianceId = '$proAppID') and (logDelete IS NULL or logDelete = 0)";
+    $sql_data = "SELECT p.propertyid, p.applianceid, t.taskid, t.propertyApplianceId, t.taskname, t.description, t.repeatTask, t.duedate, t.complete, t.intervalDays, t.reminderdate, t.reminderinterval 
+    FROM tasks t
+    INNER JOIN propertyApplianceBridge p ON t.propertyApplianceId = p.propertyApplianceId
+    WHERE (t.propertyApplianceId = '$proAppID') and (logDelete IS NULL or logDelete = 0)
+    ORDER BY t.taskname ASC
+    ";
 
     $result = $this->conn->query($sql_data);
 
@@ -248,6 +254,8 @@ public function getListOfTasks($proID, $appID) {
         $_SESSION['task' . $row['taskid']] = array(
 
             'id' => $row['taskid'],
+            'propertyId' => $row['propertyid'],
+            'applianceId' => $row['applianceid'], 
             'proAppId' => $row['propertyApplianceId'],
             'name' => $row['taskname'],
             'description' => $row['description'],
@@ -397,15 +405,15 @@ public function getListOfTasks($proID, $appID) {
         </div><!-- close card body -->
         </div><!-- close collapseOne -->
         </div><!-- close card -->
-    ';//end echo
+        ';//end echo
 
 
 
-}
-$output = ob_get_contents();
-ob_end_clean();
+    }
+    $output = ob_get_contents();
+    ob_end_clean();
 
-return $output;
+    return $output;
 }
 
     //display a list of all task pertain to login user
@@ -586,12 +594,12 @@ public function listAllTask(){
         </div><!-- close card body -->
         </div><!-- close collapseOne -->
         </div><!-- close card -->
-    ';//end echo
+        ';//end echo
 
     }
     $output = ob_get_contents();
     ob_end_clean();
 
     return $output;
-    }
+}
 }

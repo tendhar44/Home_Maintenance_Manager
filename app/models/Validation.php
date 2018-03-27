@@ -57,12 +57,13 @@ class Validation {
 
     public function uniqueInput($query){
         $result = $this->db_connection->query($query);
-        //var_dump(mysqli_num_rows($result));
+        // var_dump(mysqli_num_rows($result));
         if (!$result){
-            //echo "cannot connect to the database";
+            // echo "cannot connect to the database";
             return false;
         }
-        if (mysqli_num_rows($result)>0){
+        if (mysqli_num_rows($result) != 0){
+            // echo "Unique fail";
             return false;
         }
         return true;
