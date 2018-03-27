@@ -19,7 +19,7 @@
 			<div class="form-group">
 				<label class="control-label col-sm-4" for="applianceSelector">Select Appliance:</label>
 				<div class="col-sm-12">
-					<select class="form-control" name="proAppID" id="applianceSelector" disabled>
+					<select class="form-control" name="proAppID" id="applianceSelector" disabled required>
 					</select>
 				</div>
 			</div>
@@ -27,14 +27,14 @@
 			<div class="form-group">
 				<label class="control-label col-sm-4" for="taskName">Task Name:</label>
 				<div class="col-sm-12">
-					<input class="form-control" name="taskName" id="taskName" placeholder="Enter Task Name">
+					<input class="form-control" name="taskName" id="taskName" placeholder="Enter Task Name" required>
 				</div>
 			</div>
 
 			<div class="form-group">
 				<label class="control-label col-sm-4" for="taskDue">Task Due Date:</label>
 				<div class="col-sm-12">
-					<input type="date" class="form-control" name="taskDue" id="taskDue">
+					<input type="date" class="form-control" name="taskDue" id="taskDue" required>
 				</div>
 			</div>
 

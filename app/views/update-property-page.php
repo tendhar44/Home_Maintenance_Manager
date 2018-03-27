@@ -10,9 +10,9 @@
     <hr>
     <br>
     <form action="" method="post">
-        Property Name:<br> <input type="text" name="propertyname" value="<?php echo $_SESSION['propertyname' . $data["pn"]] ?>"><br><br>
-        Address:<br> <input type="text" name="address" value="<?php echo $_SESSION['propertyaddress' . $data["pn"]] ?>"><br><br>
-        Description:<br> <input type="text" name="propertydes" value="<?php echo $_SESSION['propertyaddress' . $data["pn"]] ?>"><br><br>
+        Property Name:<br> <input type="text" name="propertyname" value="<?php echo $_SESSION['propertyid' . $data["pn"]]['name'] ?>"><br><br>
+        Address:<br> <input type="text" name="address" value="<?php echo $_SESSION['propertyid' . $data["pn"]]['address'] ?>"><br><br>
+        Description:<br> <input type="text" name="propertydes" value="<?php echo $_SESSION['propertyid' . $data["pn"]]['description'] ?>"><br><br>
         <input type="submit" value="Submit">
     </form>
 </div>
