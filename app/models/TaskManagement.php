@@ -53,12 +53,12 @@ class TaskManagement {
         ob_end_clean();
         return $output;
     }
-    //get the propertyAppliance id from PropertyApplianceBridge table
+    //get the propertyAppliance id from propertyappliancebridge table
     private function getPropertyApplianceID($proID, $appID){
         if ($appID == NULL || $proID == NULL){
             return NULL;
         }
-        $stmt = "select propertyApplianceId from PropertyApplianceBridge where propertyId = '$proID' and applianceId = '$appID'";
+        $stmt = "select propertyApplianceId from propertyappliancebridge where propertyId = '$proID' and applianceId = '$appID'";
         $result = $this->conn->query($stmt);
         if($result === FALSE || $result->num_rows != 1) {
             return NULL;
@@ -81,10 +81,26 @@ class TaskManagement {
         // var_dump($row['propertyApplianceId']);
         return $row['propertyApplianceId'];
     }
+
+    // get the propertyAppliance id base on appliance id
+    private function getTaskPropAppID($appID){
+        if ($appID == NULL){
+            return NULL;
+        }
+        $stmt = "select propertyApplianceId from propertyappliancebridge where applianceid = '$appID'";
+        $result = $this->conn->query($stmt);
+        if($result === FALSE || $result->num_rows != 1) {
+            return NULL;
+        }
+        $row = $result->fetch_assoc();
+        // var_dump($row['propertyApplianceId']);
+        return $row['propertyApplianceId'];
+    }
+
     public function addTask() {
         $appId = (isset($_POST['appId'])) ? $_POST['appId'] : NULL;
         $proId = (isset($_POST['proId'])) ? $_POST['proId'] : NULL;
-        $proAppID = (isset($_POST['proAppID'])) ? $_POST['proAppID'] : NULL;
+        //$proAppID = (isset($_POST['proAppID'])) ? $_POST['proAppID'] : NULL;
         // var_dump($appId);
         // var_dump($proId);
         $taskName = (isset($_POST['taskName'])) ? $_POST['taskName'] : NULL;
@@ -97,6 +113,9 @@ class TaskManagement {
         $complete = (isset($_POST['taskComplete'])) ? $_POST['taskComplete'] : '';
         $reminderinterval = (isset($_POST['reminderInterval'])) ? $_POST['reminderInterval'] : NULL;
         // die($duedate);
+
+        $proAppID = $this->getTaskPropAppID($appId);
+
         $tn = mysqli_real_escape_string($this->conn, $taskName);
         $des = mysqli_real_escape_string($this->conn, $description);
 
@@ -107,10 +126,10 @@ class TaskManagement {
             echo "Failed to retrive bridge id of property and appliance";
             return;
         }
-        if($this->valid->checkTaskName($taskName, $proAppID)){
+        if($this->valid->checkTaskName($tn)){
             // attempt insert query execution
             $sql_data = "
-            INSERT INTO tasks (propertyApplianceId, taskname, description, userid, repeattask, duedate, complete, intervaldays, reminderdate, reminderinterval ) 
+            INSERT INTO tasks (propertyApplianceId, taskname, description, userid, repeattask, duedate, complete, intervaldays, reminderdate, reminderinterval) 
             VALUES ('$proAppID', '$tn', '$des', '$userid', '$repeattask', '$duedate', '$complete', '$repeatlength', '$reminderdate', '$reminderinterval')";
             if($this->conn->query($sql_data) === true) {
                 echo "Successfully added your task!";
@@ -193,7 +212,7 @@ class TaskManagement {
         //attempt select query execution
         $sql_data = "SELECT p.propertyid, p.applianceid, t.taskid, t.propertyApplianceId, t.taskname, t.description, t.repeatTask, t.duedate, t.complete, t.intervalDays, t.reminderdate, t.reminderinterval 
     FROM tasks t
-    INNER JOIN propertyApplianceBridge p ON t.propertyApplianceId = p.propertyApplianceId
+    INNER JOIN propertyappliancebridge p ON t.propertyApplianceId = p.propertyApplianceId
     WHERE (t.propertyApplianceId = '$proAppID') and (logDelete IS NULL or logDelete = 0)
     ORDER BY t.taskname ASC
     ";
@@ -343,7 +362,7 @@ class TaskManagement {
         $userid = $_SESSION['userid'];
         //attempt select query execution
         $stmt = "SELECT p.propertyId, p.applianceId, t.taskid, t.propertyApplianceId, t.taskname, t.description, t.repeatTask, t.duedate, t.complete, t.intervalDays, t.reminderdate, t.reminderinterval 
-    FROM tasks t INNER JOIN PropertyApplianceBridge p ON t.propertyApplianceId = p.propertyApplianceId
+    FROM tasks t INNER JOIN propertyappliancebridge p ON t.propertyApplianceId = p.propertyApplianceId
     WHERE (userid = '$userid') and (logDelete IS NULL or logDelete = 0)
     ORDER BY t.taskname ASC
     ";

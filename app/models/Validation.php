@@ -27,10 +27,9 @@ class Validation {
         //var_dump($query);
         return $this->uniqueInput($query);
     }
-    public function checkTaskName($taskName, $propAppID){
+    public function checkTaskName($taskName){
         if($this->checkInput($taskName) == '') return false;
-        $query = sprintf("SELECT taskname from tasks t
-            INNER JOIN propertyApplianceBridge p ON p.propertyApplianceId = t.propertyApplianceId WHERE taskname ='$taskName'");
+        $query = sprintf("SELECT t.taskname from tasks t INNER JOIN propertyappliancebridge p ON p.propertyApplianceId = t.propertyApplianceId WHERE t.taskname = '$taskName'");
         return $this->uniqueInput($query);
     }
     public function checkApplianceName($appName, $proID){

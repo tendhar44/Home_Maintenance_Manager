@@ -13,7 +13,6 @@
     <br>
     <form action="/Home_Maintenance_Manager/public/appliancecontroller/<?php echo $data['proId']; ?>" method="post">
         Appliance Name:<span class="reqAsk">*</span><br> <input type="text" name="applianceName"><br><br>
-        Model:<br> <input type="text" name="applianceModel"><br><br>
         <input type="hidden" name="propertyId" value="<?php echo $data['proId']; ?>">
         <input type="submit" value="Submit">
     </form>
