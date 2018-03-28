@@ -47,8 +47,7 @@ class UserController extends Controller {
     public function signOut() {
         $this->notSignedIn();
         $this->model->getAccountManagement()->signOutUser();
-        $this->view("sign-out-page", []);
-        header("location: /home_maintenance_manager/public/homecontroller/home");
+        header("location: /home_maintenance_manager/public/homecontroller");
     }
 
     public function signUp() {
