@@ -19,7 +19,7 @@
 			<div class="form-group">
 				<label class="control-label col-sm-4" for="applianceSelector">Select Appliance:</label>
 				<div class="col-sm-12">
-					<select class="form-control" name="proAppID" id="applianceSelector" disabled required>
+					<select class="form-control" name="appId" id="applianceSelector" disabled required>
 					</select>
 				</div>
 			</div>

@@ -70,7 +70,7 @@ class Model {
         $userId = $_SESSION['userid'];
 
         $stmt = "
-            SELECT p.propertyName, pa.propertyApplianceId, a.appliancename 
+            SELECT p.propertyName, a.applianceid, a.appliancename 
             FROM propertyappliancebridge pa 
             INNER JOIN properties p ON p.propertyId = pa.propertyId 
             INNER JOIN appliances a ON a.applianceid = pa.applianceid
@@ -83,7 +83,7 @@ class Model {
 
         while ($row = $result->fetch_assoc()) {
             // var_dump($row);
-            $associativeArray[$row['propertyName']][$row['appliancename']] = $row['propertyApplianceId'];
+            $associativeArray[$row['propertyName']][$row['appliancename']] = $row['applianceid'];
         }
 
         // var_dump($associativeArray);
