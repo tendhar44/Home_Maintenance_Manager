@@ -74,7 +74,7 @@ class Model {
             FROM propertyappliancebridge pa 
             INNER JOIN properties p ON p.propertyId = pa.propertyId 
             INNER JOIN appliances a ON a.applianceid = pa.applianceid
-            WHERE p.ownerId = '$userId'
+            WHERE p.ownerId = '$userId' and p.logDelete != 1
             ";
 
         $result = $this->conn->query($stmt);

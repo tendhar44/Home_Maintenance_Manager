@@ -387,7 +387,7 @@ public function listAllTask(){
         //attempt select query execution
     $stmt = "SELECT p.propertyId, p.applianceId, t.taskid, t.propertyApplianceId, t.taskname, t.description, t.repeatTask, t.duedate, t.complete, t.intervalDays, t.reminderdate, t.reminderinterval 
     FROM tasks t INNER JOIN propertyappliancebridge p ON t.propertyApplianceId = p.propertyApplianceId
-    WHERE (userid = '$userid') and (logDelete IS NULL or logDelete = 0)
+    WHERE (userid = '$userid') and (logDelete !=0)
     ORDER BY t.taskname ASC
     ";
     $result = $this->conn->query($stmt);
