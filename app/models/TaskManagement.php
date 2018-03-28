@@ -38,16 +38,16 @@ class TaskManagement {
             $taskReminderIntervalArray[] = $row['reminderinterval'];
         }
         echo
-            'Task ID: <span style="font-weight:600">' . $taskIdArray[0] . '</span><br>' .
-            'Task Name: <span style="font-weight:600">' . $taskNameArray[0] . '</span><br>' .
-            'Descriptions: <span style="font-weight:600">' . $taskDesArray[0] . '</span><br>' .
-            'Appliance ID: <span style="font-weight:600">' . $appIdArray[0] . '</span><br>' .
-            'Task Repeat: <span style="font-weight:600">' . $taskRepeatArray[0] . '</span><br>' .
-            'Due Date: <span style="font-weight:600">' . $taskDueDateArray[0] . '</span><br>' .
-            'Completion: <span style="font-weight:600">' . $taskCompleteArray[0] . '</span><br>' .
-            'Task Interval Day: <span style="font-weight:600">' . $taskIntervalDayArray[0] . '</span><br>' .
-            'Task Reminder Date: <span style="font-weight:600">' . $taskFirstReminderDateArray[0] . '</span><br>' .
-            'Task Reminder Interval: <span style="font-weight:600">' . $taskReminderIntervalArray[0] . '</span><br>'
+        'Task ID: <span style="font-weight:600">' . $taskIdArray[0] . '</span><br>' .
+        'Task Name: <span style="font-weight:600">' . $taskNameArray[0] . '</span><br>' .
+        'Descriptions: <span style="font-weight:600">' . $taskDesArray[0] . '</span><br>' .
+        'Appliance ID: <span style="font-weight:600">' . $appIdArray[0] . '</span><br>' .
+        'Task Repeat: <span style="font-weight:600">' . $taskRepeatArray[0] . '</span><br>' .
+        'Due Date: <span style="font-weight:600">' . $taskDueDateArray[0] . '</span><br>' .
+        'Completion: <span style="font-weight:600">' . $taskCompleteArray[0] . '</span><br>' .
+        'Task Interval Day: <span style="font-weight:600">' . $taskIntervalDayArray[0] . '</span><br>' .
+        'Task Reminder Date: <span style="font-weight:600">' . $taskFirstReminderDateArray[0] . '</span><br>' .
+        'Task Reminder Interval: <span style="font-weight:600">' . $taskReminderIntervalArray[0] . '</span><br>'
         ;
         $output = ob_get_contents();
         ob_end_clean();
@@ -162,24 +162,42 @@ class TaskManagement {
         return $row['taskname'];
     }
     public function updateTask($id) {
+
+
+        $appId = (isset($_POST['appId'])) ? $_POST['appId'] : NULL;
+        $proId = (isset($_POST['proId'])) ? $_POST['proId'] : NULL;
+        //$proAppID = (isset($_POST['proAppID'])) ? $_POST['proAppID'] : NULL;
+        // var_dump($appId);
+        // var_dump($proId);
         $taskName = (isset($_POST['taskName'])) ? $_POST['taskName'] : NULL;
-        var_dump($_POST);
-        if ($taskName == NULL){
-            echo "Name can't be empty";
+        $description = (isset($_POST['taskDes'])) ? $_POST['taskDes'] : NULL;
+        $duedate = (isset($_POST['taskDue'])) ? $_POST['taskDue'] : NULL;
+        $repeattask = (isset($_POST['repeatTask'])) ? $_POST['repeatTask'] : 0;
+        $repeatlength = (isset($_POST['intervalDay'])) ? $_POST['intervalDay'] : 0;
+        $reminderdate = (isset($_POST['taskReminder'])) ? $_POST['taskReminder'] : NULL;
+        $reminderinterval = (isset($_POST['reminderInterval'])) ? $_POST['reminderInterval'] : NULL;
+        // die($duedate);
+
+        $proAppID = $this->getTaskPropAppID($appId);
+
+        $tn = mysqli_real_escape_string($this->conn, $taskName);
+        $des = mysqli_real_escape_string($this->conn, $description);
+
+        if ($proAppID == NULL){
+            $proAppID = $this->getPropertyApplianceID($proId, $appId);
+        }
+        if($proAppID == NULL){
+            echo "Failed to retrive bridge id of property and appliance";
             return;
         }
-        $description = (isset($_POST['taskDes'])) ? $_POST['taskDes'] : '';
-        $taskName = mysqli_real_escape_string($this->conn, $taskName);
-        $description = mysqli_real_escape_string($this->conn, $description);
-        // could use either of the two methods below to get property appliance id
-        // $propAppId = $this->getExistTaskPropAppID($id);
-        $propAppId = (isset($_POST['propAppId'])) ? $_POST['propAppId'] : NULL;
+
         $orginalTaskName = $this->getTaskName($id);
-        $flag = false;
+        $flag = true;
         //if name is altered, check if name is unique
         if($orginalTaskName != $taskName){
-            //if name is unique, precede to update, if not don't update.
-            if($this->valid->checkTaskName($id, $propAppId)) {
+            $flag = false;
+            //if name unique, set flag to true to proceed to update
+            if($this->valid->checkTaskName($id, $proAppID)) {
                 $flag = true;
             }
             //name wasn't altered, so precede to update.
@@ -187,6 +205,12 @@ class TaskManagement {
         if($flag){
             // attempt insert query execution
             $sql_data = "UPDATE tasks SET taskname='$taskName', description='$description' WHERE taskid = '$id'";
+
+            $sql_data = "
+            UPDATE tasks set propertyApplianceId = '$proAppID', taskname = '$tn', description = '$des', repeattask = '$repeattask', duedate = '$duedate', intervaldays = '$repeatlength', reminderdate = '$reminderdate', reminderinterval = '$reminderinterval' 
+            WHERE taskid = '$id'
+            ";
+
             if($this->conn->query($sql_data) === true) {
                 echo "Successfully updated your task!";
             } else {
@@ -211,11 +235,11 @@ class TaskManagement {
         $proAppID = $this->getPropertyApplianceID($proID,$appID);
         //attempt select query execution
         $sql_data = "SELECT p.propertyid, p.applianceid, t.taskid, t.propertyApplianceId, t.taskname, t.description, t.repeatTask, t.duedate, t.complete, t.intervalDays, t.reminderdate, t.reminderinterval 
-    FROM tasks t
-    INNER JOIN propertyappliancebridge p ON t.propertyApplianceId = p.propertyApplianceId
-    WHERE (t.propertyApplianceId = '$proAppID') and (logDelete IS NULL or logDelete = 0)
-    ORDER BY t.taskname ASC
-    ";
+        FROM tasks t
+        INNER JOIN propertyappliancebridge p ON t.propertyApplianceId = p.propertyApplianceId
+        WHERE (t.propertyApplianceId = '$proAppID') and (logDelete IS NULL or logDelete = 0)
+        ORDER BY t.taskname ASC
+        ";
         $result = $this->conn->query($sql_data);
         if($result === FALSE) {
             echo "Failed to retrive tasks";
@@ -242,156 +266,156 @@ class TaskManagement {
             );
             //display list of task that can be collapse and un-collapse.
             echo '
-        <div class="card">
-        <div class="card-header" id="headingOne">
-        <h5 class="mb-0">
-        <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo'. $counter .'" aria-expanded="false" aria-controls="collapseTwo">
-        ' . $row['taskname'] . '             
-        </a>
-        </h5>
-        </div><!-- close card-header -->
-        <div id="collapseTwo'. $counter .'" class="collapse" role="tabpanel" aria-labelledby="headingTwo">
-        <div class="card-body">
-        <div class="container-fluid">
-        <div class="col-3">
-        </div><!-- close col-3 -->
-        <div class="col-7">
-        Description: 
-        <span style="font-weight:600">
-        '
-                . $row['description'] .
-                '
-        </span>
-        </div><!-- close col-7 -->
-        <div class="col-7">
-        Repeat Task: 
-        <span style="font-weight:600">
-        '
-                . $row['repeatTask'] .
-                '
-        </span>
-        </div><!-- close col-7 -->
-        <div class="col-7">
-        Due Date: 
-        <span style="font-weight:600">
-        '
-                . $row['duedate'] .
-                '
-        </span>
-        </div><!-- close col-7 -->
-        <div class="col-7">
-        Complete: 
-        <span style="font-weight:600">
-        '
-                . $row['complete'] .
-                '
-        </span>
-        </div><!-- close col-7 -->
-        <div class="col-7">
-        Interval Day: 
-        <span style="font-weight:600">
-        '
-                . $row['intervalDays'] .
-                '
-        </span>
-        </div><!-- close col-7 -->
-        <div class="col-7">
-        Reminder Date: 
-        <span style="font-weight:600">
-        '
-                . $row['reminderdate'] .
-                '
-        </span>
-        </div><!-- close col-7 -->
-        <div class="col-7">
-        Reminder Interval Days: 
-        <span style="font-weight:600">
-        '
-                . $row['reminderinterval'] .
-                '
-        </span>
-        </div><!-- close col-7 -->
-        <br>
-        <div class="row">
-        <div class="col-1">
-        <a href="/home_maintenance_manager/public/taskcontroller/task/'. $row['taskid'] .'"><button>
-        Details
-        </button></a>
-        </div>
-        <div class="col-1">
-        </div>
-        <div class="col-1">
-        </div>
-        <div class="col-1">
-        </div>
-        <div class="col-1">
-        </div>
-        <div class="col-1">
-        </div>
-        <div class="col-1">
-        </div>
-        <div class="col-1">
-        </div>
-        <div class="col-1">
-        </div>
-        <div class="col-1">
-        </div>
-        <div class="col-1">
-        <a href="/home_maintenance_manager/public/taskcontroller/update/'. $row['taskid'] .'"><button class="stand-bttn-size">
-        Update
-        </button></a>
-        </div> 
-        <div class="col-1">    
-        <a href="/home_maintenance_manager/public/taskcontroller/delete/'. $row['taskid'] .'"><button class="stand-bttn-size">
-        Delete
-        </button></a>
-        </div>
-        </div><!-- close col-6 -->
-        </div><!-- close container fluid -->
-        </div><!-- close card body -->
-        </div><!-- close collapseOne -->
-        </div><!-- close card -->
+            <div class="card">
+            <div class="card-header" id="headingOne">
+            <h5 class="mb-0">
+            <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo'. $counter .'" aria-expanded="false" aria-controls="collapseTwo">
+            ' . $row['taskname'] . '             
+            </a>
+            </h5>
+            </div><!-- close card-header -->
+            <div id="collapseTwo'. $counter .'" class="collapse" role="tabpanel" aria-labelledby="headingTwo">
+            <div class="card-body">
+            <div class="container-fluid">
+            <div class="col-3">
+            </div><!-- close col-3 -->
+            <div class="col-7">
+            Description: 
+            <span style="font-weight:600">
+            '
+            . $row['description'] .
+            '
+            </span>
+            </div><!-- close col-7 -->
+            <div class="col-7">
+            Repeat Task: 
+            <span style="font-weight:600">
+            '
+            . $row['repeatTask'] .
+            '
+            </span>
+            </div><!-- close col-7 -->
+            <div class="col-7">
+            Due Date: 
+            <span style="font-weight:600">
+            '
+            . $row['duedate'] .
+            '
+            </span>
+            </div><!-- close col-7 -->
+            <div class="col-7">
+            Complete: 
+            <span style="font-weight:600">
+            '
+            . $row['complete'] .
+            '
+            </span>
+            </div><!-- close col-7 -->
+            <div class="col-7">
+            Interval Day: 
+            <span style="font-weight:600">
+            '
+            . $row['intervalDays'] .
+            '
+            </span>
+            </div><!-- close col-7 -->
+            <div class="col-7">
+            Reminder Date: 
+            <span style="font-weight:600">
+            '
+            . $row['reminderdate'] .
+            '
+            </span>
+            </div><!-- close col-7 -->
+            <div class="col-7">
+            Reminder Interval Days: 
+            <span style="font-weight:600">
+            '
+            . $row['reminderinterval'] .
+            '
+            </span>
+            </div><!-- close col-7 -->
+            <br>
+            <div class="row">
+            <div class="col-1">
+            <a href="/home_maintenance_manager/public/taskcontroller/task/'. $row['taskid'] .'"><button>
+            Details
+            </button></a>
+            </div>
+            <div class="col-1">
+            </div>
+            <div class="col-1">
+            </div>
+            <div class="col-1">
+            </div>
+            <div class="col-1">
+            </div>
+            <div class="col-1">
+            </div>
+            <div class="col-1">
+            </div>
+            <div class="col-1">
+            </div>
+            <div class="col-1">
+            </div>
+            <div class="col-1">
+            </div>
+            <div class="col-1">
+            <a href="/home_maintenance_manager/public/taskcontroller/update/'. $row['taskid'] .'"><button class="stand-bttn-size">
+            Update
+            </button></a>
+            </div> 
+            <div class="col-1">    
+            <a href="/home_maintenance_manager/public/taskcontroller/delete/'. $row['taskid'] .'"><button class="stand-bttn-size">
+            Delete
+            </button></a>
+            </div>
+            </div><!-- close col-6 -->
+            </div><!-- close container fluid -->
+            </div><!-- close card body -->
+            </div><!-- close collapseOne -->
+            </div><!-- close card -->
         ';//end echo
-        }
-        $output = ob_get_contents();
-        ob_end_clean();
-        return $output;
     }
+    $output = ob_get_contents();
+    ob_end_clean();
+    return $output;
+}
     //display a list of all task pertain to login user
-    public function listAllTask(){
-        $userid = $_SESSION['userid'];
+public function listAllTask(){
+    $userid = $_SESSION['userid'];
         //attempt select query execution
-        $stmt = "SELECT p.propertyId, p.applianceId, t.taskid, t.propertyApplianceId, t.taskname, t.description, t.repeatTask, t.duedate, t.complete, t.intervalDays, t.reminderdate, t.reminderinterval 
+    $stmt = "SELECT p.propertyId, p.applianceId, t.taskid, t.propertyApplianceId, t.taskname, t.description, t.repeatTask, t.duedate, t.complete, t.intervalDays, t.reminderdate, t.reminderinterval 
     FROM tasks t INNER JOIN propertyappliancebridge p ON t.propertyApplianceId = p.propertyApplianceId
     WHERE (userid = '$userid') and (logDelete IS NULL or logDelete = 0)
     ORDER BY t.taskname ASC
     ";
-        $result = $this->conn->query($stmt);
-        if($result === FALSE) {
-            echo "Failed to retrive tasks";
-            return;
-        }
-        $counter = 0;
-        ob_start();
-        while ($row = $result->fetch_assoc()) {
-            $counter++;
+    $result = $this->conn->query($stmt);
+    if($result === FALSE) {
+        echo "Failed to retrive tasks";
+        return;
+    }
+    $counter = 0;
+    ob_start();
+    while ($row = $result->fetch_assoc()) {
+        $counter++;
             //creating a session associate array for a task
-            $_SESSION['task' . $row['taskid']] = array(
-                'id' => $row['taskid'],
-                'propertyId' => $row['propertyId'],
-                'applianceId' => $row['applianceId'],
-                'proAppId' => $row['propertyApplianceId'],
-                'name' => $row['taskname'],
-                'description' => $row['description'],
-                'repeatTask' => $row['repeatTask'],
-                'duedate' => $row['duedate'],
-                'complete' => $row['complete'],
-                'intervaldays' => $row['intervalDays'],
-                'reminderdate' => $row['reminderdate'],
-                'reminderinterval' => $row['reminderinterval']
-            );
+        $_SESSION['task' . $row['taskid']] = array(
+            'id' => $row['taskid'],
+            'propertyId' => $row['propertyId'],
+            'applianceId' => $row['applianceId'],
+            'proAppId' => $row['propertyApplianceId'],
+            'name' => $row['taskname'],
+            'description' => $row['description'],
+            'repeatTask' => $row['repeatTask'],
+            'duedate' => $row['duedate'],
+            'complete' => $row['complete'],
+            'intervaldays' => $row['intervalDays'],
+            'reminderdate' => $row['reminderdate'],
+            'reminderinterval' => $row['reminderinterval']
+        );
             //display list of task that can be collapse and un-collapse.
-            echo '
+        echo '
         <div class="card">
         <div class="card-header" id="headingOne">
         <h5 class="mb-0">
@@ -409,56 +433,56 @@ class TaskManagement {
         Description: 
         <span style="font-weight:600">
         '
-                . $row['description'] .
-                '
+        . $row['description'] .
+        '
         </span>
         </div><!-- close col-7 -->
         <div class="col-7">
         Repeat Task: 
         <span style="font-weight:600">
         '
-                . $row['repeatTask'] .
-                '
+        . $row['repeatTask'] .
+        '
         </span>
         </div><!-- close col-7 -->
         <div class="col-7">
         Due Date: 
         <span style="font-weight:600">
         '
-                . $row['duedate'] .
-                '
+        . $row['duedate'] .
+        '
         </span>
         </div><!-- close col-7 -->
         <div class="col-7">
         Complete: 
         <span style="font-weight:600">
         '
-                . $row['complete'] .
-                '
+        . $row['complete'] .
+        '
         </span>
         </div><!-- close col-7 -->
         <div class="col-7">
         Interval Day: 
         <span style="font-weight:600">
         '
-                . $row['intervalDays'] .
-                '
+        . $row['intervalDays'] .
+        '
         </span>
         </div><!-- close col-7 -->
         <div class="col-7">
         Reminder Date: 
         <span style="font-weight:600">
         '
-                . $row['reminderdate'] .
-                '
+        . $row['reminderdate'] .
+        '
         </span>
         </div><!-- close col-7 -->
         <div class="col-7">
         Reminder Interval Days: 
         <span style="font-weight:600">
         '
-                . $row['reminderinterval'] .
-                '
+        . $row['reminderinterval'] .
+        '
         </span>
         </div><!-- close col-7 -->
         <br>
@@ -502,9 +526,9 @@ class TaskManagement {
         </div><!-- close collapseOne -->
         </div><!-- close card -->
         ';//end echo
-        }
-        $output = ob_get_contents();
-        ob_end_clean();
-        return $output;
     }
+    $output = ob_get_contents();
+    ob_end_clean();
+    return $output;
+}
 }
