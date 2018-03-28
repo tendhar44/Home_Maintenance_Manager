@@ -1,6 +1,7 @@
 html, body {
 }
 
+/* Nav bar */
 .dropdown:hover .dropdown-menu {
 	display: block;
 }
@@ -28,23 +29,22 @@ html, body {
 }
 
 .navbar{
-	padding: 0;
-	margin: 0;
-	height: 60px;
+	/*padding: 0;
+	margin: 0;*/
+	/*height: 60px;*/
 }
+
+#navbarSupportedContent a:hover {
+	border-bottom: 2px solid white;
+	color: white;
+	padding-bottom: 2px;
+}
+/* END of Nav bar CSS */
 
 label{
 	font-size: 18px;
 }
 
-#navbarSupportedContent{
-	padding-left: 650px;
-}
-
-#navbarSupportedContent a:hover {
-	/*border-bottom: 4px solid white;*/
-	color: white;
-}
 
 /* Add background color to footer */
 .hmm-footer {

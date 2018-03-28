@@ -55,7 +55,7 @@ class UserController extends Controller {
         if(isset($_POST['submit'])) {
             //echo "sumbitting a register";
             if($this->model->getAccountManagement()->signUpUser()) {
-                header('Location: /home_maintenance_manager/public/usercontroller/signin');
+                $this->view("sign-in-page");
             }else {
                 //echo 'something went wrong';
                 echo '<span class="errorText">' . $_SESSION['userNameError'] . "</span>";

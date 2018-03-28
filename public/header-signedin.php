@@ -31,7 +31,7 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
                 </ul>
-                <ul class="navbar-nav">
+                <ul class="nav navbar-nav navbar-right">
                     <li class="nav-item">
                         <a class="nav-link" href="/home_maintenance_manager/public/propertycontroller/<?php echo $_SESSION['userid']; ?>">View Properties</a>
                     </li>
@@ -54,15 +54,10 @@
                         <a class="nav-link" href="/home_maintenance_manager/public/calendarcontroller">Calendar</a>
                     </li>
                 </ul>
-            </div>
-
-            <div class="collapse navbar-collapse" id="navbarSupportedContent2">
-                <ul class="navbar-nav mr-auto">
-                </ul>
                 <ul class="navbar-nav">
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="">
-                            <img id="wrenchPic" src="/home_maintenance_manager/public/img/wrench.png" alt="wrench icon"><span class="caret"></span>
+                        <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">
+                            <img class="img-fluid" id="wrenchPic" src="/home_maintenance_manager/public/img/wrench.png" alt="wrench icon"><span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
                             <li><a style="font-size:14px; color:#586069;"> &nbsp; Signed in as <span style="font-weight:600;"><?php echo $_SESSION['username']; ?></span></a></li>
@@ -74,7 +69,6 @@
                     </li>
                 </ul>
             </div>
-
         </div>
 
     </nav>

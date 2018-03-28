@@ -15,13 +15,13 @@
                 </ul>
             </p>
             <br>
-            <div class="col-xs-6 col-md-6">
+            <div class="col-xs-12 col-md-12">
                 <h4><a class="btn btn-dark btn-block btn-lg" href='/home_maintenance_manager/public/propertycontroller/<?php echo $_SESSION['userid']; ?>'>View Properties</a></h4>
                 <h4><a class="btn btn-dark btn-block btn-lg" href='/home_maintenance_manager/public/propertycontroller/add/<?php echo $_SESSION['userid'] ?>'>Create a Property</a></h4>
             </div>
         </div>
         <div class="col-md-6">
-            <img src="../../public/img/pic1.jpg" alt="picture of appliances">
+            <img class="img-fluid" src="../../public/img/pic1.jpg" alt="picture of appliances">
         </div>
     </div>
 
