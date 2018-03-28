@@ -32,9 +32,9 @@ class PropertyController extends Controller {
          * Property ID $data['pn'] is passed from PropertyController class.
          * 'pn' is array of different property ID.
          */
-        $propertyName =  $_SESSION['propertyname' . $propertyNum];
 
         if($_SERVER["REQUEST_METHOD"] == "POST") {
+            $propertyName =  $_SESSION['propertyid' . $propertyNum]['name'];
             $proManagement->updateProperty($propertyNum, $propertyName);
         }
     }

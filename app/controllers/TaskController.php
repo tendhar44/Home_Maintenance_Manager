@@ -35,7 +35,7 @@ class TaskController extends Controller {
         $taskManagement =  $this->model->getTaskManagement();
 
         if($_SERVER["REQUEST_METHOD"] == "POST") {
-            $taskID = $_SESSION['taskid' . $taskNum];
+            $taskID = $_SESSION['task' . $taskNum]['id'];
             $taskManagement->updateTask($taskID);
         }
     }
