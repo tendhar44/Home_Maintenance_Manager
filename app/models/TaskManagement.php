@@ -163,7 +163,7 @@ class TaskManagement {
     }
     public function updateTask($id) {
         $taskName = (isset($_POST['taskName'])) ? $_POST['taskName'] : NULL;
-        var_dump($_POST);
+        //var_dump($_POST);
         if ($taskName == NULL){
             echo "Name can't be empty";
             return;
