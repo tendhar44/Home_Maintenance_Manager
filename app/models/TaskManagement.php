@@ -208,14 +208,27 @@ class TaskManagement {
             $sql_data = "UPDATE tasks SET taskname='$taskName', description='$description' WHERE taskid = '$id'";
 
             $sql_data = "
-            UPDATE tasks set propertyApplianceId = '$proAppID', taskname = '$tn', description = '$des', repeattask = '$repeattask', duedate = '$duedate', intervaldays = '$repeatlength', reminderdate = '$reminderdate', reminderinterval = '$reminderinterval' 
+            UPDATE tasks set taskname = '$tn', description = '$des', repeattask = '$repeattask', duedate = '$duedate', intervaldays = '$repeatlength', reminderdate = '$reminderdate', reminderinterval = '$reminderinterval' 
             WHERE taskid = '$id'
             ";
 
             if($this->conn->query($sql_data) === true) {
-                echo "Successfully updated your task!";
+                   $_SESSION['task' . $id]['name'] = $tn;
+                   $_SESSION['task' . $id]['description'] = $des;
+                   $_SESSION['task' . $id]['repeatTask'] = $repeattask;
+                   $_SESSION['task' . $id]['duedate'] = $duedate;
+                   $_SESSION['task' . $id]['intervaldays'] = $repeatlength;
+                   $_SESSION['task' . $id]['reminderdate'] = $reminderdate;
+                   $_SESSION['task' . $id]['reminderinterval'] = $reminderinterval;
+
+                echo '<script language="javascript">';
+                echo 'alert("Successfully update")';
+                echo '</script>';
+
             } else {
-                echo "We weren't able to update your task. Please try again.";
+                echo '<script language="javascript">';
+                echo 'alert("Update task Failed. Please try again.")';
+                echo '</script>';
             }
         }else{
             echo "Name is already in use";

@@ -31,20 +31,18 @@ class TaskController extends Controller {
 
     public function update($taskNum = 0) {
         $this->notSignedIn();
-        $this->view("update-task-page", ["tn" => $taskNum]);
-        $taskManagement =  $this->model->getTaskManagement();
-
+        $taskManagement =  $this->model->getTaskManagement();        
         if($_SERVER["REQUEST_METHOD"] == "POST") {
             $taskID = $_SESSION['task' . $taskNum]['id'];
             $taskManagement->updateTask($taskID);
         }
+        $this->view("update-task-page", ["tn" => $taskNum]);
     }
 
     public function delete($taskNum = 0) {
         $this->notSignedIn();
         $taskManagement =  $this->model->getTaskManagement();
         $this->view("delete-task-page", ["tn" => $taskNum]);
-
         $taskManagement->deleteTask($taskNum);
     }
 
