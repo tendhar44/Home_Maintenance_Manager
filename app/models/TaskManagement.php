@@ -10,6 +10,13 @@ class TaskManagement {
         $this->valid = $valid;
         $this->conn = $db_con;
     }
+    
+    private function alertMsg($msg){        
+                echo '<script language="javascript">';
+                echo 'alert("'. $msg .'")';
+                echo '</script>';
+    }
+
     public function getTasksById($taskNum) {
         $taskNameArray = array();
         $taskDesArray = array();

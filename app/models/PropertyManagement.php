@@ -13,6 +13,12 @@ class PropertyManagement {
     $this->conn = $db_con;
 }
 
+protected function alertMsg($msg){        
+    echo '<script language="javascript">';
+    echo 'alert("'. $msg .'")';
+    echo '</script>';
+}
+
 public function addProperty() {
     $property_name = (isset($_POST['propertyname'])) ? $_POST['propertyname'] : '';
     $property_address = (isset($_POST['address'])) ? $_POST['address'] : '';
@@ -32,9 +38,9 @@ public function addProperty() {
     } else {
         echo "We weren't able to add your property. Please try again.";
     }
-    }else {
-      echo "The property name should be unique.";
-    }
+}else {
+  echo "The property name should be unique.";
+}
 }
 
 
@@ -60,28 +66,30 @@ public function updateProperty($id, $originalProName) {
         //if name is altered, check if name is unique
     if($originalProName != $pn){
              //if name is unique, precede to update, if not don't update.
-      if($this->valid->checkPropertyName($pn)) {
-        $proNameFlag = true;
-    }
+        if($this->valid->checkPropertyName($pn)) {
+            $proNameFlag = true;
+        }
             //name wasn't altered, so precede to update.
     }else {
-      $proNameFlag = true;
+        $proNameFlag = true;
     }
 
-            //if flag is true, precede with update
+                //if flag is true, precede with update
     if($proNameFlag){
-                // attempt insert query execution
-      $sql_data = "UPDATE properties SET propertyname='$pn', address='$add', description='$pd' WHERE propertyid = '$id'";
+                    // attempt insert query execution
+        $sql_data = "UPDATE properties SET propertyname='$pn', address='$add', description='$pd' WHERE propertyid = '$id'";
 
-      if ($this->conn->query($sql_data) === true) {
-        $_SESSION[$propertyName] = $propertyName;
-        echo "Successfully updated your property!";
-    } else {
-        echo "We weren't able to update your property. Please try again.";
-    }
-    }else {
-      echo "The property name should be unique.";
-    }
+        if ($this->conn->query($sql_data) === true) {
+           $_SESSION['propertyid' . $id]['name'] = $pn;
+           $_SESSION['propertyid' . $id]['address'] = $add;
+           $_SESSION['propertyid' . $id]['description'] = $pd;
+           echo "Successfully updated your property!";
+       } else {
+          echo "We weren't able to update your property. Please try again.";
+      }
+  } else {
+    echo "The property name should be unique.";
+}
 }
 
 public function deleteProperty($id) {
@@ -90,9 +98,9 @@ public function deleteProperty($id) {
     $sql_data = "UPDATE properties SET logDelete = '1' WHERE propertyid = '$id'";
 
     if($this->conn->query($sql_data) === true) {
-      echo "Successfully deleted your property!";
+        echo "Successfully deleted your property!";
     } else {
-      echo "We weren't able to delete your property. Please try again.";
+        echo "We weren't able to delete your property. Please try again.";
     }
 }
 
@@ -113,131 +121,129 @@ public function getListOfProperties($userid) {
     ob_start();
     $counter = 0;
     while ($row = $userData->fetch_assoc()) {
-      $counter++;
+        $counter++;
 
       //creating a session for listed property
-      $_SESSION['propertyid' . $row['propertyid']] = 
-      array (
-        'id' => $row['propertyid'],
-        'address' => $row['address'],
-        'name' => $row['propertyname'],
-        'description' => $row['description']
-    );
+        $_SESSION['propertyid' . $row['propertyid']] = 
+        array (
+          'id' => $row['propertyid'],
+          'address' => $row['address'],
+          'name' => $row['propertyname'],
+          'description' => $row['description']
+      );
 
       // var_dump($_SESSION['propertyid' . $row['propertyid']]);
 
     //display list of properties that can be collapse and un-collapse.
-      echo '
-      <div class="card">
-      <div class="card-header" id="headingOne">
-      <h5 class="mb-0">
-      <!--<a class="collapsed" data-toggle="collapse" data-target="#collapseOne'. $counter .'" aria-expanded="true" aria-controls="collapseOne">-->
-      <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo'. $counter .'" aria-expanded="false" aria-controls="collapseTwo">
-      ' . $row['propertyname'] . '             
-      </span></a>
-      </h5>
-      </div><!-- close card-header -->
+        echo '
+        <div class="card">
+        <div class="card-header" id="headingOne">
+        <h5 class="mb-0">
+        <!--<a class="collapsed" data-toggle="collapse" data-target="#collapseOne'. $counter .'" aria-expanded="true" aria-controls="collapseOne">-->
+        <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo'. $counter .'" aria-expanded="false" aria-controls="collapseTwo">
+        ' . $row['propertyname'] . '             
+        </span></a>
+        </h5>
+        </div><!-- close card-header -->
 
-      <!--<div id="collapseOne'. $counter .'" class="collapse show" aria-labelledby="headingOne" data-parent="#list-appliance">-->
-      <div id="collapseTwo'. $counter .'" class="collapse" role="tabpanel" aria-labelledby="headingTwo">
-      <div class="card-body">
-      <div class="container-fluid">
+        <!--<div id="collapseOne'. $counter .'" class="collapse show" aria-labelledby="headingOne" data-parent="#list-appliance">-->
+        <div id="collapseTwo'. $counter .'" class="collapse" role="tabpanel" aria-labelledby="headingTwo">
+        <div class="card-body">
+        <div class="container-fluid">
 
-      <div class="col-3">
+        <div class="col-3">
 
-      </div><!-- close col-3 -->
+        </div><!-- close col-3 -->
 
-      <div class="col-7">
-      Property ID#: 
-      <span style="font-weight:600">
-      '
-      . $row['propertyid'] .
+        <div class="col-7">
+        Property ID#: 
+        <span style="font-weight:600">
+        '
+        . $row['propertyid'] .
 
-      '
-      </span>
-      </div><!-- close col-7 -->
+        '
+        </span>
+        </div><!-- close col-7 -->
 
-      <div class="col-7">
-      Address:
-      <span style="font-weight:600">
-      '
-      . $row['address'] .
+        <div class="col-7">
+        Address:
+        <span style="font-weight:600">
+        '
+        . $row['address'] .
 
-      '
-      </span>
-      </div><!-- close col-7 -->
+        '
+        </span>
+        </div><!-- close col-7 -->
 
-      <div class="col-7">
-      Description: 
-      <span style="font-weight:600">
-      '
-      . $row['description'] .
+        <div class="col-7">
+        Description: 
+        <span style="font-weight:600">
+        '
+        . $row['description'] .
 
-      '
-      </span>
-      </div><!-- close col-7 -->
+        '
+        </span>
+        </div><!-- close col-7 -->
 
-      <br>
+        <br>
 
-      <div class="row">
-      <div class="col-1">
-      <a href="/home_maintenance_manager/public/appliancecontroller/'. $row['propertyid']  .'">
-      <button>
-      View Devices
-      </button></a>
-      </div>
+        <div class="row">
+        <div class="col-1">
+        <a href="/home_maintenance_manager/public/appliancecontroller/'. $row['propertyid']  .'">
+        <button>
+        View Devices
+        </button></a>
+        </div>
 
-      <div class="col-1">
-      </div>
+        <div class="col-1">
+        </div>
 
-      <div class="col-1">
-      </div>
+        <div class="col-1">
+        </div>
 
-      <div class="col-1">
-      </div>
+        <div class="col-1">
+        </div>
 
-      <div class="col-1">
-      </div>
+        <div class="col-1">
+        </div>
 
-      <div class="col-1">
-      </div>
+        <div class="col-1">
+        </div>
 
-      <div class="col-1">
-      </div>
+        <div class="col-1">
+        </div>
 
-      <div class="col-1">
-      </div>
+        <div class="col-1">
+        </div>
 
-      <div class="col-1">
-      </div>
+        <div class="col-1">
+        </div>
 
-      <div class="col-1">
-      </div>
+        <div class="col-1">
+        </div>
 
-      <div class="col-1">
+        <div class="col-1">
 
-      <a href="/home_maintenance_manager/public/propertycontroller/update/'. $row['propertyid']  .'"><button class="stand-bttn-size">
-      Update
-      </button></a>
-      </div> 
+        <a href="/home_maintenance_manager/public/propertycontroller/update/'. $row['propertyid']  .'"><button class="stand-bttn-size">
+        Update
+        </button></a>
+        </div> 
 
-      <div class="col-1">    
-      <a href="/home_maintenance_manager/public/propertycontroller/delete/'. $row['propertyid']  .'"><button class="stand-bttn-size">
-      Delete
-      </button></a>
-      </div>
+        <div class="col-1">    
+        <a href="/home_maintenance_manager/public/propertycontroller/delete/'. $row['propertyid']  .'"><button class="stand-bttn-size">
+        Delete
+        </button></a>
+        </div>
 
 
 
-      </div><!-- close col-6 -->
+        </div><!-- close col-6 -->
 
-      </div><!-- close container fluid -->
-      </div><!-- close card body -->
-      </div><!-- close collapseOne -->
-      </div><!-- close card -->
+        </div><!-- close container fluid -->
+        </div><!-- close card body -->
+        </div><!-- close collapseOne -->
+        </div><!-- close card -->
     ';//end echo
-
-
 }
 
 $output = ob_get_contents();

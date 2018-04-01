@@ -24,8 +24,6 @@ class PropertyController extends Controller {
     public function update($propertyNum = 0) {
         $this->notSignedIn();
         $proManagement =  $this->model->getPropertyManagement();
-        $this->view("update-property-page", ["pn" => $propertyNum]);
-
         /**
          * If form is submitted as post method, update property method is called.
          * Property ID is passed as parameter in the update property method.
@@ -37,6 +35,9 @@ class PropertyController extends Controller {
             $propertyName =  $_SESSION['propertyid' . $propertyNum]['name'];
             $proManagement->updateProperty($propertyNum, $propertyName);
         }
+
+        $this->view("update-property-page", ["pn" => $propertyNum]);
+
     }
 
     public function delete($propertyNum = 0) {

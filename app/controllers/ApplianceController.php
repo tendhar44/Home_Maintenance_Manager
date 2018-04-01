@@ -22,9 +22,8 @@ class ApplianceController extends Controller {
         $this->view("add-appliance-page", ["proId" => $propertyId]);
     }
 
-    public function update($applianceID = 0) {
+    public function update($propertyId = 0, $applianceID = 0) {
         $this->notSignedIn();
-        $this->view("update-appliance-page", ["an" => $applianceNum]);
         $appManagement =  $this->model->getApplianceManagement();
 
         /**
@@ -32,8 +31,10 @@ class ApplianceController extends Controller {
         * Appliance ID is passed as parameter in the update appliance method.
         */
         if($_SERVER["REQUEST_METHOD"] == "POST") {
-            $appManagement->updateAppliance($applianceID);
+            $appManagement->updateAppliance($applianceID, $propertyId);
         }
+
+        $this->view("update-appliance-page", ["pn" => $propertyId, "an" => $applianceID]);
     }
 
     public function delete($applianceNum = 0) {

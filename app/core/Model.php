@@ -15,8 +15,6 @@ require_once('../app/databaseConnection.php');
 require_once('../app/models/Validation.php');
 require_once('../app/models/Calendar.php');
 
-
-
 class Model {
 
     //create new database connection object
@@ -89,5 +87,4 @@ class Model {
         // var_dump($associativeArray);
         return $associativeArray;
     }
-
 }

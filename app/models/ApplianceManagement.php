@@ -14,6 +14,12 @@ class ApplianceManagement {
         $this->conn = $db_con;
     }
 
+    private function alertMsg($msg){        
+        echo '<script language="javascript">';
+        echo 'alert("'. $msg .'")';
+        echo '</script>';
+    } 
+
     public function addAppliance() {
 
         $appliance_name = (isset($_POST['applianceName'])) ? $_POST['applianceName'] : '';
@@ -40,48 +46,49 @@ class ApplianceManagement {
 
     //getting appliance name from database by appliance id
     private function getApplianceName($applianceId){
-        if($taskId == NULL){
+        if($applianceId == NULL){
             return NULL;
         }
-        $stmt = "SELECT taskname from tasks where taskid = '$taskId'";
+        $stmt = "SELECT appliancename from appliances where applianceId = '$applianceId'";
         $result = $this->conn->query($stmt);
         if ($result->num_rows != 1) {
             return NULL;
         }
         $row = $result->fetch_assoc();
-        var_dump($row['taskname']);
-        return $row['taskname'];
+        // var_dump($row['appliancename']);
+        return $row['appliancename'];
     }
 
-    public function updateAppliance($id) {
+    public function updateAppliance($id, $propID) {
         $applianceName = (isset($_POST['applianceName'])) ? $_POST['applianceName'] : '';
-        $model = (isset($_POST['applianceModel'])) ? $_POST['applianceModel'] : '';
+        // $model = (isset($_POST['applianceModel'])) ? $_POST['applianceModel'] : '';
 
         $applianceName = mysqli_real_escape_string($this->conn, $applianceName);
-        $model = mysqli_real_escape_string($this->conn, $model);
+        // $model = mysqli_real_escape_string($this->conn, $model);
 
         $originalAppName = $this->getApplianceName($id);
-        $appNameFlag = false;
+        $flag = false;
         //if name is altered, check if name is unique
         if($originalAppName != $applianceName){
+            $flag = true;
             //if name is unique, precede to update, if not don't update.
-            if(!$this->valid->checkApplianceName($id, $propertyId)) {
-                $appNameFlag = true;
+            if(!$this->valid->checkApplianceName($id, $propID)) {
+                $flag = false;
             }
-            //name wasn't altered, so precede to update.
         }
         
-        if($appNameFlag) {
+        if($flag) {
             // attempt insert query execution
             $sql_data = "UPDATE appliances SET appliancename='$applianceName' WHERE applianceid = '$id'";
 
             if ($this->conn->query($sql_data) === true) {
-                echo "Successfully updated your appliance!";
+                $_SESSION['applianceId' . $id]['name'] = $applianceName;
+                $this->alertMsg("Successfully updated your appliance!");
             } else {
-                echo "We weren't able to update your appliance. Please try again.";
+                $this->alertMsg("We weren't able to update your appliance. Please try again.");
             }
         }else {
-            echo "The appliance name should be unique.";
+            $this->alertMsg("The appliance name should be unique.");
         }
     }
 
@@ -118,7 +125,7 @@ class ApplianceManagement {
               'name' => $row['appliancename'],
             // $appModelArray[] = $row['model'];
               'propertyId' => $row['propertyid']
-            );
+          );
 
 
 
@@ -191,7 +198,7 @@ class ApplianceManagement {
             </div>
 
             <div class="col-1">
-            <a href="/home_maintenance_manager/public/appliancecontroller/update/'. $row['applianceid'] .'"><button class="stand-bttn-size">
+            <a href="/home_maintenance_manager/public/appliancecontroller/update/'.$propertyId.'/'. $row['applianceid'] .'"><button class="stand-bttn-size">
             Update
             </button></a>
             </div> 
@@ -210,10 +217,10 @@ class ApplianceManagement {
             </div><!-- close card -->
         ';//end echo
 
-        }
-        $output = ob_get_contents();
-        ob_end_clean();
-
-        return $output;
     }
+    $output = ob_get_contents();
+    ob_end_clean();
+
+    return $output;
+}
 }
