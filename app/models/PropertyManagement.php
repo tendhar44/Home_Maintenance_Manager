@@ -13,7 +13,7 @@ class PropertyManagement {
     $this->conn = $db_con;
 }
 
-protected function alertMsg($msg){        
+private function alertMsg($msg){        
     echo '<script language="javascript">';
     echo 'alert("'. $msg .'")';
     echo '</script>';
@@ -54,42 +54,41 @@ public function getProperty($name) {
 }
 
 public function updateProperty($id, $originalProName) {
-    $propertyName = (isset($_POST['propertyname'])) ? $_POST['propertyname'] : '';
-    $address = (isset($_POST['address'])) ? $_POST['address'] : '';
-    $propertyDes = (isset($_POST['propertydes'])) ? $_POST['propertydes'] : '';
+    $propertyName = (isset($_POST['propertyname'])) ? $_POST['propertyname'] : NULL;
+    $address = (isset($_POST['address'])) ? $_POST['address'] : NULL;
+    $propertyDes = (isset($_POST['propertydes'])) ? $_POST['propertydes'] : NULL;
 
     $pn = mysqli_real_escape_string($this->conn, $propertyName);
     $add = mysqli_real_escape_string($this->conn, $address);
     $pd = mysqli_real_escape_string($this->conn, $propertyDes);
-    $proNameFlag = false;
 
+    $flag = true;
         //if name is altered, check if name is unique
     if($originalProName != $pn){
+        $flag = false
              //if name is unique, precede to update, if not don't update.
         if($this->valid->checkPropertyName($pn)) {
-            $proNameFlag = true;
+            $flag = true;
         }
             //name wasn't altered, so precede to update.
-    }else {
-        $proNameFlag = true;
     }
 
                 //if flag is true, precede with update
-    if($proNameFlag){
+    if($flag){
                     // attempt insert query execution
         $sql_data = "UPDATE properties SET propertyname='$pn', address='$add', description='$pd' WHERE propertyid = '$id'";
 
         if ($this->conn->query($sql_data) === true) {
-           $_SESSION['propertyid' . $id]['name'] = $pn;
-           $_SESSION['propertyid' . $id]['address'] = $add;
-           $_SESSION['propertyid' . $id]['description'] = $pd;
-           echo "Successfully updated your property!";
-       } else {
-          echo "We weren't able to update your property. Please try again.";
-      }
-  } else {
-    echo "The property name should be unique.";
-}
+            $_SESSION['propertyid' . $id]['name'] = $pn;
+            $_SESSION['propertyid' . $id]['address'] = $add;
+            $_SESSION['propertyid' . $id]['description'] = $pd;
+            $this->alertMsg("Successfully updated your property!");
+        } else {
+            $this->alertMsg("We weren't able to update your property. Please try again.");
+        }
+    } else {
+        $this->alertMsg("The property name should be unique.");
+    }
 }
 
 public function deleteProperty($id) {

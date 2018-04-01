@@ -35,12 +35,12 @@ class ApplianceManagement {
             $sql_data2 = "INSERT INTO propertyappliancebridge (propertyid, applianceid) VALUES ('$propertyId', LAST_INSERT_ID())";
 
             if ($this->conn->query($sql_data) === true && $this->conn->query($sql_data2) === true) {
-                echo "Successfully added your appliance!";
+                $this->alertMsg("Successfully added your appliance!");
             } else {
-                echo "We weren't able to add your appliance. Please try again.";
+                $this->alertMsg("We weren't able to add your appliance. Please try again.");
             }
         }else {
-            echo "The appliance name should be unique.";
+            $this->alertMsg("The appliance name should be unique.");
         }
     }
 

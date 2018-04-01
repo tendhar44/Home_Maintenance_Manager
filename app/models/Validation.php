@@ -29,19 +29,19 @@ class Validation {
     }
     public function checkTaskName($taskName){
         if($this->checkInput($taskName) == '') return false;
-        $query = sprintf("SELECT t.taskname from tasks t INNER JOIN propertyappliancebridge p ON p.propertyApplianceId = t.propertyApplianceId WHERE t.taskname = '$taskName'");
+        $query = sprintf("SELECT t.taskname from tasks t INNER JOIN propertyappliancebridge p ON p.propertyApplianceId = t.propertyApplianceId WHERE t.taskname = '$taskName'" and t.logDelete != 1);
         return $this->uniqueInput($query);
     }
     public function checkApplianceName($appName, $proID){
         if($this->checkInput($appName) == '') return false;
         $query = sprintf("
-            SELECT a.appliancename FROM appliances a INNER JOIN propertyappliancebridge pa ON a.applianceid = pa.applianceid WHERE pa.propertyid = '$proID' and a.appliancename = '$appName'
+            SELECT a.appliancename FROM appliances a INNER JOIN propertyappliancebridge pa ON a.applianceid = pa.applianceid WHERE pa.propertyid = '$proID' and a.appliancename = '$appName' and a.logDelete !=1
             ");
         return $this->uniqueInput($query);
     }
     public function checkPropertyName($proName){
         if($this->checkInput($proName) == '') return false;
-        $query = sprintf("select propertyname from properties where propertyname ='$proName'");
+        $query = sprintf("SELECT propertyname FROM properties WHERE propertyname ='$proName' and logDelete !=1");
         return $this->uniqueInput($query);
     }
     public function uniqueInput($query){
