@@ -1,4 +1,5 @@
 <?php
+require_once("EventHandler.php");
 
 /**
  * Name:
@@ -7,23 +8,20 @@
 class PropertyManagement {
   private $conn;
   private $valid;
+  private $eHandler;
 
   public function __construct($db_con, $valid) {
     $this->valid = $valid;
     $this->conn = $db_con;
-}
-
-private function alertMsg($msg){        
-    echo '<script language="javascript">';
-    echo 'alert("'. $msg .'")';
-    echo '</script>';
+    $this->eHandler = new EventHandler();
 }
 
 public function addProperty() {
-    $property_name = (isset($_POST['propertyname'])) ? $_POST['propertyname'] : '';
+    $property_name = (isset($_POST['propertyname'])) ? $_POST['propertyname'] : NULL;
     $property_address = (isset($_POST['address'])) ? $_POST['address'] : '';
-    $user_id = (isset($_POST['ownerid'])) ? $_POST['ownerid'] : '';
+    $user_id = (isset($_POST['ownerid'])) ? $_POST['ownerid'] : NULL;
     $property_des = (isset($_POST['propertydes'])) ? $_POST['propertydes'] : '';
+    $imgFiles = (isset($_POST['imgSelector'])) ? $_POST['imgSelector'] : NULL;
 
     $pn = mysqli_real_escape_string($this->conn, $property_name);
     $add = mysqli_real_escape_string($this->conn, $property_address);
@@ -31,16 +29,19 @@ public function addProperty() {
     $pd = mysqli_real_escape_string($this->conn, $property_des);
 
     if($this->valid->checkPropertyName($pn, $uid)) {
-      $sql_data = "INSERT INTO properties (ownerid, propertyname, description, address) VALUES ('$uid', '$pn', '$pd', '$add')";
+        $sql_data = "INSERT INTO properties (ownerid, propertyname, description, address) VALUES ('$uid', '$pn', '$pd', '$add')";
 
-      if ($this->conn->query($sql_data) === true) {
-        echo "Successfully added your property!";
-    } else {
-        echo "We weren't able to add your property. Please try again.";
-    }
-}else {
-  echo "The property name should be unique.";
-}
+        if ($this->conn->query($sql_data) === true) {
+            $this->eHandler->alertMsg("Successfully added your property!");
+            if($imgFiles != null){
+                $this->eHandler->uploadImage($imgFiles);
+            }
+        } else {
+            $this->eHandler->alertMsg("We weren't able to add your property. Please try again.");
+        }
+    }else {
+      $this->eHandler->alertMsg("The property name should be unique.");
+  }
 }
 
 
@@ -82,12 +83,12 @@ public function updateProperty($id, $originalProName) {
             $_SESSION['propertyid' . $id]['name'] = $pn;
             $_SESSION['propertyid' . $id]['address'] = $add;
             $_SESSION['propertyid' . $id]['description'] = $pd;
-            $this->alertMsg("Successfully updated your property!");
+            $this->eHandler->alertMsg("Successfully updated your property!");
         } else {
-            $this->alertMsg("We weren't able to update your property. Please try again.");
+            $this->eHandler->alertMsg("We weren't able to update your property. Please try again.");
         }
     } else {
-        $this->alertMsg("The property name should be unique.");
+        $this->eHandler->alertMsg("The property name should be unique.");
     }
 }
 

@@ -16,7 +16,7 @@
         Description:<br> <input type="text" name="propertydes"><br><br>
 
         <input id="browse" name="imgSelector" type="file" onchange="previewFiles()" multiple accept="image/*">
-        <div id="preview"></div
+        <div id="preview"></div>
 
             <br><br>
             <input type="hidden" name="ownerid" value="<?php echo $data['uId']; ?>">

@@ -13,14 +13,15 @@
         var preview = document.querySelector('#preview');
         var filesSelector = document.querySelector('input[type=file]');
         var files  = filesSelector.files;
+        // console.log(files);
 
         //clearing the preview div so previous img dont show
         while (preview.firstChild) {
             preview.removeChild(preview.firstChild);
         }
 
-        // check if selected files are images, if not clear fileSelector Input value
-        if(!checkSelectedFiles(files)){
+        // check if selected files type and size
+        if(!checkSelectedFiles(files) || !checkSize(files)){
             filesSelector.value = "";
             return;
         }
@@ -48,9 +49,19 @@
         }
     }
 
+    function checkSize(files){
+        for (var i = 0; i < files.length; i ++){
+            // console.log(files[i].type);
+            if((files[i].size > 500000)){
+                return failValidation("Selected Files size can only be 500 KB or less");
+            }
+        }
+        return true;
+    }
+
     function checkSelectedFiles(files){
         for (var i = 0; i < files.length; i ++){
-            console.log(files[i].type);
+            // console.log(files[i].type);
             if(!isImage(files[i].type)){
                 return failValidation("Selected Files has to be a image");
             }
