@@ -98,6 +98,16 @@ label{
 	width: 100px;
 }
 
+
+
+/*Begin upload image css*/
+
+.imgPreview{
+	margin: 15px;
+}
+
+/*END upload image css*/
+
 /*Create task form*/
 #taskForm {
 	display: none;

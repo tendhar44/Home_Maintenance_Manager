@@ -65,7 +65,7 @@ public function updateProperty($id, $originalProName) {
     $flag = true;
         //if name is altered, check if name is unique
     if($originalProName != $pn){
-        $flag = false
+        $flag = false;
              //if name is unique, precede to update, if not don't update.
         if($this->valid->checkPropertyName($pn)) {
             $flag = true;
