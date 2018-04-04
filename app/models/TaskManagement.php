@@ -22,22 +22,39 @@ class TaskManagement {
     public function updateCompleteStatus(){
         $id = (isset($_POST['taskid'])) ? $_POST['taskid'] : NULL;
         $status = (isset($_POST['completeStatus'])) ? $_POST['completeStatus'] : 0;
+        $sequenceNo;
+
             // attempt insert query execution
         $stmt = "UPDATE tasks SET complete='$status' WHERE taskid = '$id'";
+
+        if($status == 1){
+            $sequenceNo = $this->getTaskHistorySequenceNumber($id);
+            if(!createTaskHistory($id, $sequenceNo)){
+                $this->eHandler->alertMsg('Fail to update task complete status');
+                return;
+            }
+
+        }
+
         if($this->conn->query($stmt)) {
             $this->eHandler->alertMsg('Successfully update task complete status');
         }else{
+            $this->deleteTaskHistory($id, $sequenceNo);
             $this->eHandler->alertMsg('Fail to update task complete status');
         }
     }
 
+    // delete a task history by task id and sequence number
+    public function deleteTaskHistory($id, $sequenceNo){
+        $stmt = "DELETE FROM taskHistory WHERE taskid = '$id', AND taskSequence = '$sequenceNo'";
+        $this->conn->query($stmt);
+    }
+
+    //get an array of task history list
     public function getTaskHistoryList(){
         $userid = $_SESSION['userid'];
 
-        $stmt = "
-        SELECT * FROM taskHistory where userid = '$userid'
-        ";
-
+        $stmt = "SELECT * FROM taskHistory where userid = '$userid'";
         $result = $this->conn->query($stmt);
 
         if($result === FALSE) {
@@ -56,12 +73,34 @@ class TaskManagement {
                 'userid' => $row['userid'],
                 'completeDate' => $row['completeDate']
             );
-
             $counter++;
         }
-
         return $taskHistoryList;
+    }
 
+    // create a task history for completed task
+    public function createTaskHistory($id, $sequenceNo){
+        $userid = $_SESSION['userid'];//get user id from logged in user session
+        $date = date("Y-m-d");// get current date
+
+        $stmt = "
+        INSERT INTO taskHistory (taskId, taskSequence, userId, CompleteDate) 
+        VALUES ('$id', '$sequenceNo', '$userid', '$date')
+        ";
+
+        if($this->conn->query($stmt) === true) {
+            return true;
+        }else {
+            return false;
+        }
+    }
+
+    //get a sequence number according to taskHistory by id previously completed
+    public getTaskHistorySequenceNumber($id){
+        $stmt = "
+        SELECT * FROM taskHistory where taskid = '$id'";
+        $result = $this->conn->query($stmt);
+        return (mysqli_num_rows($result) + 1);// return result plus 1
     }
 
     public function getTasksById($taskNum) {
@@ -269,17 +308,17 @@ class TaskManagement {
             ";
 
             if($this->conn->query($sql_data) === true) {
-               $_SESSION['task' . $id]['name'] = $tn;
-               $_SESSION['task' . $id]['description'] = $des;
-               $_SESSION['task' . $id]['repeatTask'] = $repeattask;
-               $_SESSION['task' . $id]['duedate'] = $duedate;
-               $_SESSION['task' . $id]['intervaldays'] = $repeatlength;
-               $_SESSION['task' . $id]['reminderdate'] = $reminderdate;
-               $_SESSION['task' . $id]['reminderinterval'] = $reminderinterval;
+             $_SESSION['task' . $id]['name'] = $tn;
+             $_SESSION['task' . $id]['description'] = $des;
+             $_SESSION['task' . $id]['repeatTask'] = $repeattask;
+             $_SESSION['task' . $id]['duedate'] = $duedate;
+             $_SESSION['task' . $id]['intervaldays'] = $repeatlength;
+             $_SESSION['task' . $id]['reminderdate'] = $reminderdate;
+             $_SESSION['task' . $id]['reminderinterval'] = $reminderinterval;
 
-               $this->eHandler->alertMsg("Successfully update");
+             $this->eHandler->alertMsg("Successfully update");
 
-           } else {
+         } else {
             $this->eHandler->alertMsg("Update task Failed. Please try again.");
         }
     }else{
