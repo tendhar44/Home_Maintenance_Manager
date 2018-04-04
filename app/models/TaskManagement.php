@@ -31,6 +31,39 @@ class TaskManagement {
         }
     }
 
+    public function getTaskHistoryList(){
+        $userid = $_SESSION['userid'];
+
+        $stmt = "
+        SELECT * FROM taskHistory where userid = '$userid'
+        ";
+
+        $result = $this->conn->query($stmt);
+
+        if($result === FALSE) {
+            $this->eHandler->alertMsg('Fail to retrive task history data from database');
+            return;
+        }
+
+        $taskHistoryList = NULL;
+        $counter = 0;
+
+        while ($row = $result->fetch_assoc()) {
+                    //creating a session associate array for a task
+            $taskHistoryList[$counter] = array(
+                'id' => $row['taskid'],
+                'taskSequence' => $row['taskSequence'],
+                'userid' => $row['userid'],
+                'completeDate' => $row['completeDate']
+            );
+
+            $counter++;
+        }
+
+        return $taskHistoryList;
+
+    }
+
     public function getTasksById($taskNum) {
         $taskNameArray = array();
         $taskDesArray = array();
@@ -118,6 +151,7 @@ class TaskManagement {
         return $row['propertyApplianceId'];
     }
 
+    // add a task to the database
     public function addTask() {
         $appId = (isset($_POST['appId'])) ? $_POST['appId'] : NULL;
         $proId = (isset($_POST['proId'])) ? $_POST['proId'] : NULL;
@@ -144,7 +178,7 @@ class TaskManagement {
             $proAppID = $this->getPropertyApplianceID($proId, $appId);
         }
         if($proAppID == NULL){
-            echo "Failed to retrive bridge id of property and appliance";
+            $this->eHandler->alertMsg("Failed to retrive bridge id of property and appliance");
             return;
         }
         if($this->valid->checkTaskName($tn)){
@@ -153,21 +187,24 @@ class TaskManagement {
             INSERT INTO tasks (propertyApplianceId, taskname, description, userid, repeattask, duedate, complete, intervaldays, reminderdate, reminderinterval) 
             VALUES ('$proAppID', '$tn', '$des', '$userid', '$repeattask', '$duedate', '$complete', '$repeatlength', '$reminderdate', '$reminderinterval')";
             if($this->conn->query($sql_data) === true) {
-                echo "Successfully added your task!";
+                $this->eHandler->alertMsg("Successfully added your task!");
             }else {
-                echo "We weren't able to add your task. Please try again.";
+                $this->eHandler->alertMsg("We weren't able to add your task. Please try again.");
                 // die(mysqli_error($this->conn));
             }
         }else{
-            echo "The task name should be unique.";
+            $this->eHandler->alertMsg("The task name should be unique.");
         }
     }
+
+    //get task information from a task id
     public function getTaskFromId($id) {
         //attempt select query execution
         $sql_data = "SELECT * FROM tasks WHERE taskid = '$id'";
         $userData = $this->conn->query($sql_data);
         return $userData->fetch_assoc();
     }
+
     //getting task name from database by task id
     private function getTaskName($taskId){
         if($taskId == NULL){
@@ -182,9 +219,9 @@ class TaskManagement {
         // var_dump($row['taskname']);
         return $row['taskname'];
     }
+
+    //update TasK Information
     public function updateTask($id) {
-
-
         $appId = (isset($_POST['appId'])) ? $_POST['appId'] : NULL;
         $proId = (isset($_POST['proId'])) ? $_POST['proId'] : NULL;
         //$proAppID = (isset($_POST['proAppID'])) ? $_POST['proAppID'] : NULL;
@@ -209,7 +246,7 @@ class TaskManagement {
             $proAppID = $this->getPropertyApplianceID($proId, $appId);
         }
         if($proAppID == NULL){
-            echo "Failed to retrive bridge id of property and appliance";
+            $this->eHandler->alertMsg("Failed to retrive bridge id of property and appliance");
             return;
         }
 
@@ -232,21 +269,21 @@ class TaskManagement {
             ";
 
             if($this->conn->query($sql_data) === true) {
-             $_SESSION['task' . $id]['name'] = $tn;
-             $_SESSION['task' . $id]['description'] = $des;
-             $_SESSION['task' . $id]['repeatTask'] = $repeattask;
-             $_SESSION['task' . $id]['duedate'] = $duedate;
-             $_SESSION['task' . $id]['intervaldays'] = $repeatlength;
-             $_SESSION['task' . $id]['reminderdate'] = $reminderdate;
-             $_SESSION['task' . $id]['reminderinterval'] = $reminderinterval;
+               $_SESSION['task' . $id]['name'] = $tn;
+               $_SESSION['task' . $id]['description'] = $des;
+               $_SESSION['task' . $id]['repeatTask'] = $repeattask;
+               $_SESSION['task' . $id]['duedate'] = $duedate;
+               $_SESSION['task' . $id]['intervaldays'] = $repeatlength;
+               $_SESSION['task' . $id]['reminderdate'] = $reminderdate;
+               $_SESSION['task' . $id]['reminderinterval'] = $reminderinterval;
 
-             $this->eHandler->alertMsg("Successfully update");
+               $this->eHandler->alertMsg("Successfully update");
 
-         } else {
+           } else {
             $this->eHandler->alertMsg("Update task Failed. Please try again.");
         }
     }else{
-        echo "Name is already in use";
+        $this->eHandler->alertMsg("Name is already in use");
     }
 }
 public function deleteTask($id) {
@@ -271,7 +308,7 @@ public function getListOfTasks($proID, $appID) {
     ";
     $result = $this->conn->query($sql_data);
     if($result === FALSE) {
-        echo "Failed to retrive tasks";
+        $this->eHandler->alertMsg("Failed to retrive tasks");
         return;
     }
     ob_start();
@@ -416,12 +453,12 @@ public function listAllTask(){
         //attempt select query execution
     $stmt = "SELECT p.propertyId, p.applianceId, t.taskid, t.propertyApplianceId, t.taskname, t.description, t.repeatTask, t.duedate, t.complete, t.intervalDays, t.reminderdate, t.reminderinterval 
     FROM tasks t INNER JOIN propertyappliancebridge p ON t.propertyApplianceId = p.propertyApplianceId
-    WHERE (userid = '$userid') and (logDelete !=1)
+    WHERE t.userid = '$userid' and t.logDelete !=1 and t.complete != 1
     ORDER BY t.taskname ASC
     ";
     $result = $this->conn->query($stmt);
     if($result === FALSE) {
-        echo "Failed to retrive tasks";
+        $this->eHandler->alertMsg("Failed to retrive tasks");
         return;
     }
     $counter = 0;
@@ -483,27 +520,27 @@ public function listAllTask(){
 
         <div class="row">
         <div class="col">
-            <div class="btn-group float-left mt-2">
-                <a class="btn btn-secondary btn-md" href="/home_maintenance_manager/public/taskcontroller/task/'. $row['taskid'] .'">
-                    <i class="fa fa-flag" aria-hidden="true"></i>Details</a>
-            </div>
-            </div>
-            <div class="col">
-            <div class="btn-group float-md-right mt-2">
+        <div class="btn-group float-left mt-2">
+        <a class="btn btn-secondary btn-md" href="/home_maintenance_manager/public/taskcontroller/task/'. $row['taskid'] .'">
+        <i class="fa fa-flag" aria-hidden="true"></i>Details</a>
+        </div>
+        </div>
+        <div class="col">
+        <div class="btn-group float-md-right mt-2">
 
-                <form action="#" method="post">
-                    <input type="hidden" name="taskid" value="'.$row['taskid'].'">
-                    <input type="hidden" name="completeStatus" value="1">
-                    <input type="submit" name="updtateTaskStatus" value="Complete" class="btn btn-md btn-secondary" aria-hidden="true">
+        <form action="#" method="post">
+        <input type="hidden" name="taskid" value="'.$row['taskid'].'">
+        <input type="hidden" name="completeStatus" value="1">
+        <input type="submit" name="updtateTaskStatus" value="Complete" class="btn btn-md btn-secondary" aria-hidden="true">
 
-                </form>
+        </form>
 
-                <a class="btn btn-md btn-secondary" href="/home_maintenance_manager/public/taskcontroller/update/'. $row['taskid'] .'">
-                    <i class="fa fa-flag" aria-hidden="true"></i> Update</a>
-                <a class="btn btn-md btn-secondary" href="/home_maintenance_manager/public/taskcontroller/delete/'. $row['taskid'] .'">
-                    <i class="fa fa-flag" aria-hidden="true"></i> Delete</a>
-            </div>
-            </div>
+        <a class="btn btn-md btn-secondary" href="/home_maintenance_manager/public/taskcontroller/update/'. $row['taskid'] .'">
+        <i class="fa fa-flag" aria-hidden="true"></i> Update</a>
+        <a class="btn btn-md btn-secondary" href="/home_maintenance_manager/public/taskcontroller/delete/'. $row['taskid'] .'">
+        <i class="fa fa-flag" aria-hidden="true"></i> Delete</a>
+        </div>
+        </div>
 
         </div><!-- close row -->
 

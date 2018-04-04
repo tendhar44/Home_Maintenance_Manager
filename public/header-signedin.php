@@ -58,6 +58,13 @@
 
                 <ul class="navbar-nav">
                     <li class="nav-item">
+                        <a class="nav-link" href="/home_maintenance_manager/public/taskcontroller/history/<?php echo $_SESSION['userid']; ?>">Task History</a>
+                    </li>
+                </ul>
+
+
+                <ul class="navbar-nav">
+                    <li class="nav-item">
                         <a class="nav-link" href="/home_maintenance_manager/public/calendarcontroller">Calendar</a>
                     </li>
                 </ul>

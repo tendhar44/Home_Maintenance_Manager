@@ -8,17 +8,13 @@ class ApplianceManagement {
     private $conn;
     private $valid;
     private $tasks;
+    private $eHandler;
 
     public function __construct($db_con, $valid) {
         $this->valid = $valid;
         $this->conn = $db_con;
+        $this->eHandler = new EventHandler();
     }
-
-    private function alertMsg($msg){        
-        echo '<script language="javascript">';
-        echo 'alert("'. $msg .'")';
-        echo '</script>';
-    } 
 
     public function addAppliance() {
 
@@ -35,12 +31,12 @@ class ApplianceManagement {
             $sql_data2 = "INSERT INTO propertyappliancebridge (propertyid, applianceid) VALUES ('$propertyId', LAST_INSERT_ID())";
 
             if ($this->conn->query($sql_data) === true && $this->conn->query($sql_data2) === true) {
-                $this->alertMsg("Successfully added your appliance!");
+                $this->eHandler->alertMsg("Successfully added your appliance!");
             } else {
-                $this->alertMsg("We weren't able to add your appliance. Please try again.");
+                $this->eHandler->alertMsg("We weren't able to add your appliance. Please try again.");
             }
         }else {
-            $this->alertMsg("The appliance name should be unique.");
+            $this->eHandler->alertMsg("The appliance name should be unique.");
         }
     }
 
@@ -83,12 +79,12 @@ class ApplianceManagement {
 
             if ($this->conn->query($sql_data) === true) {
                 $_SESSION['applianceId' . $id]['name'] = $applianceName;
-                $this->alertMsg("Successfully updated your appliance!");
+                $this->eHandler->alertMsg("Successfully updated your appliance!");
             } else {
-                $this->alertMsg("We weren't able to update your appliance. Please try again.");
+                $this->eHandler->alertMsg("We weren't able to update your appliance. Please try again.");
             }
         }else {
-            $this->alertMsg("The appliance name should be unique.");
+            $this->eHandler->alertMsg("The appliance name should be unique.");
         }
     }
 
@@ -98,9 +94,9 @@ class ApplianceManagement {
         $sql_data = "UPDATE appliances SET logDelete='1' WHERE applianceid = '$id'";
 
         if($this->conn->query($sql_data) === true) {
-            echo "Successfully deleted your appliance!";
+            $this->eHandler->alertMsg("Successfully deleted your appliance!");
         } else {
-            echo "We weren't able to delete your appliance. Please try again.";
+            $this->eHandler->alertMsg("We weren't able to delete your appliance. Please try again.");
         }
     }
 

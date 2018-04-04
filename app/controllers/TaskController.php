@@ -21,6 +21,15 @@ class TaskController extends Controller {
         $this->view("add-task-page", ["proNum" => $propertyNum, "appId" => $applianceId]);
     }
 
+    public function history($userId = 0){        
+        $this->notSignedIn();
+        $taskManagement =  $this->model->getTaskManagement(); 
+        $taskHistoryList = $taskManagement->getTaskHistoryList();
+        var_dump($taskHistoryList);
+
+        $this->view("history-task-page", ["userid" => $userId, "historyList" => $taskHistoryList]);
+    }
+
     public function task($taskNum = 0) {
         $this->notSignedIn();
         $taskManagement =  $this->model->getTaskManagement();
