@@ -29,7 +29,12 @@ class Validation {
     }
     public function checkTaskName($taskName){
         if($this->checkInput($taskName) == '') return false;
-        $query = sprintf("SELECT t.taskname from tasks t INNER JOIN propertyappliancebridge p ON p.propertyApplianceId = t.propertyApplianceId WHERE t.taskname = '$taskName'" and t.logDelete != 1);
+        $query = sprintf("
+            SELECT t.taskname 
+            from tasks t 
+            INNER JOIN propertyappliancebridge p ON p.propertyApplianceId = t.propertyApplianceId 
+            WHERE t.taskname = '$taskName' and t.logDelete != 1"
+        );
         return $this->uniqueInput($query);
     }
     public function checkApplianceName($appName, $proID){

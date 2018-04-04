@@ -10,8 +10,8 @@
 			<div class="form-group">
 				<label class="control-label col-sm-4" for="propertyList">Select Property:</label>
 				<div class="col-sm-12">
-					<select class="form-control" id="propertySelector">
-						<option>Select Property</option>
+					<select class="form-control" id="propertySelector" required=>
+						<option value="" disabled selected>Select Property</option>
 					</select>
 				</div>
 			</div>
@@ -78,7 +78,7 @@
 			
 			<div class="form-group"> 
 				<div class="col-sm-offset-2 col-sm-10">
-					<button type="submit" class="btn btn-default">Submit</button>
+					<button type="submit" name="addTask" value="AddTask" class="btn btn-default">Submit</button>
 				</div>
 			</div>
 		</form> 

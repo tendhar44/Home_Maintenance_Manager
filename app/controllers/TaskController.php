@@ -21,12 +21,12 @@ class TaskController extends Controller {
         $this->view("add-task-page", ["proNum" => $propertyNum, "appId" => $applianceId]);
     }
 
-    public function task($taskNum = 0, $apppNum = 0) {
+    public function task($taskNum = 0) {
         $this->notSignedIn();
         $taskManagement =  $this->model->getTaskManagement();
 
         $_SESSION['taskDetailCotent'] = $taskManagement->getTasksById($taskNum);
-        $this->view("single-task-page", ["tn" => $taskNum, "aan" => $apppNum]);
+        $this->view("single-task-page", ["tn" => $taskNum]);
     }
 
     public function update($taskNum = 0) {
@@ -53,8 +53,13 @@ class TaskController extends Controller {
 
         // var_dump($_POST);
 
-        if($_SERVER["REQUEST_METHOD"] == "POST") {            
-            $taskManagement->addTask();
+        if($_SERVER["REQUEST_METHOD"] == "POST") { 
+            if (isset($_POST['updtateTaskStatus'])){
+                $taskManagement->updateCompleteStatus();
+            }  
+            if (isset($_POST['addTask'])){
+                $taskManagement->addTask();
+            }      
         }
 
         $associativeData = $this->model->getAssociatedData();
