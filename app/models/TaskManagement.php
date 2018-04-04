@@ -96,7 +96,7 @@ class TaskManagement {
     }
 
     //get a sequence number according to taskHistory by id previously completed
-    public getTaskHistorySequenceNumber($id){
+    public function getTaskHistorySequenceNumber($id){
         $stmt = "
         SELECT * FROM taskHistory where taskid = '$id'";
         $result = $this->conn->query($stmt);
