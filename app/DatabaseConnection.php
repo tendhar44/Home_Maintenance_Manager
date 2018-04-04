@@ -14,9 +14,9 @@ class DatabaseConnection
 
     public function db_connect()
     {
+
         // static so it won't connect more than one time
         static $connection;
-
         // connect to the database, if there is not connected
         if (!isset($connection)) {
             // use config.ini file to get connection information

@@ -45,7 +45,6 @@ label{
 	font-size: 18px;
 }
 
-
 /* Add background color to footer */
 .hmm-footer {
 	font-size: 12px;
@@ -97,6 +96,16 @@ label{
 	height: 30px;
 	width: 100px;
 }
+
+
+
+/*Begin upload image css*/
+
+.imgPreview{
+	margin: 15px;
+}
+
+/*END upload image css*/
 
 /*Create task form*/
 #taskForm {

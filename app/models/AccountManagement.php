@@ -13,6 +13,13 @@ class AccountManagement {
         $this->conn = $db_con;
     }
 
+    
+    private function alertMsg($msg){        
+        echo '<script language="javascript">';
+        echo 'alert("'. $msg .'")';
+        echo '</script>';
+    }
+
     public function isSignedIn() {
         if(isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true){
             return true;
@@ -153,21 +160,21 @@ class AccountManagement {
         $username = $this->valid->checkInput($username);
 
         //if($this->valid->checkUsername($username)){
-            $password = $this->valid->checkInput($password);
-            $row = $this->getUser($username);
+        $password = $this->valid->checkInput($password);
+        $row = $this->getUser($username);
 
             // var_dump($row['username']);
             //if username and password matches then let user log in
-            if($username == $row['username'] && $password == $row['password']) {
-                $_SESSION['loggedin'] = true;
-                $_SESSION['username'] = $row['username'];
-                $_SESSION['userid'] = $row['userid'];
-                $_SESSION['email'] = $row['email'];
-                $_SESSION['firstname'] = $row['firstname'];
-                $_SESSION['lastname'] = $row['lastname'];
-                $_SESSION['password'] = $row['password'];
-                return true;
-            }
+        if($username == $row['username'] && $password == $row['password']) {
+            $_SESSION['loggedin'] = true;
+            $_SESSION['username'] = $row['username'];
+            $_SESSION['userid'] = $row['userid'];
+            $_SESSION['email'] = $row['email'];
+            $_SESSION['firstname'] = $row['firstname'];
+            $_SESSION['lastname'] = $row['lastname'];
+            $_SESSION['password'] = $row['password'];
+            return true;
+        }
         //}
         $_SESSION['signInError'] = 'Username or Password is incorrect';
         return false;
@@ -275,8 +282,8 @@ class AccountManagement {
             $authenticity = false;
         }else{
             if(!$this->valid->checkEmail($email)){
-            $_SESSION['emailError'] = 'Email address is taken';
-            $authenticity = false;
+                $_SESSION['emailError'] = 'Email address is taken';
+                $authenticity = false;
             }
         }
 
