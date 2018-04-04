@@ -532,4 +532,147 @@ public function listAllTask(){
     ob_end_clean();
     return $output;
 }
+
+
+    public function limitedListAllTask(){
+        $userid = $_SESSION['userid'];
+        //attempt select query execution
+        $stmt = "SELECT p.propertyId, p.applianceId, t.taskid, t.propertyApplianceId, t.taskname, t.description, t.repeatTask, t.duedate, t.complete, t.intervalDays, t.reminderdate, t.reminderinterval 
+    FROM tasks t INNER JOIN propertyappliancebridge p ON t.propertyApplianceId = p.propertyApplianceId
+    WHERE (userid = '$userid') and (logDelete !=1)
+    ORDER BY t.taskname ASC
+    ";
+        $result = $this->conn->query($stmt);
+        if($result === FALSE) {
+            echo "Failed to retrive tasks";
+            return;
+        }
+        $counter = 0;
+        ob_start();
+        while ($row = $result->fetch_assoc()) {
+            $counter++;
+            //creating a session associate array for a task
+            $_SESSION['task' . $row['taskid']] = array(
+                'id' => $row['taskid'],
+                'propertyId' => $row['propertyId'],
+                'applianceId' => $row['applianceId'],
+                'proAppId' => $row['propertyApplianceId'],
+                'name' => $row['taskname'],
+                'description' => $row['description'],
+                'repeatTask' => $row['repeatTask'],
+                'duedate' => $row['duedate'],
+                'complete' => $row['complete'],
+                'intervaldays' => $row['intervalDays'],
+                'reminderdate' => $row['reminderdate'],
+                'reminderinterval' => $row['reminderinterval']
+            );
+            //display list of task that can be collapse and un-collapse.
+            echo '
+        <div class="card">
+        <div class="card-header" id="headingOne">
+        <h5 class="mb-0">
+        <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo'. $counter .'" aria-expanded="false" aria-controls="collapseTwo">
+        ' . $row['taskname'] . '             
+        </a>
+        </h5>
+        </div><!-- close card-header -->
+        <div id="collapseTwo'. $counter .'" class="collapse" role="tabpanel" aria-labelledby="headingTwo">
+        <div class="card-body">
+        <div class="container-fluid">
+        <div class="col-3">
+        </div><!-- close col-3 -->
+        <div class="col-7">
+        Description: 
+        <span style="font-weight:600">
+        '
+                . $row['description'] .
+                '
+        </span>
+        </div><!-- close col-7 -->
+        <div class="col-7">
+        Repeat Task: 
+        <span style="font-weight:600">
+        '
+                . $row['repeatTask'] .
+                '
+        </span>
+        </div><!-- close col-7 -->
+        <div class="col-7">
+        Due Date: 
+        <span style="font-weight:600">
+        '
+                . $row['duedate'] .
+                '
+        </span>
+        </div><!-- close col-7 -->
+        <div class="col-7">
+        Complete: 
+        <span style="font-weight:600">
+        '
+                . $row['complete'] .
+                '
+        </span>
+        </div><!-- close col-7 -->
+        <div class="col-7">
+        Interval Day: 
+        <span style="font-weight:600">
+        '
+                . $row['intervalDays'] .
+                '
+        </span>
+        </div><!-- close col-7 -->
+        <div class="col-7">
+        Reminder Date: 
+        <span style="font-weight:600">
+        '
+                . $row['reminderdate'] .
+                '
+        </span>
+        </div><!-- close col-7 -->
+        <div class="col-7">
+        Reminder Interval Days: 
+        <span style="font-weight:600">
+        '
+                . $row['reminderinterval'] .
+                '
+        </span>
+        </div><!-- close col-7 -->
+        <br>
+        <div class="row">
+        <div class="col-1">
+        <a href="/home_maintenance_manager/public/taskcontroller/task/'. $row['taskid'] .'"><button>
+        Details
+        </button></a>
+        </div>
+        <div class="col-1">
+        </div>
+        <div class="col-1">
+        </div>
+        <div class="col-1">
+        </div>
+        <div class="col-1">
+        </div>
+        <div class="col-1">
+        </div>
+        <div class="col-1">
+        </div>
+        <div class="col-1">
+        </div>
+        <div class="col-1">
+        </div>
+        <div class="col-1">
+        </div>
+        </div><!-- close col-6 -->
+        </div><!-- close container fluid -->
+        </div><!-- close card body -->
+        </div><!-- close collapseOne -->
+        </div><!-- close card -->
+        ';//end echo
+        }
+        $output = ob_get_contents();
+        ob_end_clean();
+        return $output;
+    }
+
+
 }

@@ -9,9 +9,14 @@ class UserController extends Controller {
         $this->view("list-user-page", ["uId" => $userId]);
     }
 
-    public function add() {
+    public function add($ownerId = 0) {
         $this->notSignedIn();
-        $this->view("add-user-page", []);
+        $accManagement = $this->model->getAccountManagement();
+        $this->view("add-user-page", ["useId" => $ownerId]);
+
+        if($_SERVER["REQUEST_METHOD"] == "POST") {
+            $accManagement->addUser();
+        }
     }
 
     public function update($userId = 0) {
@@ -33,15 +38,6 @@ class UserController extends Controller {
     public function signIn() {
         $this->view("sign-in-page", []);
 
-        if(isset($_POST['submit'])) {
-            $username = $_POST["username"];
-            $password = $_POST["password"];
-            if($this->model->getAccountManagement()->signInUser($username, $password)) {
-                header('Location: /home_maintenance_manager/public/homecontroller/home');
-            }else {
-                echo '<span class="errorText">' . $_SESSION['signInError'] . "</span>";
-            }
-        }
     }
 
     public function signOut() {

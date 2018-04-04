@@ -14,6 +14,7 @@ require_once('../app/models/TaskManagement.php');
 require_once('../app/databaseConnection.php');
 require_once('../app/models/Validation.php');
 require_once('../app/models/Calendar.php');
+require_once('../app/models/GroupManagement.php');
 
 
 
@@ -31,6 +32,7 @@ class Model {
     private $applianceManagement;
     private $taskManagement;
     private $calendar;
+    private $groupManagement;
 
     public function __construct() {
         //create new database connection object
@@ -45,7 +47,7 @@ class Model {
         $this->applianceManagement = new ApplianceManagement($this->conn, $this->valid);
         $this->taskManagement = new TaskManagement($this->conn, $this->valid);
         $this->calendar = new Calendar($this->conn, $this->valid);
-
+        $this->groupManagement = new GroupManagement($this->conn, $this->valid);
     }
 
     public function getAccountManagement(){
@@ -63,7 +65,9 @@ class Model {
     public function getCalendar(){
         return $this->calendar;
     }
-
+    public function getGroupManagement(){
+        return $this->groupManagement;
+    }
 
     public function getAssociatedData(){
 

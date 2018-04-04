@@ -17,6 +17,13 @@ class AccountManagement {
         if(isset($_SESSION['loggedin']) && $_SESSION['loggedin'] == true){
             return true;
         }
+        if(isset($_SESSION['managerloggedin']) && $_SESSION['managerloggedin'] == true){
+            return true;
+        }
+        if(isset($_SESSION['limitedloggedin']) && $_SESSION['limitedloggedin'] == true){
+            return true;
+        }
+
     }
 
     public function getUserProperty(){
@@ -29,28 +36,47 @@ class AccountManagement {
     }
 
     public function addUser() {
-        /*require_once("../app/DatabaseConnection.php");
-
-        $db_con = new DatabaseConnection();
-        $db_connection = $db_con->db_connect();
-
-        $user_name= (isset($_POST['userName'])) ? $_POST['userName'] : '';
-        $pass_word= (isset($_POST['passWord'])) ? $_POST['passWord'] : '';
+        $user_id = (isset($_POST['ownerid'])) ? $_POST['ownerid'] : '';
+        $user_type = (isset($_POST['usertype'])) ? $_POST['usertype'] : '';
+        $user_name = (isset($_POST['username'])) ? $_POST['username'] : '';
+        $first_name = (isset($_POST['firstname'])) ? $_POST['firstname'] : '';
+        $last_name = (isset($_POST['lastname'])) ? $_POST['lastname'] : '';
+        $email = (isset($_POST['email'])) ? $_POST['email'] : '';
+        $pass_word = (isset($_POST['password'])) ? $_POST['password'] : '';
 
         // attempt insert query execution
-        $sql_data = "INSERT INTO user (user_name, password) VALUES ('$user_name', '$pass_word')";
+        $sql_data = "INSERT INTO managerlimitedusers (ownerid, usertypeid, username, firstname, lastname, email, password, logdelete) VALUES ('$user_id', '$user_type', '$user_name', '$first_name', '$last_name', '$email', '$pass_word', '0')";
 
-        if($db_connection->query($sql_data) === true){
-            echo "Records inserted successfully.";
+        if($this->conn->query($sql_data) === true){
+            echo "User added successfully.";
         } else{
-            echo "ERROR: Could not able to execute $sql_data. " . $db_connection->error;
-        }*/
+            echo "ERROR: Could not add the user";
+        }
     }
 
     public function getUser($username){
         //attempt select query execution
         $sql_data = "SELECT userid, username, password, firstname, lastname, email FROM users WHERE username = '$username'";
 
+        $userData = $this->conn->query($sql_data);
+        //var_dump($userData['username']);
+
+        return $userData->fetch_assoc();
+    }
+
+    public function getManager($username){
+        //attempt select query execution
+        $sql_data = "SELECT mluid, ownerid, usertypeid, username, password, firstname, lastname, email, logdelete FROM managerlimitedusers WHERE username = '$username'";
+
+        $userData = $this->conn->query($sql_data);
+        //var_dump($userData['username']);
+
+        return $userData->fetch_assoc();
+    }
+
+    public function getLimited($username){
+        //attempt select query execution
+        $sql_data = "SELECT mluid, ownerid, usertypeid, username, password, firstname, lastname, email, logdelete FROM managerlimitedusers WHERE username = '$username'";
 
         $userData = $this->conn->query($sql_data);
         //var_dump($userData['username']);
@@ -142,6 +168,60 @@ class AccountManagement {
                 $_SESSION['password'] = $row['password'];
                 return true;
             }
+        //}
+        $_SESSION['signInError'] = 'Username or Password is incorrect';
+        return false;
+    }
+
+    public function signInManager($username,$password) {
+        //checks the username for extra space, backslash and gets rid of it
+        $username = $this->valid->checkInput($username);
+
+        //if($this->valid->checkUsername($username)){
+        $password = $this->valid->checkInput($password);
+        $row = $this->getManager($username);
+
+        // var_dump($row['username']);
+        //if username and password matches then let user log in
+        if($username == $row['username'] && $password == $row['password']) {
+            $_SESSION['managerloggedin'] = true;
+            $_SESSION['mluid'] = $row['mluid'];
+            $_SESSION['usertype'] = $row['usertypeid'];
+            $_SESSION['username'] = $row['username'];
+            $_SESSION['userid'] = $row['ownerid'];
+            $_SESSION['email'] = $row['email'];
+            $_SESSION['firstname'] = $row['firstname'];
+            $_SESSION['lastname'] = $row['lastname'];
+            $_SESSION['password'] = $row['password'];
+            return true;
+        }
+        //}
+        $_SESSION['signInError'] = 'Username or Password is incorrect';
+        return false;
+    }
+
+    public function signInLimited($username,$password) {
+        //checks the username for extra space, backslash and gets rid of it
+        $username = $this->valid->checkInput($username);
+
+        //if($this->valid->checkUsername($username)){
+        $password = $this->valid->checkInput($password);
+        $row = $this->getLimited($username);
+
+        // var_dump($row['username']);
+        //if username and password matches then let user log in
+        if($username == $row['username'] && $password == $row['password']) {
+            $_SESSION['limitedloggedin'] = true;
+            $_SESSION['mluid'] = $row['mluid'];
+            $_SESSION['usertype'] = $row['usertypeid'];
+            $_SESSION['username'] = $row['username'];
+            $_SESSION['userid'] = $row['ownerid'];
+            $_SESSION['email'] = $row['email'];
+            $_SESSION['firstname'] = $row['firstname'];
+            $_SESSION['lastname'] = $row['lastname'];
+            $_SESSION['password'] = $row['password'];
+            return true;
+        }
         //}
         $_SESSION['signInError'] = 'Username or Password is incorrect';
         return false;

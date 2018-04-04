@@ -39,7 +39,7 @@
 
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="nav-link" href="/home_maintenance_manager/public/propertycontroller/add/<?php echo $_SESSION['userid']; ?>">+Add Property</a>
+                        <a class="nav-link" href="/home_maintenance_manager/public/groupcontroller/<?php echo $_SESSION['userid']; ?>">View Groups</a>
                     </li>
                 </ul>
 
@@ -62,6 +62,7 @@
                         <ul class="dropdown-menu">
                             <li><a style="font-size:14px; color:#586069;"> &nbsp; Signed in as <span style="font-weight:600;"><?php echo $_SESSION['username']; ?></span></a></li>
                             <li><hr></li>
+                            <li><a href="/home_maintenance_manager/public/usercontroller/add/<?php echo $_SESSION['userid']; ?>">&nbsp; Create New User</a></li>
                             <li><a href="/home_maintenance_manager/public/usercontroller/<?php echo $_SESSION['userid']; ?>">&nbsp; Your Profile</a></li>
                             <!--<li><a href="#">&nbsp; Setting</a></li>-->
                             <li><a href="/home_maintenance_manager/public/usercontroller/signout">&nbsp; Sign Out</a></li>

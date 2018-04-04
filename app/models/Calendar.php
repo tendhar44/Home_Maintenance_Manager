@@ -235,8 +235,8 @@ class Calendar {
                 return '<li id="li-' . $this->todayDate . '" class="' . ($dayBox % 7 == 1 ? ' start ' : ($dayBox % 7 == 0 ? ' end ' : ' ')) .
                     ($boxContent == null ? 'mask' : '') . '">' . '<span style="font-weight: 900;">' . $boxContent . '</span>'
                     . (isset($taskNameArray[0]) && $taskLogDeleteArray[0] == 0 && $taskUserIdArray[0] == 1 ? '<br><a href="/home_maintenance_manager/public/taskcontroller/task/' . $taskIdArray[0] . '" style="background-color:yellow;">' . $taskNameArray[0] . '..</a>' : '</li>')
-                    . (isset($taskNameArray[1]) && $taskLogDeleteArray[1] == 0 && $taskUserIdArray[1] == 1 ? '<br><a href="/home_maintenance_manager/public/taskcontroller/task/' . $taskIdArray[1] . '" style="background-color:yellow;">' . $taskNameArray[1] . '..</a>' : '</li>')
-                    . (isset($taskNameArray[2]) && $taskLogDeleteArray[2] == 0 && $taskUserIdArray[2] == 1 ? '<br><a href="/home_maintenance_manager/public/taskcontroller/task/' . $taskIdArray[2] . '" style="background-color:yellow;">' . $taskNameArray[2] . '..</a>' : '</li>');
+                    . (isset($taskNameArray[1]) && $taskLogDeleteArray[1] == 0 && $taskUserIdArray[0] == 1 ? '<br><a href="/home_maintenance_manager/public/taskcontroller/task/' . $taskIdArray[1] . '" style="background-color:yellow;">' . $taskNameArray[1] . '..</a>' : '</li>')
+                    . (isset($taskNameArray[2]) && $taskLogDeleteArray[2] == 0 && $taskUserIdArray[0] == 1 ? '<br><a href="/home_maintenance_manager/public/taskcontroller/task/' . $taskIdArray[2] . '" style="background-color:yellow;">' . $taskNameArray[2] . '..</a>' : '</li>');
             } else {
                 return '<li id="li-' . $this->todayDate . '" class="' . ($dayBox % 7 == 1 ? ' start ' : ($dayBox % 7 == 0 ? ' end ' : ' ')) .
                     ($boxContent == null ? 'mask' : '') . '">' . '<span style="font-weight: 900;">' . $boxContent . '</span></li>';

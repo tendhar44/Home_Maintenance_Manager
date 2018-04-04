@@ -14,4 +14,12 @@ class HomeController extends Controller {
     public function home(){
         $this->view("home-page-loggedin", []);
     }
+
+    public function managerhome(){
+        $this->view("home-page-manager-loggedin", []);
+    }
+
+    public function limitedhome(){
+        $this->view("home-page-limited-loggedin", []);
+    }
 }

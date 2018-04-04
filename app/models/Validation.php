@@ -44,6 +44,12 @@ class Validation {
         $query = sprintf("select propertyname from properties where propertyname ='$proName'");
         return $this->uniqueInput($query);
     }
+    public function checkGroupName($groName){
+        if($this->checkInput($groName) == '') return false;
+        $query = sprintf("select groupname from groups where groupname ='$groName'");
+        return $this->uniqueInput($query);
+    }
+
     public function uniqueInput($query){
         $result = $this->db_connection->query($query);
         // var_dump(mysqli_num_rows($result));

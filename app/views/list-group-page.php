@@ -1,10 +1,9 @@
 
 <div class="container" id="info">
-    <a href="/home_maintenance_manager/public">Home</a>
     <br><br>
-    <h3>Property List</h3>
+    <h3>Group List</h3>
     <br>
-    <a href="/home_maintenance_manager/public/propertycontroller/add/<?php echo$_SESSION['userid']; ?>">+ Add Property</a>
+    <a href="/home_maintenance_manager/public/groupcontroller/add/<?php echo$_SESSION['userid']; ?>">+ Add Group</a>
     <div id="list-property">
         <?php
         echo $_SESSION['outputCotent'];
