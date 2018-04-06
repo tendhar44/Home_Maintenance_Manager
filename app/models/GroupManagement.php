@@ -55,6 +55,29 @@ class GroupManagement {
             }
     }
 
+    public function addNonDefaultMember() {
+        $ownerid = $_SESSION['userid'];
+        $user_name = (isset($_POST['username'])) ? $_POST['username'] : '';
+        $group_id = (isset($_POST['groupid'])) ? $_POST['groupid'] : '';
+
+        //$un = mysqli_real_escape_string($this->conn, $user_name);
+
+        $row = $this->getUser($user_name);
+        //$row2 = $this->getGroupIdByOwner($ownerid);
+
+        //$username = $row['username'];
+        $userid = $row['userid'];
+        //$group_id = $row2['groupid'];
+
+        $sql_data = "INSERT INTO usergroupbridge (userid, groupid) VALUES ('$userid', '$group_id')";
+
+        if ($this->conn->query($sql_data) === true) {
+            echo "Successfully added a member!";
+        } else {
+            echo "We weren't able to add the member. Please try again.";
+        }
+    }
+
     public function addGroup() {
         $owner_id = (isset($_POST['ownerid'])) ? $_POST['ownerid'] : '';
         $group_name = (isset($_POST['groupname'])) ? $_POST['groupname'] : '';

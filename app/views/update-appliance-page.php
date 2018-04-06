@@ -3,8 +3,6 @@
 ?>
 
 <div class="container">
-    <a href="/home_maintenance_manager/public">Home</a>
-    >
     <a href="/home_maintenance_manager/public/propertycontroller/<?php echo $_SESSION['userid'] ?>">Property</a>
     >
     <a href="/home_maintenance_manager/public/appliancecontroller/<?php echo $_SESSION['propertyid' . $data["pn"]]['id'] ?>">Appliance</a>

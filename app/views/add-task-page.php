@@ -1,8 +1,5 @@
 
-
 <div class="container">
-    <a href="/home_maintenance_manager/public">Home</a>
-    >
     <a href="/home_maintenance_manager/public/propertycontroller/<?php echo $_SESSION['userid'] ?>">Property</a>
     >
     <a href="/home_maintenance_manager/public/appliancecontroller/<?php echo $data["proNum"] ?> ">Appliance</a>
@@ -21,7 +18,7 @@
         Repeat Task: <br> <input type="radio" name="repeatTask" value="1">&nbsp; Yes
         <br><input type="radio" name="repeatTask" value="0" checked="checked">&nbsp; No<br><br>
         Interval Days:<br> <input type="number" name="intervalDay" value="1"><br><br>
-        Task Reminder Date:<br> <input type="date" name="taskReminder"><br><br>
+        Task Reminder Date:<br> <input type="date" name="taskReminder" required><br><br>
         Reminder Interval Days:<br> <input type="number" name="reminderInterval"><br><br>
 
         Description:<br> <textarea name="taskDes"></textarea><br><br>

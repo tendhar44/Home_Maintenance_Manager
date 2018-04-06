@@ -1,6 +1,5 @@
 
 <div class="container" id="info">
-    <a href="/home_maintenance_manager/public">Home</a>
     <br><br>
     <h3>Property List</h3>
     <br>

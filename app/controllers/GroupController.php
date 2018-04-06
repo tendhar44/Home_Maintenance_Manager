@@ -23,7 +23,7 @@ class GroupController extends Controller {
         $this->view("add-groupmember-page", ["gId" => $groupNum]);
 
         if($_SERVER["REQUEST_METHOD"] == "POST") {
-            $groupManagement->addMember();
+            $groupManagement->addNonDefaultMember();
         }
     }
 
