@@ -14,8 +14,11 @@ class UserController extends Controller {
         $accManagement = $this->model->getAccountManagement();
         $this->view("add-user-page", ["useId" => $ownerId]);
 
+        $groupManagement =  $this->model->getGroupManagement();
+
         if($_SERVER["REQUEST_METHOD"] == "POST") {
             $accManagement->addUser();
+            $groupManagement->addMember();
         }
     }
 
@@ -41,9 +44,9 @@ class UserController extends Controller {
     }
 
     public function signOut() {
+        header("location: /home_maintenance_manager/public/homecontroller");
         $this->notSignedIn();
         $this->model->getAccountManagement()->signOutUser();
-        header("location: /home_maintenance_manager/public/homecontroller");
     }
 
     public function signUp() {
