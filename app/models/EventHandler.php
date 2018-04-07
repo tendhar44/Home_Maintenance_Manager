@@ -27,6 +27,33 @@ class EventHandler {
 	}
 
 
+
+	public function getImage($objectId, $objectType, $conn){
+
+		$stmt = "
+		SELECT i.imageid, i.imageFileName, i.alternateText 
+		FROM images i
+		INNER JOIN imageObjectBridge io on i.imageid = io.imageid 
+		WHERE io.objectId = '$objectId' and io.objectType = '$objectType' and i.logDelete != 1";
+
+		$imgData = $conn->query($stmt);
+		$counter = 0;
+		$imgs;
+
+		while ($row = $imgData->fetch_assoc()) {
+	      //creating a session for listed property
+			$imgs[$counter] = 
+			array (
+				'id' => $row['imageid'],
+				'name' => $row['imageFileName'],
+				'altText' => $row['alternateText'],
+			);
+			$counter++;
+		}
+		return $imgs;
+	}
+
+
 	public function getImageAutoIncrement($connection, $table){
 		$stmt = "
 		SELECT AUTO_INCREMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'home_main_db' AND TABLE_NAME = '$table'
@@ -48,7 +75,7 @@ class EventHandler {
 		return null;
 	}
 	public function createImageBridge($imgId, $objectId, $objectType, $conn){
-		$stmt = "INSERT INTO images (name) VALUES ('$imgName')";
+		$stmt = "INSERT INTO images (imageFileName) VALUES ('$imgName')";
 		return $conn->query($stmt);
 	}
 
@@ -72,7 +99,7 @@ class EventHandler {
 		foreach($imgFiles as $img){
 
 			$prefix = $uniqueId = time().mt_rand(0,100);
-			$imgName = $prefix . basename($img["name"]);
+			$imgName = $prefix . "_". basename($img["name"]);
 			$target_file = $target_dir . $imgName;
 			$uploadOk = 1;
 			$imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));

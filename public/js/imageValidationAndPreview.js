@@ -8,6 +8,41 @@
 
     */
 
+    function previewOnly(){        
+        var preview = document.querySelector('#preview');
+        var filesSelector = document.querySelector('input[type=file]');
+        var files  = filesSelector.files;
+        console.log(files);
+
+        //clearing the preview div so previous img dont show
+        while (preview.firstChild) {
+            preview.removeChild(preview.firstChild);
+        }
+
+        if (files) {
+            [].forEach.call(files, readAndPreview);
+            // files.forEach(readAndPreview); // files is not array, 'object'
+        }
+
+        function readAndPreview(file) {
+            // Make sure `file.name` matches our extensions criteria
+            if ( /\.(jpe?g|png|gif)$/i.test(file.name) ) {
+                var reader = new FileReader();
+                reader.addEventListener("load", function () {
+                    var image = new Image();
+                    image.height = 100;
+                    image.title = file.name;
+                    image.src = this.result;
+                    image.className = "imgPreview";
+                        // image.warpAll('<div class="imgPreview"></div>');
+                        preview.appendChild( image );
+                    }, false);
+                reader.readAsDataURL(file);
+            }
+        }
+    }
+
+
     function previewFiles(){
         // console.log("testing");
         var preview = document.querySelector('#preview');
