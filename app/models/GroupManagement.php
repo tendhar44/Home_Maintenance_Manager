@@ -9,6 +9,75 @@ class GroupManagement {
         $this->conn = $db_con;
     }
 
+    public function getUser($username){
+        //attempt select query execution
+        $sql_data = "SELECT userid, usertypeid, username, password, firstname, lastname, email, logdelete FROM users WHERE username = '$username'";
+
+        $userData = $this->conn->query($sql_data);
+        //var_dump($userData['username']);
+
+        return $userData->fetch_assoc();
+    }
+
+    public function getGroupIdByOwner($ownerid){
+        $username = $_SESSION['username'];
+        $def = 'default';
+        $userdef = $username . $def;
+        //attempt select query execution
+        $sql_data = "SELECT groupid, groupownerid, groupname FROM groups WHERE groupownerid = '$ownerid' AND groupname = '$userdef'";
+
+        $userData = $this->conn->query($sql_data);
+        //var_dump($userData['username']);
+
+        return $userData->fetch_assoc();
+    }
+
+    public function addMember() {
+        $ownerid = $_SESSION['userid'];
+        $user_name = (isset($_POST['username'])) ? $_POST['username'] : '';
+        //$group_id = (isset($_POST['groupid'])) ? $_POST['groupid'] : '';
+
+        //$un = mysqli_real_escape_string($this->conn, $user_name);
+
+        $row = $this->getUser($user_name);
+        $row2 = $this->getGroupIdByOwner($ownerid);
+
+        //$username = $row['username'];
+        $userid = $row['userid'];
+        $group_id = $row2['groupid'];
+
+            $sql_data = "INSERT INTO usergroupbridge (userid, groupid) VALUES ('$userid', '$group_id')";
+
+            if ($this->conn->query($sql_data) === true) {
+                echo "Successfully added a member!";
+            } else {
+                echo "We weren't able to add the member. Please try again.";
+            }
+    }
+
+    public function addNonDefaultMember() {
+        $ownerid = $_SESSION['userid'];
+        $user_name = (isset($_POST['username'])) ? $_POST['username'] : '';
+        $group_id = (isset($_POST['groupid'])) ? $_POST['groupid'] : '';
+
+        //$un = mysqli_real_escape_string($this->conn, $user_name);
+
+        $row = $this->getUser($user_name);
+        //$row2 = $this->getGroupIdByOwner($ownerid);
+
+        //$username = $row['username'];
+        $userid = $row['userid'];
+        //$group_id = $row2['groupid'];
+
+        $sql_data = "INSERT INTO usergroupbridge (userid, groupid) VALUES ('$userid', '$group_id')";
+
+        if ($this->conn->query($sql_data) === true) {
+            echo "Successfully added a member!";
+        } else {
+            echo "We weren't able to add the member. Please try again.";
+        }
+    }
+
     public function addGroup() {
         $owner_id = (isset($_POST['ownerid'])) ? $_POST['ownerid'] : '';
         $group_name = (isset($_POST['groupname'])) ? $_POST['groupname'] : '';
@@ -179,13 +248,13 @@ class GroupManagement {
 
       <div class="col-1">
 
-      <a href="/home_maintenance_manager/public/propertycontroller/update/'. $row['groupid']  .'"><button class="stand-bttn-size">
+      <a href="/home_maintenance_manager/public/groupcontroller/update/'. $row['groupid']  .'"><button class="stand-bttn-size">
       Update
       </button></a>
       </div> 
 
       <div class="col-1">    
-      <a href="/home_maintenance_manager/public/propertycontroller/delete/'. $row['groupid']  .'"><button class="stand-bttn-size">
+      <a href="/home_maintenance_manager/public/groupcontroller/delete/'. $row['groupid']  .'"><button class="stand-bttn-size">
       Delete
       </button></a>
       </div>
@@ -208,7 +277,7 @@ class GroupManagement {
     function getListOfMembers($ownerid, $groupId) {
 
         //attempt select query execution
-        $sql_data = "SELECT m.mluid, m.ownerid, m.usertypeid, m.username, m.password, m.firstname, m.lastname, m.email, m.logdelete, g.groupownerid, g.groupname FROM managerlimitedusers m INNER JOIN groups g ON m.ownerid = g.groupownerid WHERE m.ownerid = '$ownerid' AND m.logDelete != 1 AND g.groupownerid = '$ownerid'";
+        $sql_data = "SELECT u.userid, u.usertypeid, u.username, u.password, u.firstname, u.lastname, u.email, u.logdelete, ugb.groupid, ugb.userid FROM users u INNER JOIN usergroupbridge ugb ON u.userid = ugb.userid WHERE u.logDelete != 1 AND ugb.groupid = '$groupId'";
 
         $userData = $this->conn->query($sql_data);
 
@@ -217,12 +286,11 @@ class GroupManagement {
         while ($row = $userData->fetch_assoc()) {
             $counter++;
 
-            $_SESSION['mulid' . $row['mulid']] =
+            $_SESSION['userid' . $row['userid']] =
                 array (
-                    'id' => $row['mulid'],
-                    'ownerid' => $row['ownerid'],
+                    'id' => $row['userid'],
+                    'groupid' => $row['groupid'],
                     'usertype' => $row['usertypeid'],
-                    'groupname' => $row['groupname'],
                     'username' => $row['username'],
                     'first' => $row['firstname'],
                     'last' => $row['lastname'],
@@ -250,10 +318,10 @@ class GroupManagement {
       </div><!-- close col-3 -->
 
       <div class="col-7">
-      Property Owner ID#: 
+      User ID#: 
       <span style="font-weight:600">
       '
-                . $row['ownerid'] .
+                . $row['userid'] .
 
                 '
       </span>
@@ -264,16 +332,6 @@ class GroupManagement {
       <span style="font-weight:600">
       '
                 . $row['usertypeid'] .
-
-                '
-      </span>
-      </div><!-- close col-7 -->
-      
-      <div class="col-7">
-      Group Name: 
-      <span style="font-weight:600">
-      '
-                . $row['groupname'] .
 
                 '
       </span>

@@ -52,7 +52,7 @@ class AccountManagement {
         $pass_word = (isset($_POST['password'])) ? $_POST['password'] : '';
 
         // attempt insert query execution
-        $sql_data = "INSERT INTO managerlimitedusers (ownerid, usertypeid, username, firstname, lastname, email, password, logdelete) VALUES ('$user_id', '$user_type', '$user_name', '$first_name', '$last_name', '$email', '$pass_word', '0')";
+        $sql_data = "INSERT INTO users (usertypeid, username, firstname, lastname, email, password, logdelete) VALUES ('$user_type', '$user_name', '$first_name', '$last_name', '$email', '$pass_word', '0')";
 
         if($this->conn->query($sql_data) === true){
             echo "User added successfully.";
@@ -63,7 +63,7 @@ class AccountManagement {
 
     public function getUser($username){
         //attempt select query execution
-        $sql_data = "SELECT userid, username, password, firstname, lastname, email FROM users WHERE username = '$username'";
+        $sql_data = "SELECT userid, usertypeid, username, password, firstname, lastname, email, logdelete FROM users WHERE username = '$username' AND usertypeid = '1'";
 
         $userData = $this->conn->query($sql_data);
         //var_dump($userData['username']);
@@ -73,7 +73,7 @@ class AccountManagement {
 
     public function getManager($username){
         //attempt select query execution
-        $sql_data = "SELECT mluid, ownerid, usertypeid, username, password, firstname, lastname, email, logdelete FROM managerlimitedusers WHERE username = '$username'";
+        $sql_data = "SELECT userid, usertypeid, username, password, firstname, lastname, email, logdelete FROM users WHERE username = '$username' AND usertypeid = '2'";
 
         $userData = $this->conn->query($sql_data);
         //var_dump($userData['username']);
@@ -83,7 +83,7 @@ class AccountManagement {
 
     public function getLimited($username){
         //attempt select query execution
-        $sql_data = "SELECT mluid, ownerid, usertypeid, username, password, firstname, lastname, email, logdelete FROM managerlimitedusers WHERE username = '$username'";
+        $sql_data = "SELECT userid, usertypeid, username, password, firstname, lastname, email, logdelete FROM users WHERE username = '$username' AND usertypeid = '3'";
 
         $userData = $this->conn->query($sql_data);
         //var_dump($userData['username']);
@@ -168,6 +168,7 @@ class AccountManagement {
         if($username == $row['username'] && $password == $row['password']) {
             $_SESSION['loggedin'] = true;
             $_SESSION['username'] = $row['username'];
+            $_SESSION['usertype'] = $row['usertypeid'];
             $_SESSION['userid'] = $row['userid'];
             $_SESSION['email'] = $row['email'];
             $_SESSION['firstname'] = $row['firstname'];
@@ -192,10 +193,9 @@ class AccountManagement {
         //if username and password matches then let user log in
         if($username == $row['username'] && $password == $row['password']) {
             $_SESSION['managerloggedin'] = true;
-            $_SESSION['mluid'] = $row['mluid'];
             $_SESSION['usertype'] = $row['usertypeid'];
             $_SESSION['username'] = $row['username'];
-            $_SESSION['userid'] = $row['ownerid'];
+            $_SESSION['userid'] = $row['userid'];
             $_SESSION['email'] = $row['email'];
             $_SESSION['firstname'] = $row['firstname'];
             $_SESSION['lastname'] = $row['lastname'];
@@ -219,10 +219,9 @@ class AccountManagement {
         //if username and password matches then let user log in
         if($username == $row['username'] && $password == $row['password']) {
             $_SESSION['limitedloggedin'] = true;
-            $_SESSION['mluid'] = $row['mluid'];
             $_SESSION['usertype'] = $row['usertypeid'];
             $_SESSION['username'] = $row['username'];
-            $_SESSION['userid'] = $row['ownerid'];
+            $_SESSION['userid'] = $row['userid'];
             $_SESSION['email'] = $row['email'];
             $_SESSION['firstname'] = $row['firstname'];
             $_SESSION['lastname'] = $row['lastname'];
