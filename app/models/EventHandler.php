@@ -69,7 +69,6 @@ class EventHandler {
 		}
 		$target_dir = $_SERVER['DOCUMENT_ROOT']."/Home_Maintenance_Manager/public/img/";
 		// var_dump($target_dir);
-
 		foreach($imgFiles as $img){
 
 			$prefix = $uniqueId = time().mt_rand(0,100);
@@ -123,6 +122,7 @@ class EventHandler {
 				}
 			}
 		}
+		return true;
 	}
 }
 
