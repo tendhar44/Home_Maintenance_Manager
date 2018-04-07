@@ -13,7 +13,7 @@
         var preview = document.querySelector('#preview');
         var filesSelector = document.querySelector('input[type=file]');
         var files  = filesSelector.files;
-        // console.log(files);
+        console.log(files);
 
         //clearing the preview div so previous img dont show
         while (preview.firstChild) {

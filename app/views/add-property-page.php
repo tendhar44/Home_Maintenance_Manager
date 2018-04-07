@@ -15,7 +15,7 @@
         Address:<br> <input type="text" name="address"><br><br>
         Description:<br> <input type="text" name="propertydes"><br><br>
 
-        <input id="browse" name="imgSelector" type="file" onchange="previewFiles()" multiple accept="image/*">
+        <input id="browse" name="imgSelector[]" type="file" onchange="previewFiles()" multiple accept="image/*">
         <div id="preview"></div>
 
             <br><br>

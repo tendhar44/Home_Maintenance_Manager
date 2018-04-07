@@ -9,6 +9,7 @@ class PropertyManagement {
   private $conn;
   private $valid;
   private $eHandler;
+  private $imageType = 'p';
 
   public function __construct($db_con, $valid) {
     $this->valid = $valid;
@@ -21,20 +22,26 @@ public function addProperty() {
     $property_address = (isset($_POST['address'])) ? $_POST['address'] : '';
     $user_id = (isset($_POST['ownerid'])) ? $_POST['ownerid'] : NULL;
     $property_des = (isset($_POST['propertydes'])) ? $_POST['propertydes'] : '';
-    $imgFiles = (isset($_POST['imgSelector'])) ? $_POST['imgSelector'] : NULL;
 
     $pn = mysqli_real_escape_string($this->conn, $property_name);
     $add = mysqli_real_escape_string($this->conn, $property_address);
     $uid = mysqli_real_escape_string($this->conn, $user_id);
     $pd = mysqli_real_escape_string($this->conn, $property_des);
 
+
+
+    // var_dump($_FILES['imgSelector']);
+
     if($this->valid->checkPropertyName($pn, $uid)) {
         $sql_data = "INSERT INTO properties (ownerid, propertyname, description, address) VALUES ('$uid', '$pn', '$pd', '$add')";
 
         if ($this->conn->query($sql_data) === true) {
+            $last_Insert_Id = $this->conn->insert_id;
             $this->eHandler->alertMsg("Successfully added your property!");
-            if($imgFiles != null){
-                $this->eHandler->uploadImage($imgFiles);
+            if ($_FILES['imgSelector']){                
+                $file_ary = $this->eHandler->reArrayFiles($_FILES['imgSelector']);
+                // var_dump($file_ary);
+                $this->eHandler->uploadImage($file_ary, $last_Insert_Id, $this->imageType, $this->conn);
             }
         } else {
             $this->eHandler->alertMsg("We weren't able to add your property. Please try again.");
