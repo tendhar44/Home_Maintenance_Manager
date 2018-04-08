@@ -154,58 +154,28 @@ class ApplianceManagement {
 
             '
             </span>
-            </div><!-- close col-7 -->
+            </div><!-- close col-7 -->      
 
-
-            <br>
 
             <div class="row">
-            <div class="col-1">
-            <a href="/home_maintenance_manager/public/taskcontroller/'. $row['propertyid'] .'/'. $row['applianceid'].'"><button>
-            View Task
-            </button></a>
+            <div class="col">
+            <div class="btn-group float-left mt-2">
+            <a class="btn btn-secondary btn-md" href="/home_maintenance_manager/public/taskcontroller/'. $row['propertyid'] .'/'. $row['applianceid'].'">
+            <i class="fa fa-flag" aria-hidden="true"></i>Details</a>
+            </div>
+            </div>
+            <div class="col">
+            <div class="btn-group float-md-right mt-2">
+
+            <a class="btn btn-md btn-secondary" href="/home_maintenance_manager/public/appliancecontroller/update/'. $row['applianceid'] .'">
+            <i class="fa fa-flag" aria-hidden="true"></i> Update</a>
+            <a class="btn btn-md btn-secondary" href="/home_maintenance_manager/public/appliancecontroller/delete/'. $row['applianceid'] .'">
+            <i class="fa fa-flag" aria-hidden="true"></i> Delete</a>
+            </div>
             </div>
 
-            <div class="col-1">
-            </div>
+            </div><!-- close row -->
 
-            <div class="col-1">
-            </div>
-
-            <div class="col-1">
-            </div>
-
-            <div class="col-1">
-            </div>
-
-            <div class="col-1">
-            </div>
-
-            <div class="col-1">
-            </div>
-
-            <div class="col-1">
-            </div>
-
-            <div class="col-1">
-            </div>
-
-            <div class="col-1">
-            </div>
-
-            <div class="col-1">
-            <a href="/home_maintenance_manager/public/appliancecontroller/update/'.$propertyId.'/'. $row['applianceid'] .'"><button class="stand-bttn-size">
-            Update
-            </button></a>
-            </div> 
-
-            <div class="col-1">    
-            <a href="/home_maintenance_manager/public/appliancecontroller/delete/'. $row['applianceid'] .'"><button class="stand-bttn-size">
-            Delete
-            </button></a>
-            </div>
-
-            </div><!-- close col-6 -->
 
             </div><!-- close container fluid -->
             </div><!-- close card body -->

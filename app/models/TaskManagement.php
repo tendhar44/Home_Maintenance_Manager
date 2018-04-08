@@ -381,101 +381,61 @@ public function getListOfTasks($proID, $appID) {
         </div><!-- close card-header -->
         <div id="collapseTwo'. $counter .'" class="collapse" role="tabpanel" aria-labelledby="headingTwo">
         <div class="card-body">
+
         <div class="container-fluid">
-        <div class="col-3">
-        </div><!-- close col-3 -->
-        <div class="col-7">
-        Description: 
+        <div class="row">
+
+        <p>
+        Description: &nbsp;
         <span style="font-weight:600">
         '
         . $row['description'] .
         '
         </span>
-        </div><!-- close col-7 -->
-        <div class="col-7">
-        Repeat Task: 
-        <span style="font-weight:600">
-        '
-        . $row['repeatTask'] .
-        '
-        </span>
-        </div><!-- close col-7 -->
-        <div class="col-7">
-        Due Date: 
+        </p>
+        </div><!-- close row -->
+
+        <div class="row">
+        <p>
+        Due Date: &nbsp;
         <span style="font-weight:600">
         '
         . $row['duedate'] .
         '
         </span>
-        </div><!-- close col-7 -->
-        <div class="col-7">
-        Complete: 
-        <span style="font-weight:600">
-        '
-        . $row['complete'] .
-        '
-        </span>
-        </div><!-- close col-7 -->
-        <div class="col-7">
-        Interval Day: 
-        <span style="font-weight:600">
-        '
-        . $row['intervalDays'] .
-        '
-        </span>
-        </div><!-- close col-7 -->
-        <div class="col-7">
-        Reminder Date: 
-        <span style="font-weight:600">
-        '
-        . $row['reminderdate'] .
-        '
-        </span>
-        </div><!-- close col-7 -->
-        <div class="col-7">
-        Reminder Interval Days: 
-        <span style="font-weight:600">
-        '
-        . $row['reminderinterval'] .
-        '
-        </span>
-        </div><!-- close col-7 -->
-        <br>
+        </p>
+        </div><!-- close row -->
+
+
         <div class="row">
-        <div class="col-1">
-        <a href="/home_maintenance_manager/public/taskcontroller/task/'. $row['taskid'] .'"><button>
-        Details
-        </button></a>
+        <div class="col">
+        <div class="btn-group float-left mt-2">
+        <a class="btn btn-secondary btn-md" href="/home_maintenance_manager/public/taskcontroller/task/'. $row['taskid'] .'">
+        <i class="fa fa-flag" aria-hidden="true"></i>Details</a>
         </div>
-        <div class="col-1">
         </div>
-        <div class="col-1">
+        <div class="col">
+        <div class="btn-group float-md-right mt-2">
+
+        <form action="#" method="post">
+        <input type="hidden" name="taskid" value="'.$row['taskid'].'">
+        <input type="hidden" name="completeStatus" value="1">
+        <input type="submit" name="updtateTaskStatus" value="Complete" class="btn btn-md btn-secondary" aria-hidden="true">
+
+        </form>
+
+        <a class="btn btn-md btn-secondary" href="/home_maintenance_manager/public/taskcontroller/update/'. $row['taskid'] .'">
+        <i class="fa fa-flag" aria-hidden="true"></i> Update</a>
+        <a class="btn btn-md btn-secondary" href="/home_maintenance_manager/public/taskcontroller/delete/'. $row['taskid'] .'">
+        <i class="fa fa-flag" aria-hidden="true"></i> Delete</a>
         </div>
-        <div class="col-1">
         </div>
-        <div class="col-1">
-        </div>
-        <div class="col-1">
-        </div>
-        <div class="col-1">
-        </div>
-        <div class="col-1">
-        </div>
-        <div class="col-1">
-        </div>
-        <div class="col-1">
-        </div>
-        <div class="col-1">
-        <a href="/home_maintenance_manager/public/taskcontroller/update/'. $row['taskid'] .'"><button class="stand-bttn-size">
-        Update
-        </button></a>
-        </div> 
-        <div class="col-1">    
-        <a href="/home_maintenance_manager/public/taskcontroller/delete/'. $row['taskid'] .'"><button class="stand-bttn-size">
-        Delete
-        </button></a>
-        </div>
-        </div><!-- close col-6 -->
+
+        </div><!-- close row -->
+
+
+
+        
         </div><!-- close container fluid -->
         </div><!-- close card body -->
         </div><!-- close collapseOne -->

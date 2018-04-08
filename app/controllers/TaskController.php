@@ -43,7 +43,12 @@ class TaskController extends Controller {
         $taskManagement =  $this->model->getTaskManagement();        
         if($_SERVER["REQUEST_METHOD"] == "POST") {
             $taskID = $_SESSION['task' . $taskNum]['id'];
-            $taskManagement->updateTask($taskID);
+            if (isset($_POST['addTask'])){
+                $taskManagement->updateTask($taskID);
+            }  
+            if (isset($_POST['addImg'])){
+                $taskManagement->addTask();
+            }      
         }
         $this->view("update-task-page", ["tn" => $taskNum]);
     }

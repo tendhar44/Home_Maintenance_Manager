@@ -19,42 +19,47 @@
     </div>
 
     <div class="row">
-        <div class="col-sm-12 col-md-6">
+        <div class="col-sm-12 col-md-4">
             <form action="#" method="post">
                 Property Name:<br> <input type="text" name="propertyname" value="<?php echo $_SESSION['propertyid' . $data["pn"]]['name'] ?>"><br><br>
                 Address:<br> <input type="text" name="address" value="<?php echo $_SESSION['propertyid' . $data["pn"]]['address'] ?>"><br><br>
                 Description:<br> <input type="text" name="propertydes" value="<?php echo $_SESSION['propertyid' . $data["pn"]]['description'] ?>"><br><br>
                 <div class="form-group"> 
-                    <button type="submit" name="addTask" value="AddTask" class="btn btn-default">Submit</button>
+                    <button type="submit" name="updateProperty" value="updateProperty" class="btn btn-default">Submit</button>
                 </div>
             </form>
         </div>
 
-        <div class="col-auto">
+        <div class="col-sm-12 col-md-8">
+            <form action="#" method="post" enctype="multipart/form-data"> 
+
+                <label>
+                   Add Image
+                </label>
+                <div class="form-group"> 
+                    <input id="browse"  name="imgSelector[]" type="file" onchange="previewFiles()" multiple required accept="image/*">
+
+                    <div id="preview"></div>
+                </div>
+
+                <div class="form-group"> 
+                   <button type="submit" name="addImg" value="AddTask" class="btn btn-default">Submit</button>
+                </div>
+            </form>
+
 
             <?php 
 
             if($data["img"] != null){
-                
+                // var_dump($data["img"]);
+
                 foreach ($data["img"] as $image) {
 
 
                     echo '
 
-                    <img id="myImg" src="/home_maintenance_manager/public/image' . $image['name'] . '" alt="'. explode( '_', $image )[1] .'" width="200" height="200">
+                    <img id="myImg" class="imgPreview" src="/home_maintenance_manager/public/img/' . $image['name'] . '" alt="'. explode( '_', $image["name"] )[1] .'" width="150" height="150">
 
-                    <!-- The Modal -->
-                    <div id="myModal" class="modal">
-
-                    <!-- The Close Button -->
-                    <span class="close">&times;</span>
-
-                    <!-- Modal Content (The Image) -->
-                    <img class="modal-content" id="enlargeImg">
-
-                    <!-- Modal Caption (Image Text) -->
-                    <div id="caption"></div>
-                    </div>
 
 
                     ';
@@ -63,23 +68,22 @@
 
 
             ?>
+                    <!-- The Modal -->
+                    <div id="myModal" class="modal">
 
-            <label>
-             Add Image
-         </label>
-         <form action="#" method="post">
+                    <!-- The Close Button -->
+                    <span class="close">&times;</span>
 
-            <input id="browse"  name="imgSelector[]" type="file" onchange="previewFiles()" multiple accept="image/*" disabled >
+                    <!-- Modal Content (The Image) -->
+                    <img class="modal-content" id="imgEnlarge">
 
-            <div id="preview"></div>
+                    <!-- Modal Caption (Image Text) -->
+                    <div id="caption"></div>
+                    </div>
 
-            <div class="form-group"> 
-                <button type="submit" name="addTask" value="AddTask" class="btn btn-default">Submit</button>
-            </div>
-        </form>
     </div>
 </div>
 
 </div>
 
-<script src="/home_maintenance_manager/public/js/enlargeImg.js" type="text/javascript"></script>
+<script src="/home_maintenance_manager/public/js/jqueryImg.js"></script>

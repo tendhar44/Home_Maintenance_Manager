@@ -54,7 +54,7 @@
     function checkSize(files){
         for (var i = 0; i < files.length; i ++){
             // console.log(files[i].type);
-            if((files[i].size > 500000)){
+            if((files[i].size > 1000000)){
                 return failValidation("Selected Files size can only be 500 KB or less");
             }
         }

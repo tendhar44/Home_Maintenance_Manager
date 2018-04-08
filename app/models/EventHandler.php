@@ -30,33 +30,40 @@ class EventHandler {
 
 	public function getImage($objectId, $objectType, $conn){
 
+		// var_dump($objectId);
+		// var_dump($objectType);
+
 		$stmt = "
-		SELECT i.imageid, i.imageFileName, i.alternateText 
-		FROM images i
-		INNER JOIN imageObjectBridge io on i.imageid = io.imageid 
-		WHERE io.objectId = '$objectId' and io.objectType = '$objectType' and i.logDelete != 1";
+		SELECT i.imageId, i.imageFileName, i.alternateText 
+		FROM Images i
+		INNER JOIN ImageObjectBridge io on i.imageId = io.imageId 
+		WHERE io.objectId = '$objectId' and io.objectType = '$objectType'
+		";
 
 		$imgData = $conn->query($stmt);
 
-		if(!$imgData){
+		// var_dump($imgData);
+
+		if(!$imgData || mysqli_num_rows($imgData) == 0){
 			return null;
 		}
 
 		$counter = 0;
 		$imgs;
 
-		var_dump($imgData);
+		// var_dump($imgData);
 
 		while ($row = $imgData->fetch_assoc()) {
 	      //creating a session for listed property
 			$imgs[$counter] = 
 			array (
-				'id' => $row['imageid'],
+				'id' => $row['imageId'],
 				'name' => $row['imageFileName'],
 				'altText' => $row['alternateText'],
 			);
 			$counter++;
 		}
+		// var_dump($imgs);
 		return $imgs;
 	}
 
@@ -75,19 +82,21 @@ class EventHandler {
 	}
 
 	public function uploadImageToDatabase($imgName, $conn){
-		$stmt = "INSERT INTO images (name) VALUES ('$imgName')";
+		$stmt = "INSERT INTO Images (imageFileName) VALUES ('$imgName')";
 		if($conn->query($stmt)){
+			// echo "success";
 			return $conn->insert_id;
 		}
+		// echo "failed";
 		return null;
 	}
 	public function createImageBridge($imgId, $objectId, $objectType, $conn){
-		$stmt = "INSERT INTO images (imageFileName) VALUES ('$imgName')";
+		$stmt = "INSERT INTO ImageObjectBridge (imageId, objectId, objectType) VALUES ('$imgId', '$objectId', '$objectType')";
 		return $conn->query($stmt);
 	}
 
 	public function removeImage($id, $conn){
-		$stmt = "DELETE FROM images WHERE imageID = '$id'";
+		$stmt = "DELETE FROM Images WHERE imageId = '$id'";
 		$conn->query($stmt);
 	}
 
@@ -144,14 +153,18 @@ class EventHandler {
 			// if everything is ok, try to upload file
 				if (move_uploaded_file($img["tmp_name"], $target_file)) {
 					$last_id = $this->uploadImageToDatabase($imgName, $conn);
-					// var_dump($last_id);
+					var_dump($last_id);
 					if ($last_id != null) {    					
-						if($this->createImageBridge($imgName, $objectId, $objectType, $conn)){
+						if($this->createImageBridge($last_id, $objectId, $objectType, $conn)){
 							continue;// continue to next loop
 						}else{
-							// clean database by removing image if create bridge failed			
+							// clean database by removing image if create bridge failed
+							$this->alertMsg("failed to create image bridge");
 							$this->removeImage($last_id, $conn);
+							unlink($target_file);// delete moved img
 						}
+					}else{
+						$this->alertMsg("failed to upload image to database");	
 					}
 				}
 			}

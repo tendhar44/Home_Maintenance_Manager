@@ -47,7 +47,7 @@ class PropertyManagement {
         }
     }
 
-    private function addImage($objectID){    
+    public function addImage($objectID){  
         if ($_FILES['imgSelector']){                
             $file_ary = $this->eHandler->reArrayFiles($_FILES['imgSelector']);
                 // var_dump($file_ary);
@@ -199,59 +199,26 @@ class PropertyManagement {
             </span>
             </div><!-- close col-7 -->
 
-            <br>
 
             <div class="row">
-            <div class="col-1">
-            <a href="/home_maintenance_manager/public/appliancecontroller/'. $row['propertyid']  .'">
-            <button>
-            View Devices
-            </button></a>
+            <div class="col">
+            <div class="btn-group float-left mt-2">
+            <a class="btn btn-secondary btn-md" href="/home_maintenance_manager/public/appliancecontroller/'. $row['propertyid'] .'">
+            <i class="fa fa-flag" aria-hidden="true"></i>Details</a>
+            </div>
+            </div>
+            <div class="col">
+            <div class="btn-group float-md-right mt-2">
+
+            <a class="btn btn-md btn-secondary" href="/home_maintenance_manager/public/propertycontroller/update/'. $row['propertyid'] .'">
+            <i class="fa fa-flag" aria-hidden="true"></i> Update</a>
+            <a class="btn btn-md btn-secondary" href="/home_maintenance_manager/public/propertycontroller/delete/'. $row['propertyid'] .'">
+            <i class="fa fa-flag" aria-hidden="true"></i> Delete</a>
+            </div>
             </div>
 
-            <div class="col-1">
-            </div>
+            </div><!-- close row -->
 
-            <div class="col-1">
-            </div>
-
-            <div class="col-1">
-            </div>
-
-            <div class="col-1">
-            </div>
-
-            <div class="col-1">
-            </div>
-
-            <div class="col-1">
-            </div>
-
-            <div class="col-1">
-            </div>
-
-            <div class="col-1">
-            </div>
-
-            <div class="col-1">
-            </div>
-
-            <div class="col-1">
-
-            <a href="/home_maintenance_manager/public/propertycontroller/update/'. $row['propertyid']  .'"><button class="stand-bttn-size">
-            Update
-            </button></a>
-            </div> 
-
-            <div class="col-1">    
-            <a href="/home_maintenance_manager/public/propertycontroller/delete/'. $row['propertyid']  .'"><button class="stand-bttn-size">
-            Delete
-            </button></a>
-            </div>
-
-
-
-            </div><!-- close col-6 -->
 
             </div><!-- close container fluid -->
             </div><!-- close card body -->
