@@ -31,13 +31,26 @@ class ApplianceManagement {
             $sql_data = "INSERT INTO appliances (appliancename) VALUES ('$an')";
             $sql_data2 = "INSERT INTO propertyappliancebridge (propertyid, applianceid) VALUES ('$propertyId', LAST_INSERT_ID())";
 
-            if ($this->conn->query($sql_data) === true && $this->conn->query($sql_data2) === true) {
-                $this->eHandler->alertMsg("Successfully added your appliance!");
+            if ($this->conn->query($sql_data) === true){
+                    $last_Insert_Id = $this->conn->insert_id;
+                if ($this->conn->query($sql_data2) === true) {
+                    $this->eHandler->alertMsg("Successfully added your appliance!");
+                    $last_Insert_Id = $this->conn->insert_id;
+                    $this->addImage($last_Insert_Id);
+                }
             } else {
                 $this->eHandler->alertMsg("We weren't able to add your appliance. Please try again.");
             }
         }else {
             $this->eHandler->alertMsg("The appliance name should be unique.");
+        }
+    }
+
+    public function addImage($objectID){  
+        if ($_FILES['imgSelector']){                
+            $file_ary = $this->eHandler->reArrayFiles($_FILES['imgSelector']);
+                // var_dump($file_ary);
+            $this->eHandler->uploadImage($file_ary, $objectID, $this->imageType, $this->conn);
         }
     }
 
@@ -165,20 +178,20 @@ class ApplianceManagement {
 
             $imgs = $this->getImage($row['applianceid']);
 
-                if($imgs != null){
+            if($imgs != null){
                     // var_dump($data["img"]);
 
-                    foreach ($imgs as $image) {
+                foreach ($imgs as $image) {
 
-                        echo '
+                    echo '
 
-                        <img id="myImg" class="imgPreview" src="/home_maintenance_manager/public/img/' . $image['name'] . '" alt="'. explode( '_', $image["name"] )[1] .'" width="150" height="150">
+                    <img id="myImg" class="imgPreview" src="/home_maintenance_manager/public/img/' . $image['name'] . '" alt="'. explode( '_', $image["name"] )[1] .'" width="150" height="150">
 
-                        ';
-                    }
+                    ';
                 }
+            }
 
-                echo '
+            echo '
 
             </div><!-- close col -->
             </div><!-- close row -->

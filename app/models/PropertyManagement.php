@@ -36,8 +36,8 @@ class PropertyManagement {
             $sql_data = "INSERT INTO properties (ownerid, propertyname, description, address) VALUES ('$uid', '$pn', '$pd', '$add')";
 
             if ($this->conn->query($sql_data) === true) {
-                $last_Insert_Id = $this->conn->insert_id;
                 $this->eHandler->alertMsg("Successfully added your property!");
+                $last_Insert_Id = $this->conn->insert_id;
                 $this->addImage($last_Insert_Id);
             } else {
                 $this->eHandler->alertMsg("We weren't able to add your property. Please try again.");
@@ -52,6 +52,12 @@ class PropertyManagement {
             $file_ary = $this->eHandler->reArrayFiles($_FILES['imgSelector']);
                 // var_dump($file_ary);
             $this->eHandler->uploadImage($file_ary, $objectID, $this->imageType, $this->conn);
+        }
+    }
+
+    public function deleteImage($imageId){
+        if (isset($_POST['imgId'])){
+            $this->eHandler->deleteImage($_POST['imgId'], $this->conn);
         }
     }
 

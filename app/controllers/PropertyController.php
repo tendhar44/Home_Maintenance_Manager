@@ -46,6 +46,10 @@ class PropertyController extends Controller {
             if (isset($_POST['addImg'])){
                 $proManagement->addImage($_SESSION['propertyid' . $propertyNum]['id']);
             }      
+            if (isset($_POST['deleteImage'])){
+                $proManagement->deleteImage($_SESSION['propertyid' . $propertyNum]['id']);
+            }      
+
         }
 
     }

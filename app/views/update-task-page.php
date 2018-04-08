@@ -33,5 +33,9 @@
         <button class="btn btn-md btn-secondary" type="submit" value="Submit">Submit</button>
 
     </form>
+
+
 </div>
 
+
+<script src="/home_maintenance_manager/public/js/jqueryImg.js"></script>

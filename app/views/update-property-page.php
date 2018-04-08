@@ -33,8 +33,7 @@
         <div class="col-sm-12 col-md-8">
             <form action="#" method="post" enctype="multipart/form-data"> 
 
-                <label>
-                   Add Image
+                <label>Add Image
                 </label>
                 <div class="form-group"> 
                     <input id="browse"  name="imgSelector[]" type="file" onchange="previewFiles()" multiple required accept="image/*">
@@ -43,7 +42,7 @@
                 </div>
 
                 <div class="form-group"> 
-                   <button type="submit" name="addImg" value="AddTask" class="btn btn-default">Submit</button>
+                    <button type="submit" name="addImg" value="AddTask" class="btn btn-default">Submit</button>
                 </div>
             </form>
 
@@ -57,9 +56,17 @@
 
 
                     echo '
+                    <div class="img-wrap">
 
-                    <img id="myImg" class="imgPreview" src="/home_maintenance_manager/public/img/' . $image['name'] . '" alt="'. explode( '_', $image["name"] )[1] .'" width="150" height="150">
+                    <img id="myImg" class="imgPreview deletable" data-buttonId="'.$image["id"].'" src="/home_maintenance_manager/public/img/' . $image["name"] . '" alt="'. explode( '_', $image["name"] )[1] .'" width="150" height="150">
 
+                        
+                    <form action="#" method="post" enctype="multipart/form-data">
+                        <input type="hidden" name="imgId" value="'.$image["id"] .'">
+                        <button id="delete'.$image["id"].'" type="submit" name="deleteImage" value="deleteImage" class="btn">x</button>
+                    </form>
+
+                    </div>
 
 
                     ';

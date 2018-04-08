@@ -31,7 +31,7 @@ class TaskManagement {
         if($status == 1){
             $sequenceNo = $this->getTaskHistorySequenceNumber($id);
             if(!createTaskHistory($id, $sequenceNo)){
-                $this->eHandler->alertMsg('Fail to update task complete status');
+                $this->eHandler->alertMsg('Fail to create task in History');
                 return;
             }
 
@@ -90,8 +90,10 @@ class TaskManagement {
         ";
 
         if($this->conn->query($stmt) === true) {
+            echo "true";
             return true;
         }else {
+            echo "false";
             return false;
         }
     }
@@ -99,8 +101,13 @@ class TaskManagement {
     //get a sequence number according to taskHistory by id previously completed
     public function getTaskHistorySequenceNumber($id){
         $stmt = "
-        SELECT * FROM taskHistory where taskid = '$id'";
+        SELECT * FROM taskHistory where taskId = '$id'";
         $result = $this->conn->query($stmt);
+
+        if (!$result){
+            return 1;
+        }
+
         return (mysqli_num_rows($result) + 1);// return result plus 1
     }
 
@@ -233,12 +240,23 @@ class TaskManagement {
             VALUES ('$proAppID', '$tn', '$des', '$userid', '$repeattask', '$duedate', '$complete', '$repeatlength', '$reminderdate', '$reminderinterval')";
             if($this->conn->query($sql_data) === true) {
                 $this->eHandler->alertMsg("Successfully added your task!");
+                $last_Insert_Id = $this->conn->insert_id;
+                $this->addImage($last_Insert_Id);
             }else {
                 $this->eHandler->alertMsg("We weren't able to add your task. Please try again.");
                 // die(mysqli_error($this->conn));
             }
         }else{
             $this->eHandler->alertMsg("The task name should be unique.");
+        }
+    }
+
+    
+    public function addImage($objectID){  
+        if ($_FILES['imgSelector']){                
+            $file_ary = $this->eHandler->reArrayFiles($_FILES['imgSelector']);
+                // var_dump($file_ary);
+            $this->eHandler->uploadImage($file_ary, $objectID, $this->imageType, $this->conn);
         }
     }
 

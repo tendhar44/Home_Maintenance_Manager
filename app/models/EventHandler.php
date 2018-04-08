@@ -90,6 +90,7 @@ class EventHandler {
 		// echo "failed";
 		return null;
 	}
+
 	public function createImageBridge($imgId, $objectId, $objectType, $conn){
 		$stmt = "INSERT INTO ImageObjectBridge (imageId, objectId, objectType) VALUES ('$imgId', '$objectId', '$objectType')";
 		return $conn->query($stmt);
@@ -97,9 +98,26 @@ class EventHandler {
 
 	public function removeImage($id, $conn){
 		$stmt = "DELETE FROM Images WHERE imageId = '$id'";
-		$conn->query($stmt);
+		if($conn->query($stmt){
+			return true;
+		}
+		return false;
 	}
 
+	public function removeImageBridge($id, $conn){
+		$stmt = "DELETE FROM ImageObjectBridge WHERE imageId = '$id'";
+		if($conn->query($stmt){
+			return true;
+		}
+		return false;
+	}
+
+	public function deleteImage($imgId, $conn){
+		if($this->removeImageBridge($imgId, $conn) && $this->removeImage($imgId, $conn)){
+			return true;
+		}
+		return false;
+	}
 
     //input name='imgSelector' for all instance that upload image is required
     //only upload/move image to a location and not database

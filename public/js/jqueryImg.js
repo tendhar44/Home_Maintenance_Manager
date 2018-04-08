@@ -34,5 +34,17 @@
     	});
 
 
+        $('.deletable').on('mouseover', function() {
+            var buttonId = $(this).attr('data-buttonId');
+            $('#delete'+buttonId).show();
+
+        });
+
+        $('.deletable').on('mouseleave', function() {
+            var buttonId = $(this).attr('data-buttonId');
+            $('#delete'+buttonId).hide();
+
+        });
+
 
     });
