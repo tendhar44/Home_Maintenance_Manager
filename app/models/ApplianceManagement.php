@@ -8,6 +8,7 @@ class ApplianceManagement {
     private $conn;
     private $valid;
     private $tasks;
+    private $imageType = 'a'; 
     private $eHandler;
 
     public function __construct($db_con, $valid) {
@@ -54,6 +55,11 @@ class ApplianceManagement {
         // var_dump($row['appliancename']);
         return $row['appliancename'];
     }
+
+    public function getImage($id){
+        return $this->eHandler->getImage($id, $this->imageType, $this->conn);
+    }
+
 
     public function updateAppliance($id, $propID) {
         $applianceName = (isset($_POST['applianceName'])) ? $_POST['applianceName'] : '';
@@ -142,11 +148,10 @@ class ApplianceManagement {
             <div class="card-body">
             <div class="container-fluid">
 
-            <div class="col-3">
-
-            </div><!-- close col-3 -->
-
-            <div class="col-7">
+            <div class="row">
+            <div class="col-xs-12 col-sm-4">
+            
+            <div class="row">
             Appliance ID#: 
             <span style="font-weight:600">
             '
@@ -154,8 +159,29 @@ class ApplianceManagement {
 
             '
             </span>
-            </div><!-- close col-7 -->      
+            </div><!-- close row -->
+            </div><!-- close col -->
+            <div class="col-xs-12" col-sm-8>';
 
+            $imgs = $this->getImage($row['applianceid']);
+
+                if($imgs != null){
+                    // var_dump($data["img"]);
+
+                    foreach ($imgs as $image) {
+
+                        echo '
+
+                        <img id="myImg" class="imgPreview" src="/home_maintenance_manager/public/img/' . $image['name'] . '" alt="'. explode( '_', $image["name"] )[1] .'" width="150" height="150">
+
+                        ';
+                    }
+                }
+
+                echo '
+
+            </div><!-- close col -->
+            </div><!-- close row -->
 
             <div class="row">
             <div class="col">
@@ -167,7 +193,7 @@ class ApplianceManagement {
             <div class="col">
             <div class="btn-group float-md-right mt-2">
 
-            <a class="btn btn-md btn-secondary" href="/home_maintenance_manager/public/appliancecontroller/update/'. $row['applianceid'] .'">
+            <a class="btn btn-md btn-secondary" href="/home_maintenance_manager/public/appliancecontroller/update/'. $row['propertyid'] .'/'. $row['applianceid'] .'">
             <i class="fa fa-flag" aria-hidden="true"></i> Update</a>
             <a class="btn btn-md btn-secondary" href="/home_maintenance_manager/public/appliancecontroller/delete/'. $row['applianceid'] .'">
             <i class="fa fa-flag" aria-hidden="true"></i> Delete</a>

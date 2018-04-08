@@ -14,6 +14,6 @@
     <form action="" method="post">
         Appliance Name:<br> <input type="text" name="applianceName" value="<?php echo $_SESSION['applianceId' . $data["an"]]['name'] ?>">
         <br><br>
-        <button type="submit" value="Submit">
+        <button class="btn btn-md btn-secondary" type="submit" value="Submit">Submit</button>
     </form>
 </div>

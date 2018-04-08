@@ -86,6 +86,21 @@
 		<?php
 		echo $_SESSION['outputCotent'];
 		?>
+
+
+                        <!-- The Modal -->
+                        <div id="myModal" class="modal">
+
+                        <!-- The Close Button -->
+                        <span class="close">&times;</span>
+
+                        <!-- Modal Content (The Image) -->
+                        <img class="modal-content" id="imgEnlarge">
+
+                        <!-- Modal Caption (Image Text) -->
+                        <div id="caption"></div>
+                        </div>
+		
 	</div><!-- close list-property -->
 </div><!-- close container -->
 

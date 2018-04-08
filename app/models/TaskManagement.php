@@ -10,6 +10,7 @@ class TaskManagement {
     private $conn;
     private $valid;
     private $eHandler;
+    private $imageType = 't';
 
     public function __construct($db_con, $valid) {
         $this->valid = $valid;
@@ -188,6 +189,11 @@ class TaskManagement {
         $row = $result->fetch_assoc();
         // var_dump($row['propertyApplianceId']);
         return $row['propertyApplianceId'];
+    }
+
+
+    public function getImage($id){
+        return $this->eHandler->getImage($id, $this->imageType, $this->conn);
     }
 
     // add a task to the database
@@ -384,6 +390,8 @@ public function getListOfTasks($proID, $appID) {
 
         <div class="container-fluid">
         <div class="row">
+        <div class="col-sm-6">
+        <div class="row">
 
         <p>
         Description: &nbsp;
@@ -404,6 +412,44 @@ public function getListOfTasks($proID, $appID) {
         '
         </span>
         </p>
+        </div><!-- close row -->
+        </div><!-- close col -->
+        <div class="col-sm-6">';
+
+        $taskImgs = $this->getImage($row['taskid']);
+
+            if($taskImgs != null){
+                // var_dump($data["img"]);
+
+                foreach ($taskImgs as $image) {
+
+
+                    echo '
+
+                    <img id="myImg" class="imgPreview" src="/home_maintenance_manager/public/img/' . $image['name'] . '" alt="'. explode( '_', $image["name"] )[1] .'" width="150" height="150">
+
+
+
+                    ';
+                }
+            }
+
+            echo '
+                    <!-- The Modal -->
+                    <div id="myModal" class="modal">
+
+                    <!-- The Close Button -->
+                    <span class="close">&times;</span>
+
+                    <!-- Modal Content (The Image) -->
+                    <img class="modal-content" id="imgEnlarge">
+
+                    <!-- Modal Caption (Image Text) -->
+                    <div id="caption"></div>
+                    </div>
+
+
+        </div>
         </div><!-- close row -->
 
 
@@ -494,6 +540,8 @@ public function listAllTask(){
 
         <div class="container-fluid">
         <div class="row">
+        <div class="col-sm-6">
+        <div class="row">
 
         <p>
         Description: &nbsp;
@@ -514,6 +562,44 @@ public function listAllTask(){
         '
         </span>
         </p>
+        </div><!-- close row -->
+        </div><!-- close col -->
+        <div class="col-sm-6">';
+
+        $taskImgs = $this->getImage($row['taskid']);
+
+            if($taskImgs != null){
+                // var_dump($data["img"]);
+
+                foreach ($taskImgs as $image) {
+
+
+                    echo '
+
+                    <img id="myImg" class="imgPreview" src="/home_maintenance_manager/public/img/' . $image['name'] . '" alt="'. explode( '_', $image["name"] )[1] .'" width="150" height="150">
+
+
+
+                    ';
+                }
+            }
+
+            echo '
+                    <!-- The Modal -->
+                    <div id="myModal" class="modal">
+
+                    <!-- The Close Button -->
+                    <span class="close">&times;</span>
+
+                    <!-- Modal Content (The Image) -->
+                    <img class="modal-content" id="imgEnlarge">
+
+                    <!-- Modal Caption (Image Text) -->
+                    <div id="caption"></div>
+                    </div>
+
+
+        </div>
         </div><!-- close row -->
 
         <div class="row">

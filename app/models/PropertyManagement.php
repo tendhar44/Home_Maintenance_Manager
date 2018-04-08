@@ -165,11 +165,10 @@ class PropertyManagement {
             <div class="card-body">
             <div class="container-fluid">
 
-            <div class="col-3">
+            <div class="row">
+            <div class="col-xs-12 col-sm-4">
+            <div class="row">
 
-            </div><!-- close col-3 -->
-
-            <div class="col-7">
             Property ID#: 
             <span style="font-weight:600">
             '
@@ -177,9 +176,9 @@ class PropertyManagement {
 
             '
             </span>
-            </div><!-- close col-7 -->
+            </div><!-- close row -->
 
-            <div class="col-7">
+            <div class="row">
             Address:
             <span style="font-weight:600">
             '
@@ -187,9 +186,9 @@ class PropertyManagement {
 
             '
             </span>
-            </div><!-- close col-7 -->
+            </div><!-- close row -->
 
-            <div class="col-7">
+            <div class="row">
             Description: 
             <span style="font-weight:600">
             '
@@ -197,9 +196,30 @@ class PropertyManagement {
 
             '
             </span>
-            </div><!-- close col-7 -->
+            </div><!-- close row -->
+            </div><!-- close col -->
+            <div class="col-xs-12" col-sm-8>';
 
+            $imgs = $this->getImage($row['propertyid']);
 
+                if($imgs != null){
+                    // var_dump($data["img"]);
+
+                    foreach ($imgs as $image) {
+
+                        echo '
+
+                        <img id="myImg" class="imgPreview" src="/home_maintenance_manager/public/img/' . $image['name'] . '" alt="'. explode( '_', $image["name"] )[1] .'" width="150" height="150">
+
+                        ';
+                    }
+                }
+
+                echo '
+
+            </div><!-- close col -->
+            </div><!-- close row -->
+            
             <div class="row">
             <div class="col">
             <div class="btn-group float-left mt-2">
