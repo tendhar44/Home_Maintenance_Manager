@@ -1,4 +1,6 @@
 
+<script src="/home_maintenance_manager/public/js/imageValidationAndPreview.js" type="text/javascript"></script>
+
 <div class="container">
 
     <div class="row">
@@ -32,37 +34,40 @@
 
             <?php 
 
-            foreach ($data["img"] as $image) {
+            if($data["img"] != null){
+                
+                foreach ($data["img"] as $image) {
 
 
-                echo '
+                    echo '
 
-                <img id="myImg" src="/home_maintenance_manager/public/image' . $image['name'] . '" alt="'. explode( '_', $image )[1] .'" width="200" height="200">
+                    <img id="myImg" src="/home_maintenance_manager/public/image' . $image['name'] . '" alt="'. explode( '_', $image )[1] .'" width="200" height="200">
 
-                <!-- The Modal -->
-                <div id="myModal" class="modal">
+                    <!-- The Modal -->
+                    <div id="myModal" class="modal">
 
-                <!-- The Close Button -->
-                <span class="close">&times;</span>
+                    <!-- The Close Button -->
+                    <span class="close">&times;</span>
 
-                <!-- Modal Content (The Image) -->
-                <img class="modal-content" id="img01">
+                    <!-- Modal Content (The Image) -->
+                    <img class="modal-content" id="enlargeImg">
 
-                <!-- Modal Caption (Image Text) -->
-                <div id="caption"></div>
-                </div>
+                    <!-- Modal Caption (Image Text) -->
+                    <div id="caption"></div>
+                    </div>
 
 
-                ';
+                    ';
+                }
             }
 
 
             ?>
 
             <label>
-               Add Image
-           </label>
-           <form action="#" method="post">
+             Add Image
+         </label>
+         <form action="#" method="post">
 
             <input id="browse"  name="imgSelector[]" type="file" onchange="previewFiles()" multiple accept="image/*" disabled >
 
@@ -77,41 +82,4 @@
 
 </div>
 
-<script>
-$(function() {
-
-    var $propertySelector = $('#propertySelector');
-    var $applianceSelector = $('#applianceSelector');
-    // populate property selector.
-    for (key in properties) {
-        console.log(key);
-        $propertySelector.append('<option>' + key + '</option>');
-    }
-
-    $('#createTaskButton').on('click', function(){
-        $('.form-horizontal').fadeToggle(200);
-    });
-
-    // update appliance selector on change value from property selector
-    $('#propertySelector').on('change', function(event, value) {
-        console.log($(this).val());
-
-        var selectedValue = $(this).val();
-
-        if (selectedValue === 'Select Property') {
-            // clear value
-            // disable the appliance select
-            $applianceSelector.val('select property first').prop('disabled', true);
-            return;
-        }
-        // clear options in appliance selector
-        $applianceSelector.empty();
-
-        for (key in properties[selectedValue]) {
-            $applianceSelector.append('<option value="' + properties[selectedValue][key] + '">' + key + '</option>');
-        }
-
-        $applianceSelector.prop('disabled', false);
-    });
-});
-</script>
+<script src="/home_maintenance_manager/public/js/enlargeImg.js" type="text/javascript"></script>

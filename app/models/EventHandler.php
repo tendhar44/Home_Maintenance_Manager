@@ -37,8 +37,15 @@ class EventHandler {
 		WHERE io.objectId = '$objectId' and io.objectType = '$objectType' and i.logDelete != 1";
 
 		$imgData = $conn->query($stmt);
+
+		if(!$imgData){
+			return null;
+		}
+
 		$counter = 0;
 		$imgs;
+
+		var_dump($imgData);
 
 		while ($row = $imgData->fetch_assoc()) {
 	      //creating a session for listed property

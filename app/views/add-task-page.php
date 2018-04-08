@@ -1,4 +1,6 @@
 
+<script src="/home_maintenance_manager/public/js/imageValidationAndPreview.js" type="text/javascript"></script>
+
 <div class="container">
     <a href="/home_maintenance_manager/public/propertycontroller/<?php echo $_SESSION['userid'] ?>">Property</a>
     >
@@ -12,7 +14,7 @@
     <br>
     <form id="addTaskForm" action="/Home_Maintenance_Manager/public/taskcontroller/<?php echo $data["proNum"] ?>/<?php echo $data['appId']; ?>" method="post">
         Task Name: <span class="reqAsk">*</span><br> <input type="text" name="taskName" required><br><br>
-        Task Due Date: <br> <input type="date" name="taskDue" required><br><br>
+        Task Due Date: <span class="reqAsk">*</span><br> <input type="date" name="taskDue" required><br><br>
 
         <!-- one time task = 0, and repeat task = 1 -->
         Repeat Task: <br> <input type="radio" name="repeatTask" value="1">&nbsp; Yes
@@ -22,10 +24,17 @@
         Reminder Interval Days:<br> <input type="number" name="reminderInterval"><br><br>
 
         Description:<br> <textarea name="taskDes"></textarea><br><br>
+
+        Select Image only (limited 1000 kb):<br>
+        <input id="browse" name="imgSelector[]" type="file" onchange="previewFiles()" multiple accept="image/*">
+        <div id="preview"></div>
+        <br><br>
+
         <!--<input type="hidden" name="taskActiveStatus" value="1">-->
         <input type="hidden" name="taskComplete" value="0">
         <input type="hidden" name="appId" value="<?php echo $data['appId']; ?>">
         <input type="hidden" name="proId" value="<?php echo $data['proNum']; ?>">
+
 
         <input type="submit" value="Submit">
     </form>

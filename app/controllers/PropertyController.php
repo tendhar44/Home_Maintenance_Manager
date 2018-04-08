@@ -39,7 +39,7 @@ class PropertyController extends Controller {
             $proManagement->updateProperty($propertyNum, $propertyName);
         }
 
-        $this->view("update-property-page", ["pn" => $propertyNumm, "img" => $images]);
+        $this->view("update-property-page", ["pn" => $propertyNum, "img" => $images]);
 
     }
 

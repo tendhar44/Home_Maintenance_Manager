@@ -30,7 +30,7 @@
         <input type="hidden" name="appId" value="<?php echo $_SESSION['task' . $data["tn"]]['applianceId'] ?>">
         <input type="hidden" name="proId" value="<?php echo $_SESSION['task' . $data["tn"]]['propertyId'] ?>">
         <input type="hidden" name="propAppId" value="<?php echo $_SESSION['task' . $data["tn"]]['proAppId'] ?>">
-        <input type="submit" value="Submit">
+        <button type="submit" value="Submit">
 
     </form>
 </div>
