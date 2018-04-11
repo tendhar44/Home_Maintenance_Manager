@@ -11,7 +11,7 @@ require_once('../app/models/AccountManagement.php');
 require_once('../app/models/PropertyManagement.php');
 require_once('../app/models/ApplianceManagement.php');
 require_once('../app/models/TaskManagement.php');
-require_once('../app/databaseConnection.php');
+require_once('../app/DatabaseConnection.php');
 require_once('../app/models/Validation.php');
 require_once('../app/models/Calendar.php');
 require_once('../app/models/GroupManagement.php');
