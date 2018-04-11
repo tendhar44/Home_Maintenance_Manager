@@ -27,6 +27,16 @@ class GroupController extends Controller {
         }
     }
 
+    public function addProperty($groupNum = 0) {
+        $this->notSignedIn();
+        $groupManagement =  $this->model->getGroupManagement();
+        $this->view("add-groupproperty-page", ["gId" => $groupNum]);
+
+        if($_SERVER["REQUEST_METHOD"] == "POST") {
+            $groupManagement->addProperty();
+        }
+    }
+
     public function update($groupNum = 0) {
         $this->notSignedIn();
         $groupManagement =  $this->model->getGroupManagement();
@@ -52,5 +62,13 @@ class GroupController extends Controller {
 
         $_SESSION['outputCotent'] = $groupManagement->getListOfMembers($ownerId, $groupNum);
         $this->view("list-groupmember-page", ["uId" => $ownerId, "gn" => $groupNum]);
+    }
+
+    public function groupproperties($ownerId = 0, $groupNum = 0) {
+        $groupManagement =  $this->model->getGroupManagement();
+        $this->notSignedIn();
+
+        $_SESSION['outputCotent'] = $groupManagement->getListOfProperties($ownerId, $groupNum);
+        $this->view("list-groupproperty-page", ["uId" => $ownerId, "gn" => $groupNum]);
     }
 }

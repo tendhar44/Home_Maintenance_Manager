@@ -19,6 +19,16 @@ class GroupManagement {
         return $userData->fetch_assoc();
     }
 
+    public function getProperty($propertyname){
+        //attempt select query execution
+        $sql_data = "SELECT propertyid, ownerid, propertyname, description, address, logdelete FROM properties WHERE propertyname = '$propertyname'";
+
+        $userData = $this->conn->query($sql_data);
+        //var_dump($userData['username']);
+
+        return $userData->fetch_assoc();
+    }
+
     public function getGroupIdByOwner($ownerid){
         $username = $_SESSION['username'];
         $def = 'default';
@@ -70,6 +80,24 @@ class GroupManagement {
         //$group_id = $row2['groupid'];
 
         $sql_data = "INSERT INTO usergroupbridge (userid, groupid) VALUES ('$userid', '$group_id')";
+
+        if ($this->conn->query($sql_data) === true) {
+            echo "Successfully added a member!";
+        } else {
+            echo "We weren't able to add the member. Please try again.";
+        }
+    }
+
+    public function addProperty() {
+        $ownerid = $_SESSION['userid'];
+        $property_name = (isset($_POST['propertyname'])) ? $_POST['propertyname'] : '';
+        $group_id = (isset($_POST['groupid'])) ? $_POST['groupid'] : '';
+
+        $row = $this->getProperty($property_name);
+        $propertyid = $row['propertyid'];
+        $userid = $row['userid'];
+
+        $sql_data = "INSERT INTO propertygroupbridge (propertyid, groupid) VALUES ('$propertyid', '$group_id')";
 
         if ($this->conn->query($sql_data) === true) {
             echo "Successfully added a member!";
@@ -218,6 +246,13 @@ class GroupManagement {
       View Members
       </button></a>
       </div>
+      
+      <div class="col-1">
+      <a href="/home_maintenance_manager/public/groupcontroller/groupproperties/'. $row['groupownerid'] .'/'. $row['groupid']  .'">
+      <button>
+      View Properties
+      </button></a>
+      </div>
 
       <div class="col-1">
       </div>
@@ -273,6 +308,8 @@ class GroupManagement {
         ob_end_clean();
         return $output;
     }
+
+
 
     function getListOfMembers($ownerid, $groupId) {
 
@@ -372,6 +409,146 @@ class GroupManagement {
       <span style="font-weight:600">
       '
                 . $row['email'] .
+
+                '
+      </span>
+      </div><!-- close col-7 -->
+
+      <br>
+
+      <div class="row">
+
+      <div class="col-1">
+      </div>
+
+      <div class="col-1">
+      </div>
+
+      <div class="col-1">
+      </div>
+
+      <div class="col-1">
+      </div>
+
+      <div class="col-1">
+      </div>
+
+      <div class="col-1">
+      </div>
+
+      <div class="col-1">
+      </div>
+
+      <div class="col-1">
+      </div>
+
+      <div class="col-1">
+      </div>
+
+      <div class="col-1">
+
+      </div><!-- close col-6 -->
+
+      </div><!-- close container fluid -->
+      </div><!-- close card body -->
+      </div><!-- close collapseOne -->
+      </div><!-- close card -->
+    ';//end echo
+        }
+        $output = ob_get_contents();
+        ob_end_clean();
+        return $output;
+    }
+
+
+
+    function getListOfProperties($ownerid, $groupId) {
+
+        //attempt select query execution
+        $sql_data = "SELECT p.propertyid, p.ownerid, p.propertyname, p.description, p.address, pgb.groupid, pgb.propertyid FROM properties p INNER JOIN propertygroupbridge pgb ON p.propertyid = pgb.propertyid WHERE p.logDelete != 1 AND pgb.groupid = '$groupId'";
+
+        $userData = $this->conn->query($sql_data);
+
+        ob_start();
+        $counter = 0;
+        while ($row = $userData->fetch_assoc()) {
+            $counter++;
+
+            $_SESSION['propertyid' . $row['propertyid']] =
+                array (
+                    'id' => $row['propertyid'],
+                    'groupid' => $row['groupid'],
+                    'ownerid' => $row['ownerid'],
+                    'propertyname' => $row['propertyname'],
+                    'description' => $row['description'],
+                    'address' => $row['address']
+                );
+
+            echo '
+      <div class="card">
+      <div class="card-header" id="headingOne">
+      <h5 class="mb-0">
+      <!--<a class="collapsed" data-toggle="collapse" data-target="#collapseOne'. $counter .'" aria-expanded="true" aria-controls="collapseOne">-->
+      <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo'. $counter .'" aria-expanded="false" aria-controls="collapseTwo">
+      ' . $row['propertyname'] . '             
+      </span></a>
+      </h5>
+      </div><!-- close card-header -->
+
+      <!--<div id="collapseOne'. $counter .'" class="collapse show" aria-labelledby="headingOne" data-parent="#list-appliance">-->
+      <div id="collapseTwo'. $counter .'" class="collapse" role="tabpanel" aria-labelledby="headingTwo">
+      <div class="card-body">
+      <div class="container-fluid">
+
+      <div class="col-3">
+
+      </div><!-- close col-3 -->
+
+      <div class="col-7">
+      Property ID#: 
+      <span style="font-weight:600">
+      '
+                . $row['propertyid'] .
+
+                '
+      </span>
+      </div><!-- close col-7 -->
+      
+      <div class="col-7">
+      Owner ID#: 
+      <span style="font-weight:600">
+      '
+                . $row['ownerid'] .
+
+                '
+      </span>
+      </div><!-- close col-7 -->
+      
+      <div class="col-7">
+      Property Name: 
+      <span style="font-weight:600">
+      '
+                . $row['propertyname'] .
+
+                '
+      </span>
+      </div><!-- close col-7 -->
+      
+      <div class="col-7">
+      Description: 
+      <span style="font-weight:600">
+      '
+                . $row['description'] .
+
+                '
+      </span>
+      </div><!-- close col-7 -->
+      
+      <div class="col-7">
+      Address: 
+      <span style="font-weight:600">
+      '
+                . $row['address'] .
 
                 '
       </span>
