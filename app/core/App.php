@@ -9,7 +9,6 @@ class App {
     protected $controller = "homecontroller";
     protected $method = "index";
     protected $params = [];
-    protected $model;
 
     /**
      * App constructor.
@@ -22,7 +21,6 @@ class App {
        $url = $this->parseUrl();
 
        require_once "../app/core/Model.php";
-       $this->model = new Model();
 
            // var_dump($url[0]);
            // var_dump($url[1]);

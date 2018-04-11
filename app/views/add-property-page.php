@@ -15,23 +15,24 @@
         Address:<br> <input type="text" name="address"><br><br>
         Description:<br> <input type="text" name="propertydes"><br><br>
 
-        <input id="browse" name="imgSelector" type="file" onchange="previewFiles()" multiple accept="image/*">
+        Select Image only (limited 1000 kb):<br>
+        <input id="browse" name="imgSelector[]" type="file" onchange="previewFiles()" multiple accept="image/*">
         <div id="preview"></div>
 
-            <br><br>
-            <input type="hidden" name="ownerid" value="<?php echo $data['uId']; ?>">
-            <input type="submit" value="Submit">
-        </form>
+        <br><br>
+        <input type="hidden" name="ownerid" value="<?php echo $data['uId']; ?>">
+        <input type="submit" value="Submit">
+    </form>
 
-        <div>
-            <br><br><br><br>
-            <span class="reqAsk">*</span> = required
-        </div>
+    <div>
+        <br><br><br><br>
+        <span class="reqAsk">*</span> = required
     </div>
+</div>
 
-    <script>
-        $(function() {
-            $("#imgupload").on('change', function(){
-            });
-        });    
-    </script>
+<script>
+    $(function() {
+        $("#imgupload").on('change', function(){
+        });
+    });    
+</script>

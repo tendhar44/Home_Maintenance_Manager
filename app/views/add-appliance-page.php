@@ -1,4 +1,5 @@
 
+<script src="/home_maintenance_manager/public/js/imageValidationAndPreview.js" type="text/javascript"></script>
 
 <div class="container">
     <a href="/home_maintenance_manager/public/propertycontroller/<?php echo $_SESSION['userid'] ?>">Property</a>
@@ -11,6 +12,13 @@
     <br>
     <form action="/Home_Maintenance_Manager/public/appliancecontroller/<?php echo $data['proId']; ?>" method="post">
         Appliance Name:<span class="reqAsk">*</span><br> <input type="text" name="applianceName"><br><br>
+
+        Select Image only (limited 1000 kb):<br>
+        <input id="browse" name="imgSelector[]" type="file" onchange="previewFiles()" multiple accept="image/*">
+        <div id="preview"></div>
+
+        <br>
+        <br>
         <input type="hidden" name="propertyId" value="<?php echo $data['proId']; ?>">
         <input type="submit" value="Submit">
     </form>

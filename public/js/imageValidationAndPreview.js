@@ -1,5 +1,7 @@
 
+
     /*
+        PREVIEW IMAGE METHOD:
         required the following tag in html file
         id can be change as needed
 
@@ -13,7 +15,7 @@
         var preview = document.querySelector('#preview');
         var filesSelector = document.querySelector('input[type=file]');
         var files  = filesSelector.files;
-        // console.log(files);
+        console.log(files);
 
         //clearing the preview div so previous img dont show
         while (preview.firstChild) {
@@ -52,7 +54,7 @@
     function checkSize(files){
         for (var i = 0; i < files.length; i ++){
             // console.log(files[i].type);
-            if((files[i].size > 500000)){
+            if((files[i].size > 1000000)){
                 return failValidation("Selected Files size can only be 500 KB or less");
             }
         }

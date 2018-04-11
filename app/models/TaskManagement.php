@@ -10,6 +10,7 @@ class TaskManagement {
     private $conn;
     private $valid;
     private $eHandler;
+    private $imageType = 't';
 
     public function __construct($db_con, $valid) {
         $this->valid = $valid;
@@ -30,7 +31,7 @@ class TaskManagement {
         if($status == 1){
             $sequenceNo = $this->getTaskHistorySequenceNumber($id);
             if(!createTaskHistory($id, $sequenceNo)){
-                $this->eHandler->alertMsg('Fail to update task complete status');
+                $this->eHandler->alertMsg('Fail to create task in History');
                 return;
             }
 
@@ -89,8 +90,10 @@ class TaskManagement {
         ";
 
         if($this->conn->query($stmt) === true) {
+            echo "true";
             return true;
         }else {
+            echo "false";
             return false;
         }
     }
@@ -98,8 +101,13 @@ class TaskManagement {
     //get a sequence number according to taskHistory by id previously completed
     public function getTaskHistorySequenceNumber($id){
         $stmt = "
-        SELECT * FROM taskHistory where taskid = '$id'";
+        SELECT * FROM taskHistory where taskId = '$id'";
         $result = $this->conn->query($stmt);
+
+        if (!$result){
+            return 1;
+        }
+
         return (mysqli_num_rows($result) + 1);// return result plus 1
     }
 
@@ -190,6 +198,11 @@ class TaskManagement {
         return $row['propertyApplianceId'];
     }
 
+
+    public function getImage($id){
+        return $this->eHandler->getImage($id, $this->imageType, $this->conn);
+    }
+
     // add a task to the database
     public function addTask() {
         $appId = (isset($_POST['appId'])) ? $_POST['appId'] : NULL;
@@ -227,12 +240,23 @@ class TaskManagement {
             VALUES ('$proAppID', '$tn', '$des', '$userid', '$repeattask', '$duedate', '$complete', '$repeatlength', '$reminderdate', '$reminderinterval')";
             if($this->conn->query($sql_data) === true) {
                 $this->eHandler->alertMsg("Successfully added your task!");
+                $last_Insert_Id = $this->conn->insert_id;
+                $this->addImage($last_Insert_Id);
             }else {
                 $this->eHandler->alertMsg("We weren't able to add your task. Please try again.");
                 // die(mysqli_error($this->conn));
             }
         }else{
             $this->eHandler->alertMsg("The task name should be unique.");
+        }
+    }
+
+    
+    public function addImage($objectID){  
+        if ($_FILES['imgSelector']){                
+            $file_ary = $this->eHandler->reArrayFiles($_FILES['imgSelector']);
+                // var_dump($file_ary);
+            $this->eHandler->uploadImage($file_ary, $objectID, $this->imageType, $this->conn);
         }
     }
 
@@ -381,101 +405,101 @@ public function getListOfTasks($proID, $appID) {
         </div><!-- close card-header -->
         <div id="collapseTwo'. $counter .'" class="collapse" role="tabpanel" aria-labelledby="headingTwo">
         <div class="card-body">
+
         <div class="container-fluid">
-        <div class="col-3">
-        </div><!-- close col-3 -->
-        <div class="col-7">
-        Description: 
+        <div class="row">
+        <div class="col-sm-6">
+        <div class="row">
+
+        <p>
+        Description: &nbsp;
         <span style="font-weight:600">
         '
         . $row['description'] .
         '
         </span>
-        </div><!-- close col-7 -->
-        <div class="col-7">
-        Repeat Task: 
-        <span style="font-weight:600">
-        '
-        . $row['repeatTask'] .
-        '
-        </span>
-        </div><!-- close col-7 -->
-        <div class="col-7">
-        Due Date: 
+        </p>
+        </div><!-- close row -->
+
+        <div class="row">
+        <p>
+        Due Date: &nbsp;
         <span style="font-weight:600">
         '
         . $row['duedate'] .
         '
         </span>
-        </div><!-- close col-7 -->
-        <div class="col-7">
-        Complete: 
-        <span style="font-weight:600">
-        '
-        . $row['complete'] .
-        '
-        </span>
-        </div><!-- close col-7 -->
-        <div class="col-7">
-        Interval Day: 
-        <span style="font-weight:600">
-        '
-        . $row['intervalDays'] .
-        '
-        </span>
-        </div><!-- close col-7 -->
-        <div class="col-7">
-        Reminder Date: 
-        <span style="font-weight:600">
-        '
-        . $row['reminderdate'] .
-        '
-        </span>
-        </div><!-- close col-7 -->
-        <div class="col-7">
-        Reminder Interval Days: 
-        <span style="font-weight:600">
-        '
-        . $row['reminderinterval'] .
-        '
-        </span>
-        </div><!-- close col-7 -->
-        <br>
+        </p>
+        </div><!-- close row -->
+        </div><!-- close col -->
+        <div class="col-sm-6">';
+
+        $taskImgs = $this->getImage($row['taskid']);
+
+            if($taskImgs != null){
+                // var_dump($data["img"]);
+
+                foreach ($taskImgs as $image) {
+
+
+                    echo '
+
+                    <img id="myImg" class="imgPreview" src="/home_maintenance_manager/public/img/' . $image['name'] . '" alt="'. explode( '_', $image["name"] )[1] .'" width="150" height="150">
+
+
+
+                    ';
+                }
+            }
+
+            echo '
+                    <!-- The Modal -->
+                    <div id="myModal" class="modal">
+
+                    <!-- The Close Button -->
+                    <span class="close">&times;</span>
+
+                    <!-- Modal Content (The Image) -->
+                    <img class="modal-content" id="imgEnlarge">
+
+                    <!-- Modal Caption (Image Text) -->
+                    <div id="caption"></div>
+                    </div>
+
+
+        </div>
+        </div><!-- close row -->
+
+
         <div class="row">
-        <div class="col-1">
-        <a href="/home_maintenance_manager/public/taskcontroller/task/'. $row['taskid'] .'"><button>
-        Details
-        </button></a>
+        <div class="col">
+        <div class="btn-group float-left mt-2">
+        <a class="btn btn-secondary btn-md" href="/home_maintenance_manager/public/taskcontroller/task/'. $row['taskid'] .'">
+        <i class="fa fa-flag" aria-hidden="true"></i>Details</a>
         </div>
-        <div class="col-1">
         </div>
-        <div class="col-1">
+        <div class="col">
+        <div class="btn-group float-md-right mt-2">
+
+        <form action="#" method="post">
+        <input type="hidden" name="taskid" value="'.$row['taskid'].'">
+        <input type="hidden" name="completeStatus" value="1">
+        <input type="submit" name="updtateTaskStatus" value="Complete" class="btn btn-md btn-secondary" aria-hidden="true">
+
+        </form>
+
+        <a class="btn btn-md btn-secondary" href="/home_maintenance_manager/public/taskcontroller/update/'. $row['taskid'] .'">
+        <i class="fa fa-flag" aria-hidden="true"></i> Update</a>
+        <a class="btn btn-md btn-secondary" href="/home_maintenance_manager/public/taskcontroller/delete/'. $row['taskid'] .'">
+        <i class="fa fa-flag" aria-hidden="true"></i> Delete</a>
         </div>
-        <div class="col-1">
         </div>
-        <div class="col-1">
-        </div>
-        <div class="col-1">
-        </div>
-        <div class="col-1">
-        </div>
-        <div class="col-1">
-        </div>
-        <div class="col-1">
-        </div>
-        <div class="col-1">
-        </div>
-        <div class="col-1">
-        <a href="/home_maintenance_manager/public/taskcontroller/update/'. $row['taskid'] .'"><button class="stand-bttn-size">
-        Update
-        </button></a>
-        </div> 
-        <div class="col-1">    
-        <a href="/home_maintenance_manager/public/taskcontroller/delete/'. $row['taskid'] .'"><button class="stand-bttn-size">
-        Delete
-        </button></a>
-        </div>
-        </div><!-- close col-6 -->
+
+        </div><!-- close row -->
+
+
+
+        
         </div><!-- close container fluid -->
         </div><!-- close card body -->
         </div><!-- close collapseOne -->
@@ -534,6 +558,8 @@ public function listAllTask(){
 
         <div class="container-fluid">
         <div class="row">
+        <div class="col-sm-6">
+        <div class="row">
 
         <p>
         Description: &nbsp;
@@ -554,6 +580,44 @@ public function listAllTask(){
         '
         </span>
         </p>
+        </div><!-- close row -->
+        </div><!-- close col -->
+        <div class="col-sm-6">';
+
+        $taskImgs = $this->getImage($row['taskid']);
+
+            if($taskImgs != null){
+                // var_dump($data["img"]);
+
+                foreach ($taskImgs as $image) {
+
+
+                    echo '
+
+                    <img id="myImg" class="imgPreview" src="/home_maintenance_manager/public/img/' . $image['name'] . '" alt="'. explode( '_', $image["name"] )[1] .'" width="150" height="150">
+
+
+
+                    ';
+                }
+            }
+
+            echo '
+                    <!-- The Modal -->
+                    <div id="myModal" class="modal">
+
+                    <!-- The Close Button -->
+                    <span class="close">&times;</span>
+
+                    <!-- Modal Content (The Image) -->
+                    <img class="modal-content" id="imgEnlarge">
+
+                    <!-- Modal Caption (Image Text) -->
+                    <div id="caption"></div>
+                    </div>
+
+
+        </div>
         </div><!-- close row -->
 
         <div class="row">

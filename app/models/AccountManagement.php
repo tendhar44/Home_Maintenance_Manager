@@ -200,6 +200,7 @@ class AccountManagement {
             $_SESSION['firstname'] = $row['firstname'];
             $_SESSION['lastname'] = $row['lastname'];
             $_SESSION['password'] = $row['password'];
+            $_SESSION['signInError'] = '';
             return true;
         }
         //}
