@@ -98,17 +98,17 @@ class EventHandler {
 
 	public function removeImage($id, $conn){
 		$stmt = "DELETE FROM Images WHERE imageId = '$id'";
-		if($conn->query($stmt){
+		if($conn->query($stmt))
 			return true;
-		}
+
 		return false;
 	}
 
 	public function removeImageBridge($id, $conn){
 		$stmt = "DELETE FROM ImageObjectBridge WHERE imageId = '$id'";
-		if($conn->query($stmt){
+		if($conn->query($stmt))
 			return true;
-		}
+
 		return false;
 	}
 
