@@ -30,7 +30,7 @@ class TaskManagement {
 
         if($status == 1){
             $sequenceNo = $this->getTaskHistorySequenceNumber($id);
-            if(!createTaskHistory($id, $sequenceNo)){
+            if(!$this->createTaskHistory($id, $sequenceNo)){
                 $this->eHandler->alertMsg('Fail to create task in History');
                 return;
             }
@@ -52,10 +52,12 @@ class TaskManagement {
     }
 
     //get an array of task history list
-    public function getTaskHistoryList(){
+    public function getTaskHistoryList($groupId){
         $userid = $_SESSION['userid'];
 
-        $stmt = "SELECT * FROM taskHistory where userid = '$userid'";
+        $stmt = "SELECT 
+            FROM taskHistory 
+            where userid = '$userid'";
         $result = $this->conn->query($stmt);
 
         if($result === FALSE) {
@@ -69,9 +71,9 @@ class TaskManagement {
         while ($row = $result->fetch_assoc()) {
                     //creating a session associate array for a task
             $taskHistoryList[$counter] = array(
-                'id' => $row['taskid'],
+                'id' => $row['taskId'],
                 'taskSequence' => $row['taskSequence'],
-                'userid' => $row['userid'],
+                'userid' => $row['userID'],
                 'completeDate' => $row['completeDate']
             );
             $counter++;
@@ -127,7 +129,7 @@ class TaskManagement {
         $userData = $this->conn->query($sql_data);
         ob_start();
         while ($row = $userData->fetch_assoc()) {
-            $taskIdArray[] = $row['taskid'];
+            $taskIdArray[] = $row['taskisd'];
             $taskNameArray[] = $row['taskname'];
             $taskDesArray[] = $row['description'];
             $appIdArray[] = $row['propertyApplianceId'];
@@ -583,6 +585,7 @@ public function listAllTask(){
         </div><!-- close row -->
         </div><!-- close col -->
         <div class="col-sm-6">';
+
 
         $taskImgs = $this->getImage($row['taskid']);
 

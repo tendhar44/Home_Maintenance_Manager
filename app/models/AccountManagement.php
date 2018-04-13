@@ -63,27 +63,7 @@ class AccountManagement {
 
     public function getUser($username){
         //attempt select query execution
-        $sql_data = "SELECT userid, usertypeid, username, password, firstname, lastname, email, logdelete FROM users WHERE username = '$username' AND usertypeid = '1'";
-
-        $userData = $this->conn->query($sql_data);
-        //var_dump($userData['username']);
-
-        return $userData->fetch_assoc();
-    }
-
-    public function getManager($username){
-        //attempt select query execution
-        $sql_data = "SELECT userid, usertypeid, username, password, firstname, lastname, email, logdelete FROM users WHERE username = '$username' AND usertypeid = '2'";
-
-        $userData = $this->conn->query($sql_data);
-        //var_dump($userData['username']);
-
-        return $userData->fetch_assoc();
-    }
-
-    public function getLimited($username){
-        //attempt select query execution
-        $sql_data = "SELECT userid, usertypeid, username, password, firstname, lastname, email, logdelete FROM users WHERE username = '$username' AND usertypeid = '3'";
+        $sql_data = "SELECT userid, usertypeid, username, password, firstname, lastname, email, logdelete FROM users WHERE username = '$username'";
 
         $userData = $this->conn->query($sql_data);
         //var_dump($userData['username']);
@@ -166,6 +146,7 @@ class AccountManagement {
             // var_dump($row['username']);
             //if username and password matches then let user log in
         if($username == $row['username'] && $password == $row['password']) {
+            $this->setSignInUserType($row['usertypeid']);
             $_SESSION['loggedin'] = true;
             $_SESSION['username'] = $row['username'];
             $_SESSION['usertype'] = $row['usertypeid'];
@@ -174,6 +155,8 @@ class AccountManagement {
             $_SESSION['firstname'] = $row['firstname'];
             $_SESSION['lastname'] = $row['lastname'];
             $_SESSION['password'] = $row['password'];
+            $_SESSION['userNameError'] = "";
+
             return true;
         }
         //}
@@ -181,58 +164,19 @@ class AccountManagement {
         return false;
     }
 
-    public function signInManager($username,$password) {
-        //checks the username for extra space, backslash and gets rid of it
-        $username = $this->valid->checkInput($username);
-
-        //if($this->valid->checkUsername($username)){
-        $password = $this->valid->checkInput($password);
-        $row = $this->getManager($username);
-
-        // var_dump($row['username']);
-        //if username and password matches then let user log in
-        if($username == $row['username'] && $password == $row['password']) {
-            $_SESSION['managerloggedin'] = true;
-            $_SESSION['usertype'] = $row['usertypeid'];
-            $_SESSION['username'] = $row['username'];
-            $_SESSION['userid'] = $row['userid'];
-            $_SESSION['email'] = $row['email'];
-            $_SESSION['firstname'] = $row['firstname'];
-            $_SESSION['lastname'] = $row['lastname'];
-            $_SESSION['password'] = $row['password'];
-            $_SESSION['signInError'] = '';
-            return true;
+    private function setSignInUserType($type){
+        $_SESSION['owner'] = false;
+        $_SESSION['manager'] = false;
+        $_SESSION['limitedUser'] = false;
+        if ($type == 1) {
+            $_SESSION['owner'] = true;
+        } else if ($type == 2){
+            $_SESSION['manager'] = true;
+        } else {
+            $_SESSION['limitedUser'] = true;            
         }
-        //}
-        $_SESSION['signInError'] = 'Username or Password is incorrect';
-        return false;
     }
 
-    public function signInLimited($username,$password) {
-        //checks the username for extra space, backslash and gets rid of it
-        $username = $this->valid->checkInput($username);
-
-        //if($this->valid->checkUsername($username)){
-        $password = $this->valid->checkInput($password);
-        $row = $this->getLimited($username);
-
-        // var_dump($row['username']);
-        //if username and password matches then let user log in
-        if($username == $row['username'] && $password == $row['password']) {
-            $_SESSION['limitedloggedin'] = true;
-            $_SESSION['usertype'] = $row['usertypeid'];
-            $_SESSION['username'] = $row['username'];
-            $_SESSION['userid'] = $row['userid'];
-            $_SESSION['email'] = $row['email'];
-            $_SESSION['firstname'] = $row['firstname'];
-            $_SESSION['lastname'] = $row['lastname'];
-            $_SESSION['password'] = $row['password'];
-            return true;
-        }
-        //}
-        $_SESSION['signInError'] = 'Username or Password is incorrect';
-        return false;
-    }
 
     /**
      * This method signs user out by destroying the session.

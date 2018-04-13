@@ -41,6 +41,20 @@ class UserController extends Controller {
     public function signIn() {
         $this->view("sign-in-page", []);
 
+        if($_SERVER["REQUEST_METHOD"] == "POST") {
+            $username = $_POST["username"];
+            $password = $_POST["password"];
+            if($this->model->getAccountManagement()->signInUser($username, $password)) {
+                if($_SESSION['owner'] == true){
+                    header('Location: /home_maintenance_manager/public/homecontroller/home');
+                }else if ($_SESSION['manager'] == true){
+                    header('Location: /home_maintenance_manager/public/homecontroller/managerhome');
+                }else {
+                    header('Location: /home_maintenance_manager/public/homecontroller/limitedhome');
+                }
+            }
+        }
+
     }
 
     public function signOut() {
