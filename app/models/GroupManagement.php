@@ -3,10 +3,12 @@
 class GroupManagement {
     private $conn;
     private $valid;
+    private $eHandler;
 
     public function __construct($db_con, $valid) {
         $this->valid = $valid;
         $this->conn = $db_con;
+        $this->eHandler = new EventHandler();
     }
 
     public function getUser($username){
@@ -28,48 +30,6 @@ class GroupManagement {
 
         return $userData->fetch_assoc();
     }
-
-    public function getUersGroupId(){
-
-        $userid = $_SESSION['userid']; 
-
-        $stmt = "SELECT groupid FROM usergroupbridge 
-        WHERE userid = '$userid'";        
-
-        $data = $this->conn->query($stmt);
-
-        while ($row = $data->fetch_assoc()) {
-            $counter++;        
-
-    }
-
-    public function setUserGroupProperty($userid){        
-
-        //attempt select query execution
-        $sql_data = "SELECT p.propertyid FROM propertygroupbridge pgb 
-        INNER JOIN properties p ON p.propertyid = pgb.propertyid 
-        INNER JOIN groups
-        WHERE p.logDelete != 1 AND pgb.groupid = '$groupId'";
-
-        
-
-        $userData = $this->conn->query($sql_data);
-
-        $counter = 0;
-        while ($row = $userData->fetch_assoc()) {
-            $counter++;
-
-            $_SESSION['propertyid' . $row['propertyid']] =
-            array (
-                'id' => $row['propertyid'],
-                'groupid' => $row['groupid'],
-                'propertyname' => $row['propertyname'],
-                'description' => $row['description'],
-                'address' => $row['address']
-            );
-
-
-        }
 
         public function getGroupIdByOwner($ownerid){
             $username = $_SESSION['username'];

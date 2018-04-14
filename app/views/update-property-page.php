@@ -36,7 +36,7 @@
                 <label>Add Image
                 </label>
                 <div class="form-group"> 
-                    <input id="browse"  name="imgSelector[]" type="file" onchange="previewFiles()" multiple required accept="image/*">
+                    <input id="browse"  name="imgSelector" type="file" onchange="previewFiles()" required accept="image/*">
 
                     <div id="preview"></div>
                 </div>

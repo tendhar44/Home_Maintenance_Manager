@@ -45,6 +45,9 @@ class UserController extends Controller {
             $username = $_POST["username"];
             $password = $_POST["password"];
             if($this->model->getAccountManagement()->signInUser($username, $password)) {
+
+                // $this->setGroupSession();
+
                 if($_SESSION['owner'] == true){
                     header('Location: /home_maintenance_manager/public/homecontroller/home');
                 }else if ($_SESSION['manager'] == true){
@@ -76,5 +79,7 @@ class UserController extends Controller {
             }
         }
     }
+
+
 
 }

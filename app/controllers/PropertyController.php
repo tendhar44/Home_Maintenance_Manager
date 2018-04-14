@@ -26,10 +26,7 @@ class PropertyController extends Controller {
         $proManagement =  $this->model->getPropertyManagement();
         $images = $proManagement->getImage($propertyNum);
 
-
-
         $this->view("update-property-page", ["pn" => $propertyNum, "img" => $images]);
-
 
         /**
          * If form is submitted as post method, update property method is called.

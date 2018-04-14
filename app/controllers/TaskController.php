@@ -12,8 +12,8 @@ class TaskController extends Controller {
         if($_SERVER["REQUEST_METHOD"] == "POST") {            
             $taskManagement->addTask();
         }
-        $_SESSION['outputCotent'] = $taskManagement->getListOfTasks($propertyNum, $applianceId); 
-        $this->view("list-task-page", ["appId" => $applianceId, "proNum" => $propertyNum]);
+        $taskList = $taskManagement->getListOfTasks($propertyNum, $applianceId); 
+        $this->view("list-task-page", ["appId" => $applianceId, "proNum" => $propertyNum, "taskList" => $taskList]);
     }
 
     public function add($propertyNum = 0, $applianceId = 0) {
@@ -77,8 +77,8 @@ class TaskController extends Controller {
         }
 
         $associativeData = $this->model->getAssociatedData();
-        $_SESSION['outputCotent'] = $taskManagement->listAllTask(); 
-        $this->view("listAll-task-page", ["userid" => $userId, "dropDownData" => $associativeData]);
+        $taskList = $taskManagement->listAllTask(); 
+        $this->view("listAll-task-page", ["userid" => $userId, "dropDownData" => $associativeData, "taskList" => $taskList]);
     }
 
     public function limtedListAll($userId = 0) {

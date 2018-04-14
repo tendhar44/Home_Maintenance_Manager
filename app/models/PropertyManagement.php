@@ -65,13 +65,25 @@ class PropertyManagement {
         return $this->eHandler->getImage($id, $this->imageType, $this->conn);
     }
 
-    public function getProperty($name) {
+    public function getProperty($id) {
         //attempt select query execution
-        $sql_data = "SELECT * FROM properties WHERE propertyname = '$name'";
+        $sql_data = "SELECT propertyid, propertyname, description, address FROM properties WHERE propertyid = '$id'";
 
-        $userData = $this->conn->query($sql_data);
+        $result = $this->conn->query($sql_data);
 
-        return $userData->fetch_assoc();
+        if ($result){
+            $property;
+            $row = $result->fetch_assoc();
+
+            $property = array (
+                'id' => $row['propertyid'],
+                'address' => $row['address'],
+                'name' => $row['propertyname'],
+                'description' => $row['description']
+            );
+            return $property;
+        }
+        return null;
     }
 
     public function updateProperty($id, $originalProName) {
@@ -208,20 +220,20 @@ class PropertyManagement {
 
             $imgs = $this->getImage($row['propertyid']);
 
-                if($imgs != null){
+            if($imgs != null){
                     // var_dump($data["img"]);
 
-                    foreach ($imgs as $image) {
+                foreach ($imgs as $image) {
 
-                        echo '
+                    echo '
 
-                        <img id="myImg" class="imgPreview" src="/home_maintenance_manager/public/img/' . $image['name'] . '" alt="'. explode( '_', $image["name"] )[1] .'" width="150" height="150">
+                    <img id="myImg" class="imgPreview" src="/home_maintenance_manager/public/img/' . $image['name'] . '" alt="'. explode( '_', $image["name"] )[1] .'" width="150" height="150">
 
-                        ';
-                    }
+                    ';
                 }
+            }
 
-                echo '
+            echo '
 
             </div><!-- close col -->
             </div><!-- close row -->

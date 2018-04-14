@@ -14,7 +14,7 @@
         Appliance Name:<span class="reqAsk">*</span><br> <input type="text" name="applianceName"><br><br>
 
         Select Image only (limited 1000 kb):<br>
-        <input id="browse" name="imgSelector[]" type="file" onchange="previewFiles()" multiple accept="image/*">
+        <input id="browse" name="imgSelector" type="file" onchange="previewFiles()" accept="image/*">
         <div id="preview"></div>
 
         <br>
