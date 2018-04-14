@@ -52,7 +52,7 @@ class TaskManagement {
     }
 
     //get all the groupid that the login user is associated with
-    protected function getUersGroupId(){
+    private function getUersGroupId(){
         $userid = $_SESSION['userid'];
         $stmt = "SELECT groupid FROM usergroupbridge 
         WHERE userid = '$userid'"; 
@@ -73,19 +73,20 @@ class TaskManagement {
         return $associatedGroupId;
     }
 
-    protected function getGroupMemberId($groupId){
+    private function getGroupMemberId($groupId){
         $stmt = "SELECT userId FROM usergroupbridge
-        INNER JOIN groups
-        WHERE groupId = '$groupId"; 
+        WHERE groupId = '$groupId'"; 
 
+        // var_dump($stmt);
         $result = $this->conn->query($stmt);
-
         if($result){
             $counter = 0;
             $groupUserId = null;
             while ($row = $result->fetch_assoc()) {
                 $groupUserId[$counter] = $row['userId'];
+                $counter++;
             }
+            // var_dump($groupUserId);
             return $groupUserId;
         }
         return null;
@@ -95,15 +96,16 @@ class TaskManagement {
     //get an array of task history list
     public function getTaskHistoryList(){
         $userid = $_SESSION['userid'];
-
         $associatedGroupId = $this->getUersGroupId();
-
+        if($associatedGroupId == null){
+            return;
+        }
         $whereClause = '';
-        foreach ($associatedGroupId as $groupId) {
+        foreach ($associatedGroupId as $id) {
             if($whereClause !== ''){
-                $whereClause .= ' or ';
+                $whereClause .= '\' or groupId = \'';
             }
-            $whereClause .= $groupId;
+            $whereClause .= $id;
             // $groupMemberId = $this->getGroupMemberId($groupId);
             // $taskHistoryList = array(
             //     'groupId' => $groupId,
@@ -117,12 +119,28 @@ class TaskManagement {
             //     }
         }
 
-        var_dump($whereClause);
+        // var_dump($whereClause);
+        $membersId = $this->getGroupMemberId($whereClause);
 
+        if($membersId == null){
+            return;
+        }
+
+        $whereClause = '';
+        foreach ($membersId as $id) {
+            if($whereClause !== ''){
+                $whereClause .= '\' or th.userid = \'';
+            }
+            $whereClause .= $id;
+        }
+        // var_dump($whereClause);
         $taskHistoryList = null;
-        $stmt = "SELECT 
-        FROM taskHistory 
-        where userid = '$userid'";
+        $stmt = "SELECT th.taskId, th.taskSequence, th.userID, th.completeDate, t.taskName, t.description, u.userName
+        FROM taskHistory th
+        INNER JOIN tasks t ON th.taskId = t.taskId
+        INNER JOIN users u ON t.userid = u.userid
+        where th.userid = '$whereClause'";
+        // var_dump($stmt);
         $result = $this->conn->query($stmt);
 
         if($result === false) {
@@ -136,12 +154,16 @@ class TaskManagement {
                     //creating a session associate array for a task
             $taskHistoryList[$counter] = array(
                 'id' => $row['taskId'],
+                'name' => $row['taskName'],
+                'user' => $row['userName'],
+                'description' => $row['description'],
                 'taskSequence' => $row['taskSequence'],
                 'userid' => $row['userID'],
                 'completeDate' => $row['completeDate']
             );
             $counter++;
         }
+        // var_dump($taskHistoryList);
         return $taskHistoryList;
     }
 
@@ -156,10 +178,10 @@ class TaskManagement {
         ";
 
         if($this->conn->query($stmt) === true) {
-            echo "true";
+            // echo "true";
             return true;
         }else {
-            echo "false";
+            // echo "false";
             return false;
         }
     }
