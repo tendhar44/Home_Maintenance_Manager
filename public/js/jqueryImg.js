@@ -19,6 +19,7 @@
     	var modalImg = document.getElementById("imgEnlarge");
     	var captionText = document.getElementById("caption");
     	var span = document.getElementsByClassName("close")[0];
+        var buttonId;
 
     	$('.imgPreview').on('click', function() {
             debugger;
@@ -35,14 +36,14 @@
 
 
         $('.deletable').on('mouseover', function() {
-            var buttonId = $(this).attr('data-buttonId');
+            buttonId = $(this).attr('data-buttonId');
             $('#delete'+buttonId).show();
 
         });
 
         $('.deletable').on('mouseleave', function() {
-            var buttonId = $(this).attr('data-buttonId');
-            $('#delete'+buttonId).hide();
+            buttonId = $(this).attr('data-buttonId');
+            $('#delete'+buttonId).delay(5000).hide(1000);
 
         });
 

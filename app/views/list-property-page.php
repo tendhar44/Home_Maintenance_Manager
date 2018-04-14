@@ -21,6 +21,9 @@
                         </div>
 
         <?php
+
+
+        
         echo $_SESSION['outputCotent'];
         ?>
     </div><!-- close list-property -->

@@ -49,16 +49,16 @@ class Model {
     }
 
     public function getAccountManagement(){
-      return $this->accountManagement;
+        return $this->accountManagement;
     }
     public function getPropertyManagement(){
-      return $this->propertyManagement;
+        return $this->propertyManagement;
     }
     public function getApplianceManagement(){
-      return $this->applianceManagement;
+        return $this->applianceManagement;
     }
     public function getTaskManagement(){
-      return $this->taskManagement;
+        return $this->taskManagement;
     }
     public function getCalendar(){
         return $this->calendar;
@@ -72,12 +72,12 @@ class Model {
         $userId = $_SESSION['userid'];
 
         $stmt = "
-            SELECT p.propertyName, a.applianceid, a.appliancename 
-            FROM propertyappliancebridge pa 
-            INNER JOIN properties p ON p.propertyId = pa.propertyId 
-            INNER JOIN appliances a ON a.applianceid = pa.applianceid
-            WHERE p.ownerId = '$userId' and p.logDelete != 1
-            ";
+        SELECT p.propertyName, a.applianceid, a.appliancename 
+        FROM propertyappliancebridge pa 
+        INNER JOIN properties p ON p.propertyId = pa.propertyId 
+        INNER JOIN appliances a ON a.applianceid = pa.applianceid
+        WHERE p.ownerId = '$userId' and p.logDelete != 1
+        ";
 
         $result = $this->conn->query($stmt);
 
@@ -91,4 +91,38 @@ class Model {
         // var_dump($associativeArray);
         return $associativeArray;
     }
+
+
+    // public function setUserGroupPropertyId(){
+    //     $userGroupId = $this->getUersGroupId();
+    //     if($userGroupId == null){
+    //         $this->eHandler->alertMsg('user is not assign to any group');
+    //         return;
+    //     }
+
+    //     // prepare and bind
+    //     $stmt = $conn->prepare("
+    //         SELECT p.propertyid FROM propertygroupbridge pgb 
+    //         INNER JOIN properties p ON p.propertyid = pgb.propertyid 
+    //         INNER JOIN groups
+    //         WHERE p.logDelete != 1 AND pgb.groupid = ?
+    //         ");
+
+    //     $stmt->bind_param("s", $groupID);
+
+    //     $counter = 0;
+    //     foreach ($userGroupId as $id) {
+    //         $groupID = $id;
+    //         $result = $stmt->execute();
+    //         if($result){
+    //             while ($row = $result->fetch_assoc()) {
+    //                 $_SESSION['groupAssociatedPropertyID'][$counter] =
+    //                 array (
+    //                     $id => $row['propertyid'],
+    //                 );
+    //             }
+    //         }
+    //     }
+    //     var_dump($_SESSION['groupAssociatedPropertyID']);
+    // }
 }

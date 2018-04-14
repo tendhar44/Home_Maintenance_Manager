@@ -25,6 +25,11 @@ class Controller {
             exit();
         }
     }
+    
+    //setup group session
+   //  protected function setGroupSession(){
+   //     $this->model->setUserGroupProperty();
+   // }
 
     protected function getCurrentMonth(){
         return date("n");

@@ -30,7 +30,7 @@ class TaskManagement {
 
         if($status == 1){
             $sequenceNo = $this->getTaskHistorySequenceNumber($id);
-            if(!createTaskHistory($id, $sequenceNo)){
+            if(!$this->createTaskHistory($id, $sequenceNo)){
                 $this->eHandler->alertMsg('Fail to create task in History');
                 return;
             }
@@ -51,31 +51,119 @@ class TaskManagement {
         $this->conn->query($stmt);
     }
 
-    //get an array of task history list
-    public function getTaskHistoryList(){
+    //get all the groupid that the login user is associated with
+    private function getUersGroupId(){
         $userid = $_SESSION['userid'];
-
-        $stmt = "SELECT * FROM taskHistory where userid = '$userid'";
+        $stmt = "SELECT groupid FROM usergroupbridge 
+        WHERE userid = '$userid'"; 
         $result = $this->conn->query($stmt);
 
         if($result === FALSE) {
-            $this->eHandler->alertMsg('Fail to retrive task history data from database');
+            // $this->eHandler->alertMsg('Fail to retrive group id associated with user from database');
+            return null;
+        }
+
+        $associatedGroupId = null;
+        $counter = 0;
+        //fetch and store the data in an array
+        while ($row = $result->fetch_assoc()) {
+            $associatedGroupId[$counter] = $row['groupid'];
+            $counter++;
+        }
+        return $associatedGroupId;
+    }
+
+    private function getGroupMemberId($groupId){
+        $stmt = "SELECT userId FROM usergroupbridge
+        WHERE groupId = '$groupId'"; 
+
+        // var_dump($stmt);
+        $result = $this->conn->query($stmt);
+        if($result){
+            $counter = 0;
+            $groupUserId = null;
+            while ($row = $result->fetch_assoc()) {
+                $groupUserId[$counter] = $row['userId'];
+                $counter++;
+            }
+            // var_dump($groupUserId);
+            return $groupUserId;
+        }
+        return null;
+
+    }
+
+    //get an array of task history list
+    public function getTaskHistoryList(){
+        $userid = $_SESSION['userid'];
+        $associatedGroupId = $this->getUersGroupId();
+        if($associatedGroupId == null){
+            return;
+        }
+        $whereClause = '';
+        foreach ($associatedGroupId as $id) {
+            if($whereClause !== ''){
+                $whereClause .= '\' or groupId = \'';
+            }
+            $whereClause .= $id;
+            // $groupMemberId = $this->getGroupMemberId($groupId);
+            // $taskHistoryList = array(
+            //     'groupId' => $groupId,
+
+            //     );
+            //     while ($row = $result->fetch_assoc()) {
+            //         $_SESSION['groupAssociatedPropertyID'][$counter] =
+            //         array (
+            //             $id => $row['propertyid'],
+            //         );
+            //     }
+        }
+
+        // var_dump($whereClause);
+        $membersId = $this->getGroupMemberId($whereClause);
+
+        if($membersId == null){
             return;
         }
 
-        $taskHistoryList = NULL;
+        $whereClause = '';
+        foreach ($membersId as $id) {
+            if($whereClause !== ''){
+                $whereClause .= '\' or th.userid = \'';
+            }
+            $whereClause .= $id;
+        }
+        // var_dump($whereClause);
+        $taskHistoryList = null;
+        $stmt = "SELECT th.taskId, th.taskSequence, th.userID, th.completeDate, t.taskName, t.description, u.userName
+        FROM taskHistory th
+        INNER JOIN tasks t ON th.taskId = t.taskId
+        INNER JOIN users u ON t.userid = u.userid
+        where th.userid = '$whereClause'";
+        // var_dump($stmt);
+        $result = $this->conn->query($stmt);
+
+        if($result === false) {
+            // $this->eHandler->alertMsg('Fail to retrive task history data from database');
+            return;
+        }
+
         $counter = 0;
 
         while ($row = $result->fetch_assoc()) {
                     //creating a session associate array for a task
             $taskHistoryList[$counter] = array(
-                'id' => $row['taskid'],
+                'id' => $row['taskId'],
+                'name' => $row['taskName'],
+                'user' => $row['userName'],
+                'description' => $row['description'],
                 'taskSequence' => $row['taskSequence'],
-                'userid' => $row['userid'],
+                'userid' => $row['userID'],
                 'completeDate' => $row['completeDate']
             );
             $counter++;
         }
+        // var_dump($taskHistoryList);
         return $taskHistoryList;
     }
 
@@ -90,10 +178,10 @@ class TaskManagement {
         ";
 
         if($this->conn->query($stmt) === true) {
-            echo "true";
+            // echo "true";
             return true;
         }else {
-            echo "false";
+            // echo "false";
             return false;
         }
     }
@@ -332,334 +420,143 @@ class TaskManagement {
             ";
 
             if($this->conn->query($sql_data) === true) {
-             $_SESSION['task' . $id]['name'] = $tn;
-             $_SESSION['task' . $id]['description'] = $des;
-             $_SESSION['task' . $id]['repeatTask'] = $repeattask;
-             $_SESSION['task' . $id]['duedate'] = $duedate;
-             $_SESSION['task' . $id]['intervaldays'] = $repeatlength;
-             $_SESSION['task' . $id]['reminderdate'] = $reminderdate;
-             $_SESSION['task' . $id]['reminderinterval'] = $reminderinterval;
+                $_SESSION['task' . $id]['name'] = $tn;
+                $_SESSION['task' . $id]['description'] = $des;
+                $_SESSION['task' . $id]['repeatTask'] = $repeattask;
+                $_SESSION['task' . $id]['duedate'] = $duedate;
+                $_SESSION['task' . $id]['intervaldays'] = $repeatlength;
+                $_SESSION['task' . $id]['reminderdate'] = $reminderdate;
+                $_SESSION['task' . $id]['reminderinterval'] = $reminderinterval;
 
-             $this->eHandler->alertMsg("Successfully update");
+                $this->eHandler->alertMsg("Successfully update");
 
-         } else {
-            $this->eHandler->alertMsg("Update task Failed. Please try again.");
+            } else {
+                $this->eHandler->alertMsg("Update task Failed. Please try again.");
+            }
+        }else{
+            $this->eHandler->alertMsg("Name is already in use");
         }
-    }else{
-        $this->eHandler->alertMsg("Name is already in use");
     }
-}
-public function deleteTask($id) {
+    public function deleteTask($id) {
         // attempt insert query execution
         //$sql_data = "DELETE FROM tasks WHERE taskid = '$id'";
-    $sql_data = "UPDATE tasks SET logDelete = '1' WHERE taskid = '$id'";
-    if($this->conn->query($sql_data) === true) {
-        $this->eHandler->alertMsg("Successfully deleted your task!");
-    } else {
-        $this->eHandler->alertMsg("We weren't able to delete your task. Please try again.");
+        $sql_data = "UPDATE tasks SET logDelete = '1' WHERE taskid = '$id'";
+        if($this->conn->query($sql_data) === true) {
+            $this->eHandler->alertMsg("Successfully deleted your task!");
+        } else {
+            $this->eHandler->alertMsg("We weren't able to delete your task. Please try again.");
+        }
     }
-}
     // get the list of task for an appliance
-public function getListOfTasks($proID, $appID) {
-    $proAppID = $this->getPropertyApplianceID($proID,$appID);
+    public function getListOfTasks($proID, $appID) {
+        $proAppID = $this->getPropertyApplianceID($proID,$appID);
         //attempt select query execution
-    $sql_data = "SELECT p.propertyid, p.applianceid, t.taskid, t.propertyApplianceId, t.taskname, t.description, t.repeatTask, t.duedate, t.complete, t.intervalDays, t.reminderdate, t.reminderinterval 
-    FROM tasks t
-    INNER JOIN propertyappliancebridge p ON t.propertyApplianceId = p.propertyApplianceId
-    WHERE (t.propertyApplianceId = '$proAppID') and (logDelete IS NULL or logDelete = 0)
-    ORDER BY t.taskname ASC
-    ";
-    $result = $this->conn->query($sql_data);
-    if($result === FALSE) {
-        $this->eHandler->alertMsg("Failed to retrive tasks");
-        return;
-    }
-    ob_start();
-    $counter = 0;
-    while ($row = $result->fetch_assoc()) {
-        $counter++;
+        $sql_data = "SELECT p.propertyid, p.applianceid, t.taskid, t.propertyApplianceId, t.taskname, t.description, t.repeatTask, t.duedate, t.complete, t.intervalDays, t.reminderdate, t.reminderinterval 
+        FROM tasks t
+        INNER JOIN propertyappliancebridge p ON t.propertyApplianceId = p.propertyApplianceId
+        WHERE (t.propertyApplianceId = '$proAppID') and (logDelete IS NULL or logDelete = 0)
+        ORDER BY t.taskname ASC
+        ";
+        $result = $this->conn->query($sql_data);
+        if($result === FALSE) {
+            $this->eHandler->alertMsg("Failed to retrive tasks");
+            return;
+        }
+        $counter = 0;
+        $taskList = null;
+        while ($row = $result->fetch_assoc()) {
+            $taskImgs = $this->getImage($row['taskid']);
             //creating a session associate array for a task
-        $_SESSION['task' . $row['taskid']] = array(
-            'id' => $row['taskid'],
-            'propertyId' => $row['propertyid'],
-            'applianceId' => $row['applianceid'],
-            'proAppId' => $row['propertyApplianceId'],
-            'name' => $row['taskname'],
-            'description' => $row['description'],
-            'repeatTask' => $row['repeatTask'],
-            'duedate' => $row['duedate'],
-            'complete' => $row['complete'],
-            'intervaldays' => $row['intervalDays'],
-            'reminderdate' => $row['reminderdate'],
-            'reminderinterval' => $row['reminderinterval']
-        );
-            //display list of task that can be collapse and un-collapse.
-        echo '
-        <div class="card">
-        <div class="card-header" id="headingOne">
-        <h5 class="mb-0">
-        <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo'. $counter .'" aria-expanded="false" aria-controls="collapseTwo">
-        ' . $row['taskname'] . '             
-        </a>
-        </h5>
-        </div><!-- close card-header -->
-        <div id="collapseTwo'. $counter .'" class="collapse" role="tabpanel" aria-labelledby="headingTwo">
-        <div class="card-body">
-
-        <div class="container-fluid">
-        <div class="row">
-        <div class="col-sm-6">
-        <div class="row">
-
-        <p>
-        Description: &nbsp;
-        <span style="font-weight:600">
-        '
-        . $row['description'] .
-        '
-        </span>
-        </p>
-        </div><!-- close row -->
-
-        <div class="row">
-        <p>
-        Due Date: &nbsp;
-        <span style="font-weight:600">
-        '
-        . $row['duedate'] .
-        '
-        </span>
-        </p>
-        </div><!-- close row -->
-        </div><!-- close col -->
-        <div class="col-sm-6">';
-
-        $taskImgs = $this->getImage($row['taskid']);
-
-            if($taskImgs != null){
-                // var_dump($data["img"]);
-
-                foreach ($taskImgs as $image) {
-
-
-                    echo '
-
-                    <img id="myImg" class="imgPreview" src="/home_maintenance_manager/public/img/' . $image['name'] . '" alt="'. explode( '_', $image["name"] )[1] .'" width="150" height="150">
-
-
-
-                    ';
-                }
-            }
-
-            echo '
-                    <!-- The Modal -->
-                    <div id="myModal" class="modal">
-
-                    <!-- The Close Button -->
-                    <span class="close">&times;</span>
-
-                    <!-- Modal Content (The Image) -->
-                    <img class="modal-content" id="imgEnlarge">
-
-                    <!-- Modal Caption (Image Text) -->
-                    <div id="caption"></div>
-                    </div>
-
-
-        </div>
-        </div><!-- close row -->
-
-
-        <div class="row">
-        <div class="col">
-        <div class="btn-group float-left mt-2">
-        <a class="btn btn-secondary btn-md" href="/home_maintenance_manager/public/taskcontroller/task/'. $row['taskid'] .'">
-        <i class="fa fa-flag" aria-hidden="true"></i>Details</a>
-        </div>
-        </div>
-        <div class="col">
-        <div class="btn-group float-md-right mt-2">
-
-        <form action="#" method="post">
-        <input type="hidden" name="taskid" value="'.$row['taskid'].'">
-        <input type="hidden" name="completeStatus" value="1">
-        <input type="submit" name="updtateTaskStatus" value="Complete" class="btn btn-md btn-secondary" aria-hidden="true">
-
-        </form>
-
-        <a class="btn btn-md btn-secondary" href="/home_maintenance_manager/public/taskcontroller/update/'. $row['taskid'] .'">
-        <i class="fa fa-flag" aria-hidden="true"></i> Update</a>
-        <a class="btn btn-md btn-secondary" href="/home_maintenance_manager/public/taskcontroller/delete/'. $row['taskid'] .'">
-        <i class="fa fa-flag" aria-hidden="true"></i> Delete</a>
-        </div>
-        </div>
-
-        </div><!-- close row -->
-
-
-
-        
-        </div><!-- close container fluid -->
-        </div><!-- close card body -->
-        </div><!-- close collapseOne -->
-        </div><!-- close card -->
-        ';//end echo
+            $_SESSION['task' . $row['taskid']] = array(
+                'id' => $row['taskid'],
+                'propertyId' => $row['propertyid'],
+                'applianceId' => $row['applianceid'],
+                'proAppId' => $row['propertyApplianceId'],
+                'name' => $row['taskname'],
+                'description' => $row['description'],
+                'repeatTask' => $row['repeatTask'],
+                'duedate' => $row['duedate'],
+                'complete' => $row['complete'],
+                'intervaldays' => $row['intervalDays'],
+                'reminderdate' => $row['reminderdate'],
+                'reminderinterval' => $row['reminderinterval'],
+                'imgs' => $taskImgs
+            );
+            $taskList[$counter] = array(
+                'id' => $row['taskid'],
+                'propertyId' => $row['propertyid'],
+                'applianceId' => $row['applianceid'],
+                'proAppId' => $row['propertyApplianceId'],
+                'name' => $row['taskname'],
+                'description' => $row['description'],
+                'repeatTask' => $row['repeatTask'],
+                'duedate' => $row['duedate'],
+                'complete' => $row['complete'],
+                'intervaldays' => $row['intervalDays'],
+                'reminderdate' => $row['reminderdate'],
+                'reminderinterval' => $row['reminderinterval'],
+                'imgs' => $taskImgs
+            );
+            $counter++;
+        }
+        return $taskList;
     }
-    $output = ob_get_contents();
-    ob_end_clean();
-    return $output;
-}
-
-
-
 
 
     //display a list of all task pertain to login user
-public function listAllTask(){
-    $userid = $_SESSION['userid'];
+    public function listAllTask(){
+        $userid = $_SESSION['userid'];
         //attempt select query execution
-    $stmt = "SELECT p.propertyId, p.applianceId, t.taskid, t.propertyApplianceId, t.taskname, t.description, t.repeatTask, t.duedate, t.complete, t.intervalDays, t.reminderdate, t.reminderinterval 
-    FROM tasks t INNER JOIN propertyappliancebridge p ON t.propertyApplianceId = p.propertyApplianceId
-    WHERE t.userid = '1' and t.logDelete !=1 and t.complete != 1
-    ORDER BY t.taskname ASC
-    ";
-    $result = $this->conn->query($stmt);
-    if($result === FALSE) {
-        $this->eHandler->alertMsg("Failed to retrive tasks");
-        return;
-    }
-    $counter = 0;
-    ob_start();
-    while ($row = $result->fetch_assoc()) {
-        $counter++;
-            //creating a session associate array for a task
-        $_SESSION['task' . $row['taskid']] = array(
-            'id' => $row['taskid'],
-            'propertyId' => $row['propertyId'],
-            'applianceId' => $row['applianceId'],
-            'proAppId' => $row['propertyApplianceId'],
-            'name' => $row['taskname'],
-            'description' => $row['description'],
-            'repeatTask' => $row['repeatTask'],
-            'duedate' => $row['duedate'],
-            'complete' => $row['complete'],
-            'intervaldays' => $row['intervalDays'],
-            'reminderdate' => $row['reminderdate'],
-            'reminderinterval' => $row['reminderinterval']
-        );
-            //display list of task that can be collapse and un-collapse.
-        echo '
-        <div class="card">
-        <div class="card-header" id="headingOne">
-        <h5 class="mb-0">
-        <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo'. $counter .'" aria-expanded="false" aria-controls="collapseTwo">
-        ' . $row['taskname'] . '             
-        </a>
-        </h5>
-        </div><!-- close card-header -->
-        <div id="collapseTwo'. $counter .'" class="collapse" role="tabpanel" aria-labelledby="headingTwo">
-        <div class="card-body">
-
-        <div class="container-fluid">
-        <div class="row">
-        <div class="col-sm-6">
-        <div class="row">
-
-        <p>
-        Description: &nbsp;
-        <span style="font-weight:600">
-        '
-        . $row['description'] .
-        '
-        </span>
-        </p>
-        </div><!-- close row -->
-
-        <div class="row">
-        <p>
-        Due Date: &nbsp;
-        <span style="font-weight:600">
-        '
-        . $row['duedate'] .
-        '
-        </span>
-        </p>
-        </div><!-- close row -->
-        </div><!-- close col -->
-        <div class="col-sm-6">';
-
-        $taskImgs = $this->getImage($row['taskid']);
-
-            if($taskImgs != null){
-                // var_dump($data["img"]);
-
-                foreach ($taskImgs as $image) {
-
-
-                    echo '
-
-                    <img id="myImg" class="imgPreview" src="/home_maintenance_manager/public/img/' . $image['name'] . '" alt="'. explode( '_', $image["name"] )[1] .'" width="150" height="150">
-
-
-
-                    ';
-                }
-            }
-
-            echo '
-                    <!-- The Modal -->
-                    <div id="myModal" class="modal">
-
-                    <!-- The Close Button -->
-                    <span class="close">&times;</span>
-
-                    <!-- Modal Content (The Image) -->
-                    <img class="modal-content" id="imgEnlarge">
-
-                    <!-- Modal Caption (Image Text) -->
-                    <div id="caption"></div>
-                    </div>
-
-
-        </div>
-        </div><!-- close row -->
-
-        <div class="row">
-        <div class="col">
-        <div class="btn-group float-left mt-2">
-        <a class="btn btn-secondary btn-md" href="/home_maintenance_manager/public/taskcontroller/task/'. $row['taskid'] .'">
-        <i class="fa fa-flag" aria-hidden="true"></i>Details</a>
-        </div>
-        </div>
-        <div class="col">
-        <div class="btn-group float-md-right mt-2">
-
-        <form action="#" method="post">
-        <input type="hidden" name="taskid" value="'.$row['taskid'].'">
-        <input type="hidden" name="completeStatus" value="1">
-        <input type="submit" name="updtateTaskStatus" value="Complete" class="btn btn-md btn-secondary" aria-hidden="true">
-
-        </form>
-
-        <a class="btn btn-md btn-secondary" href="/home_maintenance_manager/public/taskcontroller/update/'. $row['taskid'] .'">
-        <i class="fa fa-flag" aria-hidden="true"></i> Update</a>
-        <a class="btn btn-md btn-secondary" href="/home_maintenance_manager/public/taskcontroller/delete/'. $row['taskid'] .'">
-        <i class="fa fa-flag" aria-hidden="true"></i> Delete</a>
-        </div>
-        </div>
-
-        </div><!-- close row -->
-
-        </div><!-- close container fluid -->
-        </div><!-- close card body -->
-        </div><!-- close collapseOne -->
-        </div><!-- close card -->
-        ';//end echo
+        $stmt = "SELECT p.propertyId, p.applianceId, t.taskid, t.propertyApplianceId, t.taskname, t.description, t.repeatTask, t.duedate, t.complete, t.intervalDays, t.reminderdate, t.reminderinterval 
+        FROM tasks t INNER JOIN propertyappliancebridge p ON t.propertyApplianceId = p.propertyApplianceId
+        WHERE t.userid = '$userid' and t.logDelete !=1 and t.complete != 1
+        ORDER BY t.taskname ASC
+        ";
+        $result = $this->conn->query($stmt);
+        if($result === FALSE) {
+            $this->eHandler->alertMsg("Failed to retrive tasks");
+            return;
         }
-        $output = ob_get_contents();
-        ob_end_clean();
-        return $output;
+        $counter = 0;
+        $taskList = null;
+        while ($row = $result->fetch_assoc()) {
+            $taskImgs = $this->getImage($row['taskid']);
+            //creating a session associate array for a task
+            $_SESSION['task' . $row['taskid']] = array(
+                'id' => $row['taskid'],
+                'propertyId' => $row['propertyId'],
+                'applianceId' => $row['applianceId'],
+                'proAppId' => $row['propertyApplianceId'],
+                'name' => $row['taskname'],
+                'description' => $row['description'],
+                'repeatTask' => $row['repeatTask'],
+                'duedate' => $row['duedate'],
+                'complete' => $row['complete'],
+                'intervaldays' => $row['intervalDays'],
+                'reminderdate' => $row['reminderdate'],
+                'reminderinterval' => $row['reminderinterval'],
+                'imgs' => $taskImgs
+            );
+
+            $taskList[$counter] = array(
+                'id' => $row['taskid'],
+                'propertyId' => $row['propertyId'],
+                'applianceId' => $row['applianceId'],
+                'proAppId' => $row['propertyApplianceId'],
+                'name' => $row['taskname'],
+                'description' => $row['description'],
+                'repeatTask' => $row['repeatTask'],
+                'duedate' => $row['duedate'],
+                'complete' => $row['complete'],
+                'intervaldays' => $row['intervalDays'],
+                'reminderdate' => $row['reminderdate'],
+                'reminderinterval' => $row['reminderinterval'],
+                'imgs' => $taskImgs
+            );
+
+            $counter++;
+        }
+        return $taskList;
     }
 
 
