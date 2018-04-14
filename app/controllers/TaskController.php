@@ -93,7 +93,7 @@ class TaskController extends Controller {
         $this->notSignedIn();
         $taskManagement =  $this->model->getTaskManagement();
 
-        $_SESSION['outputCotent'] = $taskManagement->listAllTask();
+        $_SESSION['outputCotent'] = $taskManagement->managerListAllTask();
         $this->view("manager-listAll-task-page", ["userid" => $userId]);
     }
 }

@@ -1,5 +1,4 @@
-<?php
-?>
+
 <div class="container" id="info">
     <h3>All Tasks - Manager User View</h3>
     <br>

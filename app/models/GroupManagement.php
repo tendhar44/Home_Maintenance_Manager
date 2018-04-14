@@ -95,14 +95,14 @@ class GroupManagement {
 
         $row = $this->getProperty($property_name);
         $propertyid = $row['propertyid'];
-        $userid = $row['userid'];
+        $userid = $row['ownerid'];
 
         $sql_data = "INSERT INTO propertygroupbridge (propertyid, groupid) VALUES ('$propertyid', '$group_id')";
 
         if ($this->conn->query($sql_data) === true) {
-            echo "Successfully added a member!";
+            echo "Successfully added a property!";
         } else {
-            echo "We weren't able to add the member. Please try again.";
+            echo "We weren't able to add the property. Please try again.";
         }
     }
 
