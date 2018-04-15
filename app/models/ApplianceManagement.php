@@ -54,6 +54,12 @@ class ApplianceManagement {
         }
     }
 
+    public function deleteImage($imageId){
+        if (isset($_POST['imgId'])){
+            $this->eHandler->deleteImage($_POST['imgId'], $this->conn);
+        }
+    }
+
     //getting appliance name from database by appliance id
     private function getApplianceName($applianceId){
         if($applianceId == NULL){

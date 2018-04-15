@@ -40,17 +40,23 @@ class TaskController extends Controller {
 
     public function update($taskNum = 0) {
         $this->notSignedIn();
-        $taskManagement =  $this->model->getTaskManagement();        
+        $taskManagement =  $this->model->getTaskManagement();  
+        $images = $taskManagement->getImage($taskNum);
+              
         if($_SERVER["REQUEST_METHOD"] == "POST") {
             $taskID = $_SESSION['task' . $taskNum]['id'];
             if (isset($_POST['addTask'])){
                 $taskManagement->updateTask($taskID);
             }  
             if (isset($_POST['addImg'])){
-                $taskManagement->addTask();
+                $taskManagement->addImage($taskID);
+            }      
+            if (isset($_POST['deleteImage'])){
+                $taskManagement->deleteImage($taskID);
             }      
         }
-        $this->view("update-task-page", ["tn" => $taskNum]);
+        
+        $this->view("update-task-page", ["tn" => $taskNum, "img" => $images]);
     }
 
     public function delete($taskNum = 0) {

@@ -24,17 +24,26 @@ class ApplianceController extends Controller {
 
     public function update($propertyId = 0, $applianceID = 0) {
         $this->notSignedIn();
-        $appManagement =  $this->model->getApplianceManagement();
+        $appManagement =  $this->model->getApplianceManagement(); 
+        $images = $appManagement->getImage($applianceID);
 
         /**
         * If form is submitted as post method, update appliance method is called.
         * Appliance ID is passed as parameter in the update appliance method.
         */
         if($_SERVER["REQUEST_METHOD"] == "POST") {
+            if (isset($_POST['addAppliance'])){
             $appManagement->updateAppliance($applianceID, $propertyId);
+            }  
+            if (isset($_POST['addImg'])){
+                $appManagement->addImage($_SESSION['applianceId' . $applianceID]['id']);
+            }      
+            if (isset($_POST['deleteImage'])){
+                $appManagement->deleteImage($_SESSION['applianceId' . $applianceID]['id']);
+            }      
         }
 
-        $this->view("update-appliance-page", ["pn" => $propertyId, "an" => $applianceID]);
+        $this->view("update-appliance-page", ["pn" => $propertyId, "an" => $applianceID, "img" => $images]);
     }
 
     public function delete($applianceNum = 0) {

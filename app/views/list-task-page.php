@@ -25,6 +25,20 @@
     <?php
 
         $counter = 0;
+
+        if ($data['taskList'] == null){
+            echo '
+            <div class="row">
+            <div class="col-sm-12">
+            <p>
+            There is currently no task available 
+            </p>
+            </div>
+            </div>
+            ';
+            return;
+        }
+
         foreach ($data['taskList'] as $task) {
             $counter++;
 
@@ -43,8 +57,8 @@
             <div class="container-fluid">
             <div class="row">
             <div class="col-sm-6">
+            
             <div class="row">
-
             <p>
             Description: &nbsp;
             <span style="font-weight:600">
@@ -72,7 +86,7 @@
             if($task['imgs'] != null){
                     // var_dump($data["img"]);
 
-                foreach ($$task['imgs'] as $image) {
+                foreach ($task['imgs'] as $image) {
                     echo '
                     <img id="myImg" class="imgPreview" src="/home_maintenance_manager/public/img/' . $image['name'] . '" alt="'. explode( '_', $image["name"] )[1] .'" width="150" height="150">
                     ';

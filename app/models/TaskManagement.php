@@ -287,9 +287,6 @@ class TaskManagement {
     }
 
 
-    public function getImage($id){
-        return $this->eHandler->getImage($id, $this->imageType, $this->conn);
-    }
 
     // add a task to the database
     public function addTask() {
@@ -346,6 +343,16 @@ class TaskManagement {
                 // var_dump($file_ary);
             $this->eHandler->uploadImage($file_ary, $objectID, $this->imageType, $this->conn);
         }
+    }
+
+    public function deleteImage($imageId){
+        if (isset($_POST['imgId'])){
+            $this->eHandler->deleteImage($_POST['imgId'], $this->conn);
+        }
+    }
+    
+    public function getImage($id){
+        return $this->eHandler->getImage($id, $this->imageType, $this->conn);
     }
 
     //get task information from a task id

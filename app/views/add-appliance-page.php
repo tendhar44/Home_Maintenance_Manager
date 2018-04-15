@@ -10,11 +10,11 @@
     <h3>Create An Appliance</h3>
     <hr>
     <br>
-    <form action="/Home_Maintenance_Manager/public/appliancecontroller/<?php echo $data['proId']; ?>" method="post">
+    <form action="/Home_Maintenance_Manager/public/appliancecontroller/<?php echo $data['proId']; ?>" method="post" enctype="multipart/form-data">
         Appliance Name:<span class="reqAsk">*</span><br> <input type="text" name="applianceName"><br><br>
 
         Select Image only (limited 1000 kb):<br>
-        <input id="browse" name="imgSelector" type="file" onchange="previewFiles()" accept="image/*">
+        <input id="browse" name="imgSelector[]" type="file" onchange="previewFiles()" accept="image/*">
         <div id="preview"></div>
 
         <br>
