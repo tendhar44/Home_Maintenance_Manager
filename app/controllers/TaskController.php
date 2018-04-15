@@ -81,19 +81,4 @@ class TaskController extends Controller {
         $this->view("listAll-task-page", ["userid" => $userId, "dropDownData" => $associativeData, "taskList" => $taskList]);
     }
 
-    public function limtedListAll($userId = 0) {
-        $this->notSignedIn();
-        $taskManagement =  $this->model->getTaskManagement();
-
-        $_SESSION['outputCotent'] = $taskManagement->limitedListAllTask();
-        $this->view("limited-listAll-task-page", ["userid" => $userId]);
-    }
-
-    public function managerListAll($userId = 0) {
-        $this->notSignedIn();
-        $taskManagement =  $this->model->getTaskManagement();
-
-        $_SESSION['outputCotent'] = $taskManagement->managerListAllTask();
-        $this->view("manager-listAll-task-page", ["userid" => $userId]);
-    }
 }

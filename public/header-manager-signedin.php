@@ -33,7 +33,7 @@
 
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link" href="/home_maintenance_manager/public/taskcontroller/managerListAll/<?php echo $_SESSION['userid']; ?>">View All Task</a>
+                    <a class="nav-link" href="/home_maintenance_manager/public/taskcontroller/listAll/<?php echo $_SESSION['userid']; ?>">View All Task</a>
                 </li>
             </ul>
 

@@ -506,12 +506,45 @@ class TaskManagement {
     //display a list of all task pertain to login user
     public function listAllTask(){
         $userid = $_SESSION['userid'];
-        //attempt select query execution
-        $stmt = "SELECT p.propertyId, p.applianceId, t.taskid, t.propertyApplianceId, t.taskname, t.description, t.repeatTask, t.duedate, t.complete, t.intervalDays, t.reminderdate, t.reminderinterval 
-        FROM tasks t INNER JOIN propertyappliancebridge p ON t.propertyApplianceId = p.propertyApplianceId
-        WHERE t.userid = '$userid' and t.logDelete !=1 and t.complete != 1
-        ORDER BY t.taskname ASC
-        ";
+
+        if(isset($_SESSION['owner']) && $_SESSION['owner']){
+
+            // echo "owner list all";
+
+            $stmt = "SELECT p.propertyId, p.applianceId, t.taskid, t.propertyApplianceId, t.taskname, t.description, t.repeatTask, t.duedate, t.complete, t.intervalDays, t.reminderdate, t.reminderinterval 
+            FROM tasks t INNER JOIN propertyappliancebridge p ON t.propertyApplianceId = p.propertyApplianceId
+            WHERE t.userid = '$userid' and t.logDelete !=1 and t.complete != 1
+            ORDER BY t.taskname ASC
+            ";
+
+
+        } else if(isset($_SESSION['manager']) && $_SESSION['manager']) {
+
+            // echo "manager list all";
+
+            $stmt = "SELECT p.propertyId, p.applianceId, t.taskid, t.propertyApplianceId, t.taskname, t.description, t.repeatTask, t.duedate, t.complete, t.intervalDays, t.reminderdate, t.reminderinterval 
+            FROM tasks t INNER JOIN propertyappliancebridge p ON t.propertyApplianceId = p.propertyApplianceId
+            INNER JOIN propertygroupbridge pg ON p.propertyId = pg.propertyId 
+            INNER JOIN usergroupbridge ug ON pg.groupId = ug.groupId
+            WHERE ug.userId = '$userid' and t.logDelete !=1 and t.complete != 1
+            ORDER BY t.taskname ASC
+            ";
+
+        } else if(isset($_SESSION['limitedUser']) && $_SESSION['limitedUser']) {
+
+            // echo "limited user list all";
+
+            $stmt = "SELECT p.propertyId, p.applianceId, t.taskid, t.propertyApplianceId, t.taskname, t.description, t.repeatTask, t.duedate, t.complete, t.intervalDays, t.reminderdate, t.reminderinterval 
+            FROM tasks t INNER JOIN propertyappliancebridge p ON t.propertyApplianceId = p.propertyApplianceId
+            INNER JOIN propertygroupbridge pg ON p.propertyId = pg.propertyId 
+            INNER JOIN usergroupbridge ug ON pg.groupId = ug.groupId
+            WHERE ug.userId = '$userid' and t.logDelete !=1 and t.complete != 1
+            ORDER BY t.taskname ASC
+            ";
+
+        }
+
+
         $result = $this->conn->query($stmt);
         if($result === FALSE) {
             $this->eHandler->alertMsg("Failed to retrive tasks");
@@ -558,97 +591,5 @@ class TaskManagement {
         }
         return $taskList;
     }
-
-
-
-    public function managerListAllTask(){
-        $userid = $_SESSION['userid'];
-        //attempt select query execution
-        $stmt = "SELECT p.propertyId, p.applianceId, t.taskid, t.propertyApplianceId, t.taskname, t.description, t.repeatTask, t.duedate, t.complete, t.intervalDays, t.reminderdate, t.reminderinterval 
-    FROM tasks t INNER JOIN propertyappliancebridge p ON t.propertyApplianceId = p.propertyApplianceId
-    INNER JOIN propertygroupbridge pg ON p.propertyId = pg.propertyId 
-    INNER JOIN usergroupbridge ug ON pg.groupId = ug.groupId
-    WHERE ug.userId = '$userid' and t.logDelete !=1 and t.complete != 1
-    ORDER BY t.taskname ASC
-    ";
-
-        $result = $this->conn->query($stmt);
-        if($result === FALSE) {
-            $this->eHandler->alertMsg("Failed to retrive tasks");
-            return;
-        }
-        $counter = 0;
-        ob_start();
-        while ($row = $result->fetch_assoc()) {
-            $counter++;
-            //creating a session associate array for a task
-            $_SESSION['task' . $row['taskid']] = array(
-                'id' => $row['taskid'],
-                'name' => $row['taskname'],
-                'description' => $row['description'],
-                'duedate' => $row['duedate'],
-            );
-            //display list of task that can be collapse and un-collapse.
-            echo '
-        <div class="card">
-        <div class="card-header" id="headingOne">
-        <h5 class="mb-0">
-        <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="/home_maintenance_manager/public/taskcontroller/task/'. $row['taskid'] .'" aria-expanded="false" aria-controls="collapseTwo">
-        ' . $row['taskname'] . '             
-        </a>
-        </h5>
-        </div><!-- close card-header -->
-        ';//end echo
-        }
-        $output = ob_get_contents();
-        ob_end_clean();
-        return $output;
-    }
-
-
-
-    public function limitedListAllTask(){
-        $userid = $_SESSION['userid'];
-        //attempt select query execution
-        $stmt = "SELECT p.propertyId, p.applianceId, t.taskid, t.propertyApplianceId, t.taskname, t.description, t.repeatTask, t.duedate, t.complete, t.intervalDays, t.reminderdate, t.reminderinterval 
-    FROM tasks t INNER JOIN propertyappliancebridge p ON t.propertyApplianceId = p.propertyApplianceId
-    INNER JOIN propertygroupbridge pg ON p.propertyId = pg.propertyId 
-    INNER JOIN usergroupbridge ug ON pg.groupId = ug.groupId
-    WHERE ug.userId = '$userid' and t.logDelete !=1 and t.complete != 1
-    ORDER BY t.taskname ASC
-    ";
-        $result = $this->conn->query($stmt);
-        if($result === FALSE) {
-            $this->eHandler->alertMsg("Failed to retrive tasks");
-            return;
-        }
-        $counter = 0;
-        ob_start();
-        while ($row = $result->fetch_assoc()) {
-            $counter++;
-            //creating a session associate array for a task
-            $_SESSION['task' . $row['taskid']] = array(
-                'id' => $row['taskid'],
-                'name' => $row['taskname'],
-                'description' => $row['description'],
-                'duedate' => $row['duedate'],
-            );
-            //display list of task that can be collapse and un-collapse.
-            echo '
-        <div class="card">
-        <div class="card-header" id="headingOne">
-        <h5 class="mb-0">
-        <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="/home_maintenance_manager/public/taskcontroller/task/'. $row['taskid'] .'" aria-expanded="false" aria-controls="collapseTwo">
-        ' . $row['taskname'] . '             
-        </a>
-        </h5>
-        </div><!-- close card-header -->
-        ';//end echo
-        }
-        $output = ob_get_contents();
-        ob_end_clean();
-        return $output;
-    }
-
 
 }
