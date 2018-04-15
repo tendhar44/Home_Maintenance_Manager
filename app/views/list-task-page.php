@@ -115,7 +115,7 @@
             <div class="row">
             <div class="col">
             <div class="btn-group float-left mt-2">
-            <a class="btn btn-secondary btn-md" href="/home_maintenance_manager/public/taskcontroller/task/'. $task['id'] .'">
+            <a class="btn btn-secondary btn-md" href="/home_maintenance_manager/public/taskcontroller/index/'. $task['id'] .'">
             <i class="fa fa-flag" aria-hidden="true"></i>Details</a>
             </div>
             </div>

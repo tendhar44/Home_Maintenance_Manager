@@ -36,7 +36,7 @@
         <input type="hidden" name="proId" value="<?php echo $data['proNum']; ?>">
 
 
-        <input type="submit" value="Submit">
+        <input name="addTask" value="addTask" type="submit" value="Submit">
     </form>
 
     <div>

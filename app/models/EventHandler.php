@@ -145,7 +145,7 @@ class EventHandler {
 	public function uploadImage($imgFiles, $objectId, $objectType, $conn){
 
 		// var_dump($imgFiles);
-		if($imgFiles === NULL){
+		if($imgFiles === NULL || $imgFiles === ''){
 			$this->alertMsg("No image files was selected");
 			return false;
 		}

@@ -9,8 +9,13 @@ class TaskController extends Controller {
         $this->notSignedIn();
 
         $taskManagement =  $this->model->getTaskManagement();
-        if($_SERVER["REQUEST_METHOD"] == "POST") {            
-            $taskManagement->addTask();
+        if($_SERVER["REQUEST_METHOD"] == "POST") { 
+            if (isset($_POST['addTask'])){
+                $taskManagement->addTask();
+            }
+            if (isset($_POST['updtateTaskStatus'])){
+                $taskManagement->updateCompleteStatus();
+            }  
         }
         $taskList = $taskManagement->getListOfTasks($propertyNum, $applianceId); 
         $this->view("list-task-page", ["appId" => $applianceId, "proNum" => $propertyNum, "taskList" => $taskList]);
@@ -42,7 +47,7 @@ class TaskController extends Controller {
         $this->notSignedIn();
         $taskManagement =  $this->model->getTaskManagement();  
         $images = $taskManagement->getImage($taskNum);
-              
+        
         if($_SERVER["REQUEST_METHOD"] == "POST") {
             $taskID = $_SESSION['task' . $taskNum]['id'];
             if (isset($_POST['addTask'])){

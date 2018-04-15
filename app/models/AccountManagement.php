@@ -146,7 +146,6 @@ class AccountManagement {
             // var_dump($row['username']);
             //if username and password matches then let user log in
         if($username == $row['username'] && $password == $row['password']) {
-            $this->setSignInUserType($row['usertypeid']);
             $_SESSION['loggedin'] = true;
             $_SESSION['username'] = $row['username'];
             $_SESSION['usertype'] = $row['usertypeid'];
@@ -156,6 +155,7 @@ class AccountManagement {
             $_SESSION['lastname'] = $row['lastname'];
             $_SESSION['password'] = $row['password'];
             $_SESSION['userNameError'] = "";
+            $this->setSignInUserType($row['usertypeid']);
 
             return true;
         }
@@ -170,11 +170,29 @@ class AccountManagement {
         $_SESSION['limitedUser'] = false;
         if ($type == 1) {
             $_SESSION['owner'] = true;
+            return;
         } else if ($type == 2){
             $_SESSION['manager'] = true;
         } else {
             $_SESSION['limitedUser'] = true;            
         }
+        $this->setOwnerId();
+    }
+
+    private function setOwnerId(){  
+        $userid = $_SESSION['userid'];  
+        $stmt = "
+        SELECT g.groupOwnerId 
+        FROM groups g 
+        INNER JOIN usergroupbridge ugb            
+        WHERE ugb.userid = '$userid'
+        LIMIT 1"; 
+        
+        $result = $this->conn->query($stmt);
+        $row = mysql_fetch_row($result);
+        $_SESSION['ownerid'] = $row['groupOwnerId'];
+
+
     }
 
 
