@@ -1,10 +1,10 @@
 <?php 
 
-	$display = 'none';
+$display = 'none';
 
-	if(isset($_SESSION['owner']) && $_SESSION['owner']){
-		$display = 'block';
-	}
+if(isset($_SESSION['owner']) && $_SESSION['owner']){
+	$display = 'block';
+}
 
 ?>
 
@@ -191,40 +191,44 @@
 			<a class="btn btn-secondary btn-md" href="/home_maintenance_manager/public/taskcontroller/task/'. $task['id'] .'">
 			<i class="fa fa-flag" aria-hidden="true"></i>Details</a>
 			</div>
-			</div>
-			<div class="col">
-			<div class="btn-group float-md-right mt-2">
+			</div>';
 
-			<form action="#" method="post">
-			<input type="hidden" name="taskid" value="'.$task['id'].'">
-			<input type="hidden" name="completeStatus" value="1">
-			<input type="submit" name="updtateTaskStatus" value="Complete" class="btn btn-md btn-secondary" aria-hidden="true">
+			if(isset($_SESSION['owner']) && $_SESSION['owner']){
 
-			</form>
+				echo '
 
-			<a class="btn btn-md btn-secondary" href="/home_maintenance_manager/public/taskcontroller/update/'. $task['id'] .'">
-			<i class="fa fa-flag" aria-hidden="true"></i> Update</a>
-			<a class="btn btn-md btn-secondary" href="/home_maintenance_manager/public/taskcontroller/delete/'. $task['id'] .'">
-			<i class="fa fa-flag" aria-hidden="true"></i> Delete</a>
-			</div>
-			</div>
+				<div class="col">
+				<div class="btn-group float-md-right mt-2">
 
+				<form action="#" method="post">
+				<input type="hidden" name="taskid" value="'.$task['id'].'">
+				<input type="hidden" name="completeStatus" value="1">
+				<input type="submit" name="updtateTaskStatus" value="Complete" class="btn btn-md btn-secondary" aria-hidden="true">
+
+				</form>
+
+				<a class="btn btn-md btn-secondary" href="/home_maintenance_manager/public/taskcontroller/update/'. $task['id'] .'">
+				<i class="fa fa-flag" aria-hidden="true"></i> Update</a>
+				<a class="btn btn-md btn-secondary" href="/home_maintenance_manager/public/taskcontroller/delete/'. $task['id'] .'">
+				<i class="fa fa-flag" aria-hidden="true"></i> Delete</a>
+				</div>
+				</div>
+
+
+				';
+			}
+			
+			echo '
 			</div><!-- close row -->
-
-
-
 
 			</div><!-- close container fluid -->
 			</div><!-- close card body -->
 			</div><!-- close collapseOne -->
 			</div><!-- close card -->
-
 			';
-
 		}
+
 		?>
-
-
 
 		<!-- The Modal -->
 		<div id="myModal" class="modal">
