@@ -12,7 +12,7 @@
     <h3>Create A Task</h3>
     <hr>
     <br>
-    <form id="addTaskForm" action="/Home_Maintenance_Manager/public/taskcontroller/<?php echo $data["proNum"] ?>/<?php echo $data['appId']; ?>" method="post">
+    <form id="addTaskForm" action="/Home_Maintenance_Manager/public/taskcontroller/<?php echo $data["proNum"] ?>/<?php echo $data['appId']; ?>" method="post" enctype="multipart/form-data">
         Task Name: <span class="reqAsk">*</span><br> <input type="text" name="taskName" required><br><br>
         Task Due Date: <span class="reqAsk">*</span><br> <input type="date" name="taskDue" required><br><br>
 
@@ -26,7 +26,7 @@
         Description:<br> <textarea name="taskDes"></textarea><br><br>
 
         Select Image only (limited 1000 kb):<br>
-        <input id="browse" name="imgSelector" type="file" onchange="previewFiles()" accept="image/*">
+        <input id="browse" name="imgSelector[]" type="file" onchange="previewFiles()" accept="image/*">
         <div id="preview"></div>
         <br><br>
 
@@ -36,7 +36,7 @@
         <input type="hidden" name="proId" value="<?php echo $data['proNum']; ?>">
 
 
-        <input type="submit" value="Submit">
+        <input name="addTask" value="addTask" type="submit" value="Submit">
     </form>
 
     <div>

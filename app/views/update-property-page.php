@@ -25,7 +25,7 @@
                 Address:<br> <input type="text" name="address" value="<?php echo $_SESSION['propertyid' . $data["pn"]]['address'] ?>"><br><br>
                 Description:<br> <input type="text" name="propertydes" value="<?php echo $_SESSION['propertyid' . $data["pn"]]['description'] ?>"><br><br>
                 <div class="form-group"> 
-                    <button type="submit" name="updateProperty" value="updateProperty" class="btn btn-default">Submit</button>
+                    <button class="btn btn-md btn-secondary" type="submit" name="updateProperty" value="updateProperty">Submit</button>
                 </div>
             </form>
         </div>
@@ -36,13 +36,13 @@
                 <label>Add Image
                 </label>
                 <div class="form-group"> 
-                    <input id="browse"  name="imgSelector" type="file" onchange="previewFiles()" required accept="image/*">
+                    <input id="browse"  name="imgSelector[]" type="file" onchange="previewFiles()" required accept="image/*">
 
                     <div id="preview"></div>
                 </div>
 
                 <div class="form-group"> 
-                    <button type="submit" name="addImg" value="AddTask" class="btn btn-default">Submit</button>
+                    <button type="submit" name="addImg" value="AddTask" class="btn btn-md btn-secondary">Submit</button>
                 </div>
             </form>
 
@@ -60,10 +60,10 @@
 
                     <img id="myImg" class="imgPreview deletable" data-buttonId="'.$image["id"].'" src="/home_maintenance_manager/public/img/' . $image["name"] . '" alt="'. explode( '_', $image["name"] )[1] .'" width="150" height="150">
 
-                        
+                    
                     <form action="#" method="post" enctype="multipart/form-data">
-                        <input type="hidden" name="imgId" value="'.$image["id"] .'">
-                        <button id="delete'.$image["id"].'" type="submit" name="deleteImage" value="deleteImage" class="btn">x</button>
+                    <input type="hidden" name="imgId" value="'.$image["id"] .'">
+                    <button id="delete'.$image["id"].'" type="submit" name="deleteImage" value="deleteImage" class="btn">x</button>
                     </form>
 
                     </div>
@@ -75,21 +75,21 @@
 
 
             ?>
-                    <!-- The Modal -->
-                    <div id="myModal" class="modal">
+            <!-- The Modal -->
+            <div id="myModal" class="modal">
 
-                    <!-- The Close Button -->
-                    <span class="close">&times;</span>
+                <!-- The Close Button -->
+                <span class="close">&times;</span>
 
-                    <!-- Modal Content (The Image) -->
-                    <img class="modal-content" id="imgEnlarge">
+                <!-- Modal Content (The Image) -->
+                <img class="modal-content" id="imgEnlarge">
 
-                    <!-- Modal Caption (Image Text) -->
-                    <div id="caption"></div>
-                    </div>
+                <!-- Modal Caption (Image Text) -->
+                <div id="caption"></div>
+            </div>
 
+        </div>
     </div>
-</div>
 
 </div>
 

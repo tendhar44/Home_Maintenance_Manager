@@ -26,7 +26,18 @@ class EventHandler {
 		return $file_ary;
 	}
 
+	private function getImageName($id, $conn){
 
+		$stmt = "
+		SELECT imageFileName 
+		FROM Images
+		WHERE imageId = '$id' 
+		";
+
+		$imgData = $conn->query($stmt);
+		$row = $imgData->fetch_assoc();
+		return $row['imageFileName'];
+	}
 
 	public function getImage($objectId, $objectType, $conn){
 
@@ -81,7 +92,7 @@ class EventHandler {
 		return -1;
 	}
 
-	public function uploadImageToDatabase($imgName, $conn){
+	private function uploadImageToDatabase($imgName, $conn){
 		$stmt = "INSERT INTO Images (imageFileName) VALUES ('$imgName')";
 		if($conn->query($stmt)){
 			// echo "success";
@@ -91,12 +102,12 @@ class EventHandler {
 		return null;
 	}
 
-	public function createImageBridge($imgId, $objectId, $objectType, $conn){
+	private function createImageBridge($imgId, $objectId, $objectType, $conn){
 		$stmt = "INSERT INTO ImageObjectBridge (imageId, objectId, objectType) VALUES ('$imgId', '$objectId', '$objectType')";
 		return $conn->query($stmt);
 	}
 
-	public function removeImage($id, $conn){
+	private function removeImage($id, $conn){
 		$stmt = "DELETE FROM Images WHERE imageId = '$id'";
 		if($conn->query($stmt))
 			return true;
@@ -104,7 +115,7 @@ class EventHandler {
 		return false;
 	}
 
-	public function removeImageBridge($id, $conn){
+	private function removeImageBridge($id, $conn){
 		$stmt = "DELETE FROM ImageObjectBridge WHERE imageId = '$id'";
 		if($conn->query($stmt))
 			return true;
@@ -113,18 +124,28 @@ class EventHandler {
 	}
 
 	public function deleteImage($imgId, $conn){
+		$imgName = $this->getImageName($imgId, $conn);
+
+		$target_dir = $_SERVER['DOCUMENT_ROOT']."/Home_Maintenance_Manager/public/img/";
+		$target_file = $target_dir . $imgName;
+
+		//delete image from database
 		if($this->removeImageBridge($imgId, $conn) && $this->removeImage($imgId, $conn)){
-			return true;
+			//delete image from folder
+			if (file_exists($target_file)) {
+				unlink($target_file);
+				return true;
+			}
 		}
 		return false;
 	}
 
-    //input name='imgSelector' for all instance that upload image is required
-    //only upload/move image to a location and not database
+    //input name='imgSelector[]' for all instance that upload image is required
+    //enctype="multipart/form-data" tag is needed in html form
 	public function uploadImage($imgFiles, $objectId, $objectType, $conn){
 
 		// var_dump($imgFiles);
-		if($imgFiles === NULL){
+		if($imgFiles === NULL || $imgFiles === ''){
 			$this->alertMsg("No image files was selected");
 			return false;
 		}
@@ -171,7 +192,7 @@ class EventHandler {
 			// if everything is ok, try to upload file
 				if (move_uploaded_file($img["tmp_name"], $target_file)) {
 					$last_id = $this->uploadImageToDatabase($imgName, $conn);
-					var_dump($last_id);
+					// var_dump($last_id);
 					if ($last_id != null) {    					
 						if($this->createImageBridge($last_id, $objectId, $objectType, $conn)){
 							continue;// continue to next loop

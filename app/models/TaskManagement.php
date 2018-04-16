@@ -54,8 +54,14 @@ class TaskManagement {
     //get all the groupid that the login user is associated with
     private function getUersGroupId(){
         $userid = $_SESSION['userid'];
-        $stmt = "SELECT groupid FROM usergroupbridge 
-        WHERE userid = '$userid'"; 
+        if (isset($_SESSION['owner']) && $_SESSION['owner']){
+            $stmt = "SELECT groupid FROM groups 
+            WHERE groupOwnerId = '$userid' and logDelete != 1"; 
+        }else{
+            $stmt = "SELECT groupid FROM usergroupbridge 
+            WHERE userid = '$userid'"; 
+        }
+        // var_dump($stmt);        
         $result = $this->conn->query($stmt);
 
         if($result === FALSE) {
@@ -121,6 +127,11 @@ class TaskManagement {
 
         // var_dump($whereClause);
         $membersId = $this->getGroupMemberId($whereClause);
+        if (isset($_SESSION['owner']) && $_SESSION['owner']){
+            array_push($membersId, $_SESSION['userid']);
+        }else {            
+            array_push($membersId, $_SESSION['ownerid']);
+        }
 
         if($membersId == null){
             return;
@@ -287,9 +298,6 @@ class TaskManagement {
     }
 
 
-    public function getImage($id){
-        return $this->eHandler->getImage($id, $this->imageType, $this->conn);
-    }
 
     // add a task to the database
     public function addTask() {
@@ -346,6 +354,16 @@ class TaskManagement {
                 // var_dump($file_ary);
             $this->eHandler->uploadImage($file_ary, $objectID, $this->imageType, $this->conn);
         }
+    }
+
+    public function deleteImage($imageId){
+        if (isset($_POST['imgId'])){
+            $this->eHandler->deleteImage($_POST['imgId'], $this->conn);
+        }
+    }
+    
+    public function getImage($id){
+        return $this->eHandler->getImage($id, $this->imageType, $this->conn);
     }
 
     //get task information from a task id
@@ -454,7 +472,7 @@ class TaskManagement {
         $sql_data = "SELECT p.propertyid, p.applianceid, t.taskid, t.propertyApplianceId, t.taskname, t.description, t.repeatTask, t.duedate, t.complete, t.intervalDays, t.reminderdate, t.reminderinterval 
         FROM tasks t
         INNER JOIN propertyappliancebridge p ON t.propertyApplianceId = p.propertyApplianceId
-        WHERE (t.propertyApplianceId = '$proAppID') and (logDelete IS NULL or logDelete = 0)
+        WHERE (t.propertyApplianceId = '$proAppID') and (logDelete != 1)
         ORDER BY t.taskname ASC
         ";
         $result = $this->conn->query($sql_data);

@@ -112,12 +112,13 @@ if(isset($_SESSION['owner']) && $_SESSION['owner']){
 			return;
 		}
 
+		echo '<div id="accordion">';
 		foreach ($data['taskList'] as $task) {
 			$counter++;
 
 			echo '
 			<div class="card">
-			<div class="card-header" id="headingOne">
+			<div class="card-header" id="heading'.$counter.'">
 			<h5 class="mb-0">
 			<a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo'. $counter .'" aria-expanded="false" aria-controls="collapseTwo">
 			' . $task['name'] . '             
@@ -191,7 +192,8 @@ if(isset($_SESSION['owner']) && $_SESSION['owner']){
 			<a class="btn btn-secondary btn-md" href="/home_maintenance_manager/public/taskcontroller/task/'. $task['id'] .'">
 			<i class="fa fa-flag" aria-hidden="true"></i>Details</a>
 			</div>
-			</div>';
+			</div>
+			';
 
 			if(isset($_SESSION['owner']) && $_SESSION['owner']){
 
@@ -211,6 +213,7 @@ if(isset($_SESSION['owner']) && $_SESSION['owner']){
 				<i class="fa fa-flag" aria-hidden="true"></i> Update</a>
 				<a class="btn btn-md btn-secondary" href="/home_maintenance_manager/public/taskcontroller/delete/'. $task['id'] .'">
 				<i class="fa fa-flag" aria-hidden="true"></i> Delete</a>
+
 				</div>
 				</div>
 
@@ -227,6 +230,7 @@ if(isset($_SESSION['owner']) && $_SESSION['owner']){
 			</div><!-- close card -->
 			';
 		}
+		echo '</div><!-- close accordion -->';
 
 		?>
 

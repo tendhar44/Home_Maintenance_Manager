@@ -16,7 +16,7 @@
         Description:<br> <input type="text" name="propertydes"><br><br>
 
         Select Image only (limited 1000 kb):<br>
-        <input id="browse" name="imgSelector" type="file" onchange="previewFiles()" accept="image/*">
+        <input id="browse" name="imgSelector[]" type="file" onchange="previewFiles()" accept="image/*">
         <div id="preview"></div>
 
         <br><br>
