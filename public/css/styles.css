@@ -40,6 +40,11 @@ label{
 	font-size: 18px;
 }
 
+#groupList {
+    border-top: solid;
+    padding-bottom: 6px;
+}
+
 /* Add background color to footer */
 .hmm-footer {
 	font-size: 12px;

@@ -206,7 +206,7 @@ class ApplianceManagement {
             <div class="col">
             <div class="btn-group float-left mt-2">
             <a class="btn btn-secondary btn-md" href="/home_maintenance_manager/public/taskcontroller/'. $row['propertyid'] .'/'. $row['applianceid'].'">
-            <i class="fa fa-flag" aria-hidden="true"></i>Details</a>
+            <i class="fa fa-flag" aria-hidden="true"></i>View Appliance Task</a>
             </div>
             </div>
             <div class="col">

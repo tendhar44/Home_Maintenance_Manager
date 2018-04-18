@@ -210,100 +210,37 @@ class GroupManagement {
 
             //display list of properties that can be collapse and un-collapse.
                 echo '
-                <div class="card">
-                <div class="card-header" id="headingOne">
+
+                <div class="row" id="groupList">
+
+            <div class="col">
+
                 <h5 class="mb-0">
-                <!--<a class="collapsed" data-toggle="collapse" data-target="#collapseOne'. $counter .'" aria-expanded="true" aria-controls="collapseOne">-->
-                <a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo'. $counter .'" aria-expanded="false" aria-controls="collapseTwo">
-                ' . $row['groupname'] . '             
-                </span></a>
-                </h5>
-                </div><!-- close card-header -->
+                ' . $row['groupname'] . '  
+                </h5>        
 
-                <!--<div id="collapseOne'. $counter .'" class="collapse show" aria-labelledby="headingOne" data-parent="#list-appliance">-->
-                <div id="collapseTwo'. $counter .'" class="collapse" role="tabpanel" aria-labelledby="headingTwo">
-                <div class="card-body">
-                <div class="container-fluid">
+            </div>
 
-                <div class="col-3">
+            <div class="col">
+            <div class="btn-group float-md-right mt-2">
 
-                </div><!-- close col-3 -->
+            <a class="btn btn-secondary btn-md" href="/home_maintenance_manager/public/groupcontroller/groupmembers/'. $row['groupownerid'] .'/'. $row['groupid']  .'">
+            <i class="fa fa-flag" aria-hidden="true"></i>View Members</a>
 
-                <div class="col-7">
-                Group ID#: 
-                <span style="font-weight:600">
-                '
-                . $row['groupid'] .
+            <a class="btn btn-secondary btn-md" href="/home_maintenance_manager/public/groupcontroller/groupproperties/'. $row['groupownerid'] .'/'. $row['groupid']  .'">
+            <i class="fa fa-flag" aria-hidden="true"></i>View Property</a>
 
-                '
-                </span>
-                </div><!-- close col-7 -->
+            <a class="btn btn-secondary btn-md" href="/home_maintenance_manager/public/groupcontroller/update/'. $row['groupid']  .'">
+            <i class="fa fa-flag" aria-hidden="true"></i>Update</a>
 
-                <br>
+            <a class="btn btn-secondary btn-md" href="/home_maintenance_manager/public/groupcontroller/delete/'. $row['groupid']  .'">
+            <i class="fa fa-flag" aria-hidden="true"></i>delete</a>
 
-                <div class="row">
-                <div class="col-1">
-                <a href="/home_maintenance_manager/public/groupcontroller/groupmembers/'. $row['groupownerid'] .'/'. $row['groupid']  .'">
-                <button>
-                View Members
-                </button></a>
-                </div>
+            </div>
+            </div>
 
-                <div class="col-1">
-                <a href="/home_maintenance_manager/public/groupcontroller/groupproperties/'. $row['groupownerid'] .'/'. $row['groupid']  .'">
-                <button>
-                View Properties
-                </button></a>
-                </div>
+                </div><!-- close row -->
 
-                <div class="col-1">
-                </div>
-
-                <div class="col-1">
-                </div>
-
-                <div class="col-1">
-                </div>
-
-                <div class="col-1">
-                </div>
-
-                <div class="col-1">
-                </div>
-
-                <div class="col-1">
-                </div>
-
-                <div class="col-1">
-                </div>
-
-                <div class="col-1">
-                </div>
-
-                <div class="col-1">
-                </div>
-
-                <div class="col-1">
-
-                <a href="/home_maintenance_manager/public/groupcontroller/update/'. $row['groupid']  .'"><button class="stand-bttn-size">
-                Update
-                </button></a>
-                </div> 
-
-                <div class="col-1">    
-                <a href="/home_maintenance_manager/public/groupcontroller/delete/'. $row['groupid']  .'"><button class="stand-bttn-size">
-                Delete
-                </button></a>
-                </div>
-
-
-
-                </div><!-- close col-6 -->
-
-                </div><!-- close container fluid -->
-                </div><!-- close card body -->
-                </div><!-- close collapseOne -->
-                </div><!-- close card -->
     ';//end echo
 }
 $output = ob_get_contents();
