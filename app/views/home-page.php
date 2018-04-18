@@ -29,7 +29,7 @@
             </div>
         </div>
         <div class="col-md-6">
-            <img class="img-fluid" src="../public/img/pic1.jpg" alt="picture of appliances">
+            <img class="img-fluid" src="/home_maintenance_manager/public/img/pic1.jpg" alt="picture of appliances">
         </div>
     </div>
 
