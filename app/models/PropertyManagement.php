@@ -28,8 +28,6 @@ class PropertyManagement {
         $uid = mysqli_real_escape_string($this->conn, $user_id);
         $pd = mysqli_real_escape_string($this->conn, $property_des);
 
-
-
     // var_dump($_FILES['imgSelector']);
 
         if($this->valid->checkPropertyName($pn, $uid)) {
@@ -48,7 +46,8 @@ class PropertyManagement {
     }
 
     public function addImage($objectID){  
-        if ($_FILES['imgSelector']){                
+        // var_dump($_FILES['imgSelector']);
+        if ($_FILES['imgSelector'] && $_FILES['imgSelector']['size'][0] != 0){                
             $file_ary = $this->eHandler->reArrayFiles($_FILES['imgSelector']);
                 // var_dump($file_ary);
             $this->eHandler->uploadImage($file_ary, $objectID, $this->imageType, $this->conn);
