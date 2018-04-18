@@ -131,8 +131,30 @@ if(isset($_SESSION['owner']) && $_SESSION['owner']){
 			<div class="container-fluid">
 			<div class="row">
 			<div class="col-sm-6">
-			<div class="row">
 
+			<div class="row">
+			<p>
+			Property: &nbsp;
+			<span style="font-weight:600">
+			'
+			. $task['propertyName'] .
+			'
+			</span>
+			</p>
+			</div><!-- close row -->
+
+			<div class="row">
+			<p>
+			Appliance: &nbsp;
+			<span style="font-weight:600">
+			'
+			. $task['applianceName'] .
+			'
+			</span>
+			</p>
+			</div><!-- close row -->
+
+			<div class="row">
 			<p>
 			Description: &nbsp;
 			<span style="font-weight:600">
@@ -160,7 +182,7 @@ if(isset($_SESSION['owner']) && $_SESSION['owner']){
 			if($task['imgs'] != null){
                     // var_dump($data["img"]);
 
-				foreach ($$task['imgs'] as $image) {
+				foreach ($task['imgs'] as $image) {
 					echo '
 					<img id="myImg" class="imgPreview" src="/home_maintenance_manager/public/img/' . $image['name'] . '" alt="'. explode( '_', $image["name"] )[1] .'" width="150" height="150">
 					';

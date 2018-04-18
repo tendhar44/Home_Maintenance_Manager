@@ -35,6 +35,23 @@ class TaskManagement {
                 return;
             }
 
+
+            if ($_SESSION['task'.$id]['repeatTask'] == 1){
+                $newDueDate = new DateTime($_SESSION['task'.$id]['duedate']);
+
+                date_add($newDueDate,date_interval_create_from_date_string($_SESSION['task'.$id]['intervaldays'] . ' days'));
+
+                $newReminderDate = new DateTime($_SESSION['task'.$id]['reminderdate']);
+
+                date_add($newReminderDate,date_interval_create_from_date_string($_SESSION['task'.$id]['intervaldays'] . ' days'));
+
+
+                $stmt = "UPDATE tasks SET complete='$status', duedate = '$newDueDate', reminderdate = '$newReminderDate'  WHERE taskid = '$id'";
+            }
+
+            // attempt insert query execution
+            $stmt = "UPDATE tasks SET complete='$status' WHERE taskid = '$id'";
+
         }
 
         if($this->conn->query($stmt)) {
@@ -526,24 +543,28 @@ class TaskManagement {
         $userid = $_SESSION['userid'];
 
         if(isset($_SESSION['owner']) && $_SESSION['owner']){
-
             // echo "owner list all";
 
-            $stmt = "SELECT p.propertyId, p.applianceId, t.taskid, t.propertyApplianceId, t.taskname, t.description, t.repeatTask, t.duedate, t.complete, t.intervalDays, t.reminderdate, t.reminderinterval 
-            FROM tasks t INNER JOIN propertyappliancebridge p ON t.propertyApplianceId = p.propertyApplianceId
+            $stmt = "SELECT pr.propertyName, a.applianceName, p.propertyId, p.applianceId, t.taskid, t.propertyApplianceId, t.taskname, t.description, t.repeatTask, t.duedate, t.complete, t.intervalDays, t.reminderdate, t.reminderinterval 
+            FROM propertyappliancebridge p 
+            INNER JOIN tasks t ON t.propertyApplianceId = p.propertyApplianceId
+            INNER JOIN properties pr ON pr.propertyId = p.propertyId
+            INNER JOIN appliances a ON a.applianceId = p.applianceId            
             WHERE t.userid = '$userid' and t.logDelete !=1 and t.complete != 1
             ORDER BY t.taskname ASC
             ";
-
 
         } else if(isset($_SESSION['manager']) && $_SESSION['manager']) {
 
             // echo "manager list all";
 
-            $stmt = "SELECT p.propertyId, p.applianceId, t.taskid, t.propertyApplianceId, t.taskname, t.description, t.repeatTask, t.duedate, t.complete, t.intervalDays, t.reminderdate, t.reminderinterval 
-            FROM tasks t INNER JOIN propertyappliancebridge p ON t.propertyApplianceId = p.propertyApplianceId
+            $stmt = "SELECT pr.propertyName, a.applianceName, p.propertyId, p.applianceId, t.taskid, t.propertyApplianceId, t.taskname, t.description, t.repeatTask, t.duedate, t.complete, t.intervalDays, t.reminderdate, t.reminderinterval 
+            FROM tasks t 
+            INNER JOIN propertyappliancebridge p ON t.propertyApplianceId = p.propertyApplianceId
             INNER JOIN propertygroupbridge pg ON p.propertyId = pg.propertyId 
             INNER JOIN usergroupbridge ug ON pg.groupId = ug.groupId
+            INNER JOIN properties pr ON pr.propertyId = p.propertyId
+            INNER JOIN appliances a ON a.applianceId = p.applianceId            
             WHERE ug.userId = '$userid' and t.logDelete !=1 and t.complete != 1
             ORDER BY t.taskname ASC
             ";
@@ -552,14 +573,16 @@ class TaskManagement {
 
             // echo "limited user list all";
 
-            $stmt = "SELECT p.propertyId, p.applianceId, t.taskid, t.propertyApplianceId, t.taskname, t.description, t.repeatTask, t.duedate, t.complete, t.intervalDays, t.reminderdate, t.reminderinterval 
-            FROM tasks t INNER JOIN propertyappliancebridge p ON t.propertyApplianceId = p.propertyApplianceId
+            $stmt = "SELECT pr.propertyName, a.applianceName, p.propertyId, p.applianceId, t.taskid, t.propertyApplianceId, t.taskname, t.description, t.repeatTask, t.duedate, t.complete, t.intervalDays, t.reminderdate, t.reminderinterval 
+            FROM tasks t 
+            INNER JOIN propertyappliancebridge p ON t.propertyApplianceId = p.propertyApplianceId
             INNER JOIN propertygroupbridge pg ON p.propertyId = pg.propertyId 
             INNER JOIN usergroupbridge ug ON pg.groupId = ug.groupId
+            INNER JOIN properties pr ON pr.propertyId = p.propertyId
+            INNER JOIN appliances a ON a.applianceId = p.applianceId            
             WHERE ug.userId = '$userid' and t.logDelete !=1 and t.complete != 1
             ORDER BY t.taskname ASC
             ";
-
         }
 
 
@@ -571,12 +594,15 @@ class TaskManagement {
         $counter = 0;
         $taskList = null;
         while ($row = $result->fetch_assoc()) {
+
             $taskImgs = $this->getImage($row['taskid']);
             //creating a session associate array for a task
             $_SESSION['task' . $row['taskid']] = array(
                 'id' => $row['taskid'],
                 'propertyId' => $row['propertyId'],
                 'applianceId' => $row['applianceId'],
+                'propertyName' => $row['propertyName'],
+                'applianceName' => $row['applianceName'],
                 'proAppId' => $row['propertyApplianceId'],
                 'name' => $row['taskname'],
                 'description' => $row['description'],
@@ -593,6 +619,8 @@ class TaskManagement {
                 'id' => $row['taskid'],
                 'propertyId' => $row['propertyId'],
                 'applianceId' => $row['applianceId'],
+                'propertyName' => $row['propertyName'],
+                'applianceName' => $row['applianceName'],
                 'proAppId' => $row['propertyApplianceId'],
                 'name' => $row['taskname'],
                 'description' => $row['description'],
