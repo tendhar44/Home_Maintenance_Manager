@@ -1,8 +1,7 @@
 
 <div class="container" id="info">
+    <
     <a href="/home_maintenance_manager/public/propertycontroller/<?php echo $_SESSION['userid'] ?>">Property</a>
-    >
-    <a href="/home_maintenance_manager/public/appliancecontroller/<?php echo  $data["proNum"]?>">Appliance</a>
     <br><br>
     <h3>Task List</h3>
     <br>
@@ -115,7 +114,7 @@
             <div class="row">
             <div class="col">
             <div class="btn-group float-left mt-2">
-            <a class="btn btn-secondary btn-md" href="/home_maintenance_manager/public/taskcontroller/index/'. $task['id'] .'">
+            <a class="btn btn-secondary btn-md" href="/home_maintenance_manager/public/taskcontroller/task/'. $task['id'] .'">
             <i class="fa fa-flag" aria-hidden="true"></i>Details</a>
             </div>
             </div>

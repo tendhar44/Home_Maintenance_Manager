@@ -90,6 +90,18 @@ class GroupManagement {
             }
         }
 
+    public function deleteNonDefaultMember($uid, $gid) {
+        // attempt insert query execution
+        $sql_data = "DELETE FROM usergroupbridge WHERE userid = '$uid' AND groupid = '$gid'";
+
+        if($this->conn->query($sql_data) === true) {
+            echo "Successfully removed member from the group!";
+        } else {
+            echo "We weren't able to remove the member from the group. Please try again.";
+        }
+    }
+
+
         public function addProperty() {
             $ownerid = $_SESSION['userid'];
             $property_name = (isset($_POST['propertyname'])) ? $_POST['propertyname'] : '';
@@ -107,6 +119,19 @@ class GroupManagement {
                 echo "We weren't able to add the property. Please try again.";
             }
         }
+
+    public function deleteNonDefaultProperty($uid, $gid) {
+        // attempt insert query execution
+        $sql_data = "DELETE FROM propertygroupbridge WHERE propertyid = '$uid' AND groupid = '$gid'";
+
+        if($this->conn->query($sql_data) === true) {
+            echo "Successfully removed property from the group!";
+        } else {
+            echo "We weren't able to remove the property from the group. Please try again.";
+        }
+    }
+
+
 
         public function addGroup() {
             $owner_id = (isset($_POST['ownerid'])) ? $_POST['ownerid'] : '';
@@ -447,7 +472,13 @@ function getListOfMembers($ownerid, $groupId) {
         <div class="col-1">
         </div>
 
-        <div class="col-1">
+        <div class="col-1">    
+            <a href="/home_maintenance_manager/public/groupcontroller/deletemember/'. $row['userid']  .'/'. $row['groupid']  .'">
+                <button class="stand-bttn-size">
+                Delete
+                </button>
+            </a>
+        </div>
 
         </div><!-- close col-6 -->
 
@@ -587,7 +618,13 @@ function getListOfProperties($ownerid, $groupId) {
         <div class="col-1">
         </div>
 
-        <div class="col-1">
+                <div class="col-1">    
+            <a href="/home_maintenance_manager/public/groupcontroller/deletegroupproperty/'. $row['propertyid']  .'/'. $row['groupid']  .'">
+                <button class="stand-bttn-size">
+                Delete
+                </button>
+            </a>
+        </div>
 
         </div><!-- close col-6 -->
 

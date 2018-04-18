@@ -56,6 +56,14 @@ class GroupController extends Controller {
         $groupManagement->deleteGroup($groupNum);
     }
 
+    public function deletemember($userNum = 0, $groupNum = 0) {
+        $this->notSignedIn();
+        $groupManagement =  $this->model->getGroupManagement();
+        $this->view("delete-member-page", ["un" => $userNum, "gn" => $groupNum]);
+
+        $groupManagement->deleteNonDefaultMember($userNum, $groupNum);
+    }
+
     public function groupmembers($ownerId = 0, $groupNum = 0) {
         $groupManagement =  $this->model->getGroupManagement();
         $this->notSignedIn();
@@ -70,5 +78,13 @@ class GroupController extends Controller {
 
         $_SESSION['outputCotent'] = $groupManagement->getListOfProperties($ownerId, $groupNum);
         $this->view("list-groupproperty-page", ["uId" => $ownerId, "gn" => $groupNum]);
+    }
+
+    public function deletegroupproperty($propertyNum = 0, $groupNum = 0) {
+        $this->notSignedIn();
+        $groupManagement =  $this->model->getGroupManagement();
+        $this->view("delete-group-property-page", ["pn" => $propertyNum, "gn" => $groupNum]);
+
+        $groupManagement->deleteNonDefaultProperty($propertyNum, $groupNum);
     }
 }
