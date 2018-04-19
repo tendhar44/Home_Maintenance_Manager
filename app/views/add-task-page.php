@@ -12,7 +12,7 @@
     <h3>Create A Task</h3>
     <hr>
     <br>
-    <form id="addTaskForm" action="/Home_Maintenance_Manager/public/taskcontroller/<?php echo $data["proNum"] ?>/<?php echo $data['appId']; ?>" method="post" enctype="multipart/form-data">
+    <form id="addTaskForm" action="" method="post" enctype="multipart/form-data">
         Task Name: <span class="reqAsk">*</span><br> <input type="text" name="taskName" required><br><br>
         Task Due Date: <span class="reqAsk">*</span><br> <input type="date" name="taskDue" required><br><br>
 

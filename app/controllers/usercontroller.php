@@ -40,7 +40,6 @@ class UserController extends Controller {
 
     public function signIn() {
         $this->view("sign-in-page", []);
-
         if($_SERVER["REQUEST_METHOD"] == "POST") {
             $username = $_POST["username"];
             $password = $_POST["password"];
@@ -68,11 +67,9 @@ class UserController extends Controller {
 
     public function signUp() {
         $this->view("sign-up-page", []);        
-        if(isset($_POST['submit'])) {
+        if($_SERVER["REQUEST_METHOD"] == "POST") {
             //echo "sumbitting a register";
-            if($this->model->getAccountManagement()->signUpUser()) {
-                $this->view("sign-in-page");
-            }else {
+            if(!$this->model->getAccountManagement()->signUpUser()) { 
                 //echo 'something went wrong';
                 echo '<span class="errorText">' . $_SESSION['userNameError'] . "</span>";
                 echo '<span class="errorText">' . $_SESSION['emailError'] . "</span>";

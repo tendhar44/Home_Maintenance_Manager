@@ -10,7 +10,7 @@
     <h3>Create A Property</h3>
     <hr>
     <br>
-    <form action="/Home_Maintenance_Manager/public/propertycontroller/<?php echo $data['uId']; ?>" method="post" enctype="multipart/form-data">
+    <form action="" method="post" enctype="multipart/form-data">
         Property Name:<span class="reqAsk">*</span><br> <input type="text" name="propertyname" required><br><br>
         Address:<br> <input type="text" name="address"><br><br>
         Description:<br> <input type="text" name="propertydes"><br><br>

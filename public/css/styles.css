@@ -1,5 +1,11 @@
 html, body {
 }
+#cssForm{
+  border: 5px solid #555555;
+  border-radius: 5px;
+  padding: 15px;
+  background-color: #C1C0C0;
+}
 
 /* Nav bar */
 .dropdown:hover .dropdown-menu {
@@ -325,7 +331,6 @@ End of calendar style
 /* Container needed to position the button. Adjust the width as needed */
 .img-wrap {
   position: relative;
-  width: 50%;
 }
 
 /* Make the image responsive */

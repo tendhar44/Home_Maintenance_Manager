@@ -32,11 +32,12 @@ class ApplianceManagement {
             $sql_data2 = "INSERT INTO propertyappliancebridge (propertyid, applianceid) VALUES ('$propertyId', LAST_INSERT_ID())";
 
             if ($this->conn->query($sql_data) === true){
-                    $last_Insert_Id = $this->conn->insert_id;
+                $last_Insert_Id = $this->conn->insert_id;
                 if ($this->conn->query($sql_data2) === true) {
-                    $this->eHandler->alertMsg("Successfully added your appliance!");
                     $last_Insert_Id = $this->conn->insert_id;
                     $this->addImage($last_Insert_Id);
+                    $link = '/Home_Maintenance_Manager/public/appliancecontroller/'.$propertyId;
+                    $this->eHandler->alertMsgRedirect("Successfully added your appliance!", $link);
                 }
             } else {
                 $this->eHandler->alertMsg("We weren't able to add your appliance. Please try again.");
@@ -47,9 +48,8 @@ class ApplianceManagement {
     }
 
     public function addImage($objectID){  
-        if ($_FILES['imgSelector']){                
+        if ($_FILES['imgSelector'] && $_FILES['imgSelector']['size'][0] != 0){                
             $file_ary = $this->eHandler->reArrayFiles($_FILES['imgSelector']);
-                // var_dump($file_ary);
             $this->eHandler->uploadImage($file_ary, $objectID, $this->imageType, $this->conn);
         }
     }

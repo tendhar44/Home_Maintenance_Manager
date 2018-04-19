@@ -352,9 +352,10 @@ class TaskManagement {
             INSERT INTO tasks (propertyApplianceId, taskname, description, userid, repeattask, duedate, complete, intervaldays, reminderdate, reminderinterval) 
             VALUES ('$proAppID', '$tn', '$des', '$userid', '$repeattask', '$duedate', '$complete', '$repeatlength', '$reminderdate', '$reminderinterval')";
             if($this->conn->query($sql_data) === true) {
-                $this->eHandler->alertMsg("Successfully added your task!");
                 $last_Insert_Id = $this->conn->insert_id;
                 $this->addImage($last_Insert_Id);
+                $link = '/Home_Maintenance_Manager/public/taskcontroller/'.$proId.'/'.$appId;
+                $this->eHandler->alertMsgRedirect("Successfully added your task!", $link);
             }else {
                 $this->eHandler->alertMsg("We weren't able to add your task. Please try again.");
                 // die(mysqli_error($this->conn));
@@ -363,12 +364,10 @@ class TaskManagement {
             $this->eHandler->alertMsg("The task name should be unique.");
         }
     }
-
     
     public function addImage($objectID){  
-        if ($_FILES['imgSelector']){                
+        if ($_FILES['imgSelector'] && $_FILES['imgSelector']['size'][0] != 0){                
             $file_ary = $this->eHandler->reArrayFiles($_FILES['imgSelector']);
-                // var_dump($file_ary);
             $this->eHandler->uploadImage($file_ary, $objectID, $this->imageType, $this->conn);
         }
     }

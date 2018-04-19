@@ -1,7 +1,8 @@
 
 <div class="container" id="info">
-    <
     <a href="/home_maintenance_manager/public/propertycontroller/<?php echo $_SESSION['userid'] ?>">Property</a>
+    <
+    <a href="/home_maintenance_manager/public/appliancecontroller/<?php echo $data["proNum"] ?>/<?php echo $data['appId'] ?>">Appliance</a>
     <br><br>
     <h3>Task List</h3>
     <br>

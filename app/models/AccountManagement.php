@@ -258,7 +258,12 @@ class AccountManagement {
             $sql_data = "INSERT INTO users (userTypeId, username, password, email, firstname, lastname, logdelete) VALUES (1, '$username', '$password', '$email', '$firstname', '$lastname', '0')";
 
             if($this->conn->query($sql_data)){
-                return true;
+
+                echo '<script language="javascript">';
+                echo 'alert("Register Success, Please Login");';
+                echo 'window.location.href = "/home_maintenance_manager/public/usercontroller/signin";';
+                echo '</script>';
+
             }
         }
         return false;

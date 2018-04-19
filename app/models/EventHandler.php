@@ -10,6 +10,17 @@ class EventHandler {
 		echo '</script>';
 	} 
 
+	public function alertMsgRedirect($msg, $link){     
+		echo '<script language="javascript">';
+		echo 'alert("'. $msg .'");';
+
+		if($link != null){			
+    		echo 'window.location.href = "'.$link.'";';
+		}
+
+		echo '</script>';
+	} 
+
 	//code reference from from php.net
 	//use to rearrange file array for easier looping
 	function reArrayFiles(&$file_post) {
@@ -43,6 +54,7 @@ class EventHandler {
 
 		// var_dump($objectId);
 		// var_dump($objectType);
+
 
 		$stmt = "
 		SELECT i.imageId, i.imageFileName, i.alternateText 
@@ -92,8 +104,8 @@ class EventHandler {
 		return -1;
 	}
 
-	private function uploadImageToDatabase($imgName, $conn){
-		$stmt = "INSERT INTO Images (imageFileName) VALUES ('$imgName')";
+	private function uploadImageToDatabase($imgName, $imgAlt, $conn){
+		$stmt = "INSERT INTO Images (imageFileName, alternateText) VALUES ('$imgName', '$imgAlt')";
 		if($conn->query($stmt)){
 			// echo "success";
 			return $conn->insert_id;
@@ -149,6 +161,9 @@ class EventHandler {
 			$this->alertMsg("No image files was selected");
 			return false;
 		}
+
+        $imgAlt = (isset($_POST['altSelector'])) ? $_POST['altSelector'] : NULL;
+
 		$target_dir = $_SERVER['DOCUMENT_ROOT']."/Home_Maintenance_Manager/public/img/";
 		// var_dump($target_dir);
 		foreach($imgFiles as $img){
@@ -191,7 +206,7 @@ class EventHandler {
 			if ($uploadOk == 1) {			
 			// if everything is ok, try to upload file
 				if (move_uploaded_file($img["tmp_name"], $target_file)) {
-					$last_id = $this->uploadImageToDatabase($imgName, $conn);
+					$last_id = $this->uploadImageToDatabase($imgName, $imgAlt, $conn);
 					// var_dump($last_id);
 					if ($last_id != null) {    					
 						if($this->createImageBridge($last_id, $objectId, $objectType, $conn)){

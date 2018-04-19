@@ -10,9 +10,6 @@ class TaskController extends Controller {
 
         $taskManagement =  $this->model->getTaskManagement();
         if($_SERVER["REQUEST_METHOD"] == "POST") { 
-            if (isset($_POST['addTask'])){
-                $taskManagement->addTask();
-            }
             if (isset($_POST['updtateTaskStatus'])){
                 $taskManagement->updateCompleteStatus();
             }  
@@ -23,7 +20,11 @@ class TaskController extends Controller {
 
     public function add($propertyNum = 0, $applianceId = 0) {
         $this->notSignedIn();
+        $taskManagement =  $this->model->getTaskManagement();
         $this->view("add-task-page", ["proNum" => $propertyNum, "appId" => $applianceId]);
+        if($_SERVER["REQUEST_METHOD"] == "POST") { 
+            $taskManagement->addTask();
+        }
     }
 
     public function history($userId = 0){        

@@ -9,9 +9,6 @@ class PropertyController extends Controller {
 
         $proManagement =  $this->model->getPropertyManagement();
         $this->notSignedIn();
-        if($_SERVER["REQUEST_METHOD"] == "POST") {
-            $proManagement->addProperty();
-        }
         $_SESSION['outputCotent'] = $proManagement->getListOfProperties($_SESSION['userid']); 
         $this->view("list-property-page", ["uId" => $userId]);
     }
@@ -19,6 +16,10 @@ class PropertyController extends Controller {
     public function add($userId = 0) {
         $this->notSignedIn();
         $this->view("add-property-page", ["uId" => $userId]);
+        $proManagement =  $this->model->getPropertyManagement();
+        if($_SERVER["REQUEST_METHOD"] == "POST") {
+            $proManagement->addProperty();
+        }
     }
 
     public function update($propertyNum = 0) {

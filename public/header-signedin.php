@@ -25,7 +25,6 @@
     <title>Home Maintenance Manager</title>
 </head>
 <body>
-
     <nav class="navbar navbar-expand-sm navbar-dark" style="background-color: #343a40;">
 
         <div class="container" id="info">
@@ -62,7 +61,6 @@
                     </li>
                 </ul>
 
-
                 <ul class="navbar-nav">
                     <li class="nav-item">
                         <a class="nav-link" href="/home_maintenance_manager/public/calendarcontroller">Calendar</a>
@@ -85,7 +83,7 @@
                 </ul>
             </div>
         </div>
-
     </nav>
+
     <br>
     <br>

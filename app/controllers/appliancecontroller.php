@@ -9,9 +9,6 @@ class ApplianceController extends Controller {
         $this->notSignedIn();
         $appManagement =  $this->model->getApplianceManagement();
 
-        if($_SERVER["REQUEST_METHOD"] == "POST") {
-            $appManagement->addAppliance();
-        }
         $_SESSION['outputCotent'] = $appManagement->getListOfAppliances($propertyId); 
 
         $this->view("list-appliance-page", ["proId" => $propertyId]);
@@ -19,7 +16,11 @@ class ApplianceController extends Controller {
 
     public function add($propertyId = 0) {
         $this->notSignedIn();
+        $appManagement =  $this->model->getApplianceManagement();
         $this->view("add-appliance-page", ["proId" => $propertyId]);
+        if($_SERVER["REQUEST_METHOD"] == "POST") {
+            $appManagement->addAppliance();
+        }
     }
 
     public function update($propertyId = 0, $applianceID = 0) {

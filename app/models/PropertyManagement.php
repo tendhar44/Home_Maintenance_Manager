@@ -34,9 +34,10 @@ class PropertyManagement {
             $sql_data = "INSERT INTO properties (ownerid, propertyname, description, address) VALUES ('$uid', '$pn', '$pd', '$add')";
 
             if ($this->conn->query($sql_data) === true) {
-                $this->eHandler->alertMsg("Successfully added your property!");
                 $last_Insert_Id = $this->conn->insert_id;
                 $this->addImage($last_Insert_Id);
+                $link = '/Home_Maintenance_Manager/public/propertycontroller/'.$user_id;
+                $this->eHandler->alertMsgRedirect("Successfully added your property!", $link);
             } else {
                 $this->eHandler->alertMsg("We weren't able to add your property. Please try again.");
             }

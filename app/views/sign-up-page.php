@@ -2,12 +2,29 @@
 
 
 ?>
+
+
+<script type="text/javascript">
+
+function submitform()
+{
+ if(document.myform.onsubmit())
+ {//this check triggers the validations
+    alert("click");
+    window.location.href = "/home_maintenance_manager/public/usercontroller/signin";
+    document.myform.submit();
+ }
+}
+
+</script>
+
+
 <div class="container">
 
     <div class="row">
 
         <div class="col-xs-12 col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
-            <form role="form" method="post" action="" autocomplete="off">
+            <form role="form" method="post" id="myform" autocomplete="off">
                 <h2>Sign Up to Create a <br>Property Manager Account</h2>
                 <p>Already a member? <a class="hmm-links" href='/home_maintenance_manager/public/usercontroller/signin'>Sign In</a></p>
                 <hr>
@@ -37,13 +54,13 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-xs-6 col-md-6"><input type="submit" name="submit" value="Register" class="btn btn-dark btn-block btn-lg" tabindex="8"></div>
+                    <div class="col-xs-6 col-md-6"><button value="Register" onclick="submitform()" class="btn btn-dark btn-block btn-lg" tabindex="8">Register</button></div>
                 </div>
             </form>
         </div>
     </div>
         <br><br>
-</div
-?>
+</div>
+
 
 
