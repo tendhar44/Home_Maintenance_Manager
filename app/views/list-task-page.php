@@ -80,7 +80,8 @@
             </p>
             </div><!-- close row -->
             </div><!-- close col -->
-            <div class="col-sm-6">';
+            <div class="col-sm-6">
+            <div class="row">';
 
 
             if($task['imgs'] != null){
@@ -88,26 +89,18 @@
 
                 foreach ($task['imgs'] as $image) {
                     echo '
+                    <div class="img-wrap">
                     <img id="myImg" class="imgPreview" src="/home_maintenance_manager/public/img/' . $image['name'] . '" alt="'. explode( '_', $image["name"] )[1] .'" width="150" height="150">
+                    <div class="caption text-center">
+                    <p>'. $image["altText"] .'</p>
+                    </div>
+                    </div>
                     ';
                 }
             }
 
             echo '
-            <!-- The Modal -->
-            <div id="myModal" class="modal">
-
-            <!-- The Close Button -->
-            <span class="close">&times;</span>
-
-            <!-- Modal Content (The Image) -->
-            <img class="modal-content" id="imgEnlarge">
-
-            <!-- Modal Caption (Image Text) -->
-            <div id="caption"></div>
             </div>
-
-
             </div>
             </div><!-- close row -->
 

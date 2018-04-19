@@ -7,17 +7,12 @@
 class AccountManagement {
     private $conn;
     private $valid;
+    private $eHandler;
 
     public function __construct($db_con, $valid) {
         $this->valid = $valid;
         $this->conn = $db_con;
-    }
-
-    
-    private function alertMsg($msg){        
-        echo '<script language="javascript">';
-        echo 'alert("'. $msg .'")';
-        echo '</script>';
+        $this->eHandler = new EventHandler();
     }
 
     public function isSignedIn() {
@@ -55,9 +50,9 @@ class AccountManagement {
         $sql_data = "INSERT INTO users (usertypeid, username, firstname, lastname, email, password, logdelete) VALUES ('$user_type', '$user_name', '$first_name', '$last_name', '$email', '$pass_word', '0')";
 
         if($this->conn->query($sql_data) === true){
-            echo "User added successfully.";
+            $this->eHandler->alertMsg("User added successfully.");
         } else{
-            echo "ERROR: Could not add the user";
+            $this->eHandler->alertMsg("ERROR: Could not add the user");
         }
     }
 
@@ -93,9 +88,9 @@ class AccountManagement {
         $sql_data = "UPDATE users SET firstname='$fn', lastname='$ln', email='$em', password='$pw' WHERE userid = '$userid'";
 
         if($this->conn->query($sql_data) === true) {
-            echo "Successfully updated your profile!";
+            $this->eHandler->alertMsg("Successfully updated your profile!");
         } else {
-            echo "We weren't able to update your profile. Please try again.";
+            $this->eHandler->alertMsg("We weren't able to update your profile. Please try again.");
         }
     }
 
@@ -104,9 +99,9 @@ class AccountManagement {
         $sql_data = "DELETE FROM users WHERE userid = '$userid'";
 
         if($this->conn->query($sql_data) === true) {
-            echo "Successfully deleted your account!";
+            $this->eHandler->alertMsg("Successfully deleted your account!");
         } else {
-            echo "We weren't able to delete your account. Please try again.";
+            $this->eHandler->alertMsg("We weren't able to delete your account. Please try again.");
         }
 
     }
@@ -155,12 +150,13 @@ class AccountManagement {
             $_SESSION['lastname'] = $row['lastname'];
             $_SESSION['password'] = $row['password'];
             $_SESSION['userNameError'] = "";
+            // $_SESSION['signInError'] = '';
             $this->setSignInUserType($row['usertypeid']);
-
             return true;
         }
         //}
-        $_SESSION['signInError'] = 'Username or Password is incorrect';
+        // $_SESSION['signInError'] = 'Username or Password is incorrect';
+        $this->eHandler->alertMsg('Username or Password is incorrect');
         return false;
     }
 

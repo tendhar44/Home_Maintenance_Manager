@@ -68,31 +68,32 @@
     </div>
 
     <div class='row'>
-            <?php 
+        <?php 
 
-            if($data["img"] != null){
+        if($data["img"] != null){
                 // var_dump($data["img"]);
 
-                foreach ($data["img"] as $image) {
+            foreach ($data["img"] as $image) {
 
-                    echo '
-                    <div class="img-wrap">
+                echo '
+                <div class="img-wrap">
+                <img id="myImg" class="imgPreview deletable" data-buttonId="'.$image["id"].'" src="/home_maintenance_manager/public/img/' . $image["name"] . '" alt="'. explode( '_', $image["name"] )[1] .'" width="150" height="150">
+                <div class="caption text-center">
+                <p>'. $image["altText"] .'</p>
+                </div>
+                
+                <form action="#" method="post" enctype="multipart/form-data">
+                <input type="hidden" name="imgId" value="'.$image["id"] .'">
+                <button id="delete'.$image["id"].'" type="submit" name="deleteImage" value="deleteImage" class="btn">x</button>
+                </form>
 
-                    <img id="myImg" class="imgPreview deletable" data-buttonId="'.$image["id"].'" src="/home_maintenance_manager/public/img/' . $image["name"] . '" alt="'. explode( '_', $image["name"] )[1] .'" width="150" height="150">
-
-                    
-                    <form action="#" method="post" enctype="multipart/form-data">
-                    <input type="hidden" name="imgId" value="'.$image["id"] .'">
-                    <button id="delete'.$image["id"].'" type="submit" name="deleteImage" value="deleteImage" class="btn">x</button>
-                    </form>
-
-                    </div>
+                </div>
 
 
-                    ';
-                }
+                ';
             }
-            ?>
+        }
+        ?>
     </div>
 
 

@@ -180,7 +180,8 @@ class ApplianceManagement {
             </span>
             </div><!-- close row -->
             </div><!-- close col -->
-            <div class="col-xs-12" col-sm-8>';
+            <div class="col-xs-12" col-sm-8>
+            <div class="row">';
 
             $imgs = $this->getImage($row['applianceid']);
 
@@ -190,8 +191,12 @@ class ApplianceManagement {
                 foreach ($imgs as $image) {
 
                     echo '
-
+                    <div class="img-wrap">
                     <img id="myImg" class="imgPreview" src="/home_maintenance_manager/public/img/' . $image['name'] . '" alt="'. explode( '_', $image["name"] )[1] .'" width="150" height="150">
+                    <div class="caption text-center">
+                    <p>'. $image["altText"] .'</p>
+                    </div>
+                    </div>
 
                     ';
                 }
@@ -199,6 +204,7 @@ class ApplianceManagement {
 
             echo '
 
+            </div><!-- close row -->
             </div><!-- close col -->
             </div><!-- close row -->
 

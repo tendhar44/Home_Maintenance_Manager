@@ -93,6 +93,18 @@ if(isset($_SESSION['owner']) && $_SESSION['owner']){
 		</form> 
 
 
+		<!-- The Modal -->
+		<div id="myModal" class="modal">
+
+			<!-- The Close Button -->
+			<span class="close">&times;</span>
+
+			<!-- Modal Content (The Image) -->
+			<img class="modal-content" id="imgEnlarge">
+
+			<!-- Modal Caption (Image Text) -->
+			<div id="caption"></div>
+		</div>
 
 		<?php
 
@@ -176,7 +188,10 @@ if(isset($_SESSION['owner']) && $_SESSION['owner']){
 			</p>
 			</div><!-- close row -->
 			</div><!-- close col -->
-			<div class="col-sm-6">';
+			<div class="col-sm-12 col-md-auto">
+			<div class="row">
+			';
+
 
 
 			if($task['imgs'] != null){
@@ -184,26 +199,21 @@ if(isset($_SESSION['owner']) && $_SESSION['owner']){
 
 				foreach ($task['imgs'] as $image) {
 					echo '
+					<div class="img-wrap">
 					<img id="myImg" class="imgPreview" src="/home_maintenance_manager/public/img/' . $image['name'] . '" alt="'. explode( '_', $image["name"] )[1] .'" width="150" height="150">
+
+					<div class="caption text-center">
+					<p>'. $image["altText"] .'</p>
+					</div>
+					</div>
 					';
 				}
 			}
 
+
 			echo '
-			<!-- The Modal -->
-			<div id="myModal" class="modal">
 
-			<!-- The Close Button -->
-			<span class="close">&times;</span>
-
-			<!-- Modal Content (The Image) -->
-			<img class="modal-content" id="imgEnlarge">
-
-			<!-- Modal Caption (Image Text) -->
-			<div id="caption"></div>
 			</div>
-
-
 			</div>
 			</div><!-- close row -->
 
@@ -256,25 +266,13 @@ if(isset($_SESSION['owner']) && $_SESSION['owner']){
 
 		?>
 
-		<!-- The Modal -->
-		<div id="myModal" class="modal">
-
-			<!-- The Close Button -->
-			<span class="close">&times;</span>
-
-			<!-- Modal Content (The Image) -->
-			<img class="modal-content" id="imgEnlarge">
-
-			<!-- Modal Caption (Image Text) -->
-			<div id="caption"></div>
-		</div>
 		
 	</div><!-- close list-property -->
 </div><!-- close container -->
 
 
 <script>
-	$(function() {
+	$.getScript('/home_maintenance_manager/public/js/jqueryImg.js', function() {
 
 		var properties = <?= json_encode($data["dropDownData"]) ?>;
 

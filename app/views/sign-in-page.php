@@ -1,12 +1,10 @@
 <?php
 ?>
-
-
 <div class="container">
     <div class="row">
 
         <div class="col-xs-12 col-sm-8 col-md-6 col-sm-offset-2 col-md-offset-3">
-            <form role="form" method="post" action="" autocomplete="off">
+            <form role="form" method="post" action="#" autocomplete="off">
                 <h2>Sign in</h2>
                 <p>Not a member? <a class="hmm-links" href="/home_maintenance_manager/public/usercontroller/signup">Sign Up</a></p>
                 <hr>
