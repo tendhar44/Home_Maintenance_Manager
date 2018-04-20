@@ -5,16 +5,19 @@ class GroupController extends Controller {
 
         $groupManagement =  $this->model->getGroupManagement();
         $this->notSignedIn();
-        if($_SERVER["REQUEST_METHOD"] == "POST") {
-            $groupManagement->addGroup();
-        }
+
         $_SESSION['outputCotent'] = $groupManagement->getListOfGroups($_SESSION['userid']);
         $this->view("list-group-page", ["uId" => $userId]);
     }
 
     public function add($userId = 0) {
+        $groupManagement =  $this->model->getGroupManagement();
         $this->notSignedIn();
         $this->view("add-group-page", ["uId" => $userId]);
+
+        if($_SERVER["REQUEST_METHOD"] == "POST") {
+            $groupManagement->addGroup();
+        }
     }
 
     public function addMember($groupNum = 0) {
