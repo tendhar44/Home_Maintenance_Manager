@@ -48,11 +48,23 @@ class UserController extends Controller {
                 // $this->setGroupSession();
 
                 if($_SESSION['owner'] == true){
-                    header('Location: /home_maintenance_manager/public/homecontroller/home');
+                    
+                    echo '<script language="javascript">';
+                    echo 'window.location.href = "/home_maintenance_manager/public/homecontroller/home";';
+                    echo '</script>';
+
                 }else if ($_SESSION['manager'] == true){
-                    header('Location: /home_maintenance_manager/public/homecontroller/managerhome');
+
+                    echo '<script language="javascript">';
+                    echo 'window.location.href = "/home_maintenance_manager/public/homecontroller/managerhome";';
+                    echo '</script>';
+
                 }else {
-                    header('Location: /home_maintenance_manager/public/homecontroller/limitedhome');
+
+
+                    echo '<script language="javascript">';
+                    echo 'window.location.href = "/home_maintenance_manager/public/homecontroller/limitedhome";';
+                    echo '</script>';
                 }
             }
         }

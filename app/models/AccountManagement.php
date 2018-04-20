@@ -180,15 +180,18 @@ class AccountManagement {
         $stmt = "
         SELECT g.groupOwnerId 
         FROM groups g 
-        INNER JOIN usergroupbridge ugb            
+        INNER JOIN usergroupbridge ugb 
+        ON g.groupId = ugb.groupId         
         WHERE ugb.userid = '$userid'
         LIMIT 1"; 
         
+        // var_dump($stmt);
         $result = $this->conn->query($stmt);
-        $row = mysql_fetch_row($result);
-        $_SESSION['ownerid'] = $row['groupOwnerId'];
-
-
+        if($result){           
+            // var_dump($result);
+            $row = $result->fetch_assoc();
+            $_SESSION['ownerid'] = $row['groupOwnerId'];  
+        }
     }
 
 
