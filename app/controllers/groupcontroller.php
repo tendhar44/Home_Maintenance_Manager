@@ -20,7 +20,7 @@ class GroupController extends Controller {
         }
     }
 
-    public function addMember($groupNum = 0) {
+    public function addmember($groupNum = 0) {
         $this->notSignedIn();
         $groupManagement =  $this->model->getGroupManagement();
         $this->view("add-groupmember-page", ["gId" => $groupNum]);
@@ -30,7 +30,7 @@ class GroupController extends Controller {
         }
     }
 
-    public function addProperty($groupNum = 0) {
+    public function addproperty($groupNum = 0) {
         $this->notSignedIn();
         $groupManagement =  $this->model->getGroupManagement();
         $this->view("add-groupproperty-page", ["gId" => $groupNum]);
