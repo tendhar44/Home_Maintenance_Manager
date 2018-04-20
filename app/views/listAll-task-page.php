@@ -272,6 +272,7 @@ if(isset($_SESSION['owner']) && $_SESSION['owner']){
 
 
 <script>
+	
 	$.getScript('/home_maintenance_manager/public/js/jqueryImg.js', function() {
 
 		var properties = <?= json_encode($data["dropDownData"]) ?>;

@@ -11,6 +11,109 @@ class GroupManagement {
         $this->eHandler = new EventHandler();
     }
 
+    //get all the groupid that the login user is associated with
+    private function getUersGroupId(){
+        $userid = $_SESSION['userid'];
+        if (isset($_SESSION['owner']) && $_SESSION['owner']){
+            $stmt = "SELECT groupid FROM groups 
+            WHERE groupOwnerId = '$userid' and logDelete != 1"; 
+        }else{
+            $stmt = "SELECT groupid FROM usergroupbridge 
+            WHERE userid = '$userid'"; 
+        }
+        // var_dump($stmt);        
+        $result = $this->conn->query($stmt);
+
+        if($result === FALSE) {
+            // $this->eHandler->alertMsg('Fail to retrive group id associated with user from database');
+            return null;
+        }
+
+        $associatedGroupId = null;
+        $counter = 0;
+        //fetch and store the data in an array
+        while ($row = $result->fetch_assoc()) {
+            $associatedGroupId[$counter] = $row['groupid'];
+            $counter++;
+        }
+        return $associatedGroupId;
+    }
+
+    private function getGroupMemberId($groupId){
+        $stmt = "SELECT userId FROM usergroupbridge
+        WHERE groupId = '$groupId'"; 
+
+        // var_dump($stmt);
+        $result = $this->conn->query($stmt);
+        if($result){
+            $counter = 0;
+            $groupUserId = null;
+            while ($row = $result->fetch_assoc()) {
+                $groupUserId[$counter] = $row['userId'];
+                $counter++;
+            }
+            // var_dump($groupUserId);
+            return $groupUserId;
+        }
+        return null;
+    }
+
+    public function getGroupMemberUsername(){   
+        $userid = $_SESSION['userid'];
+        $associatedGroupId = $this->getUersGroupId();
+        if($associatedGroupId == null){
+            return;
+        }
+        $whereClause = '';
+        foreach ($associatedGroupId as $id) {
+            if($whereClause !== ''){
+                $whereClause .= '\' or groupId = \'';
+            }
+            $whereClause .= $id;
+        }
+
+        // var_dump($whereClause);
+        $membersId = $this->getGroupMemberId($whereClause);
+        if (isset($_SESSION['owner']) && $_SESSION['owner']){
+            array_push($membersId, $_SESSION['userid']);
+        }else {            
+            array_push($membersId, $_SESSION['ownerid']);
+        }
+
+        if($membersId == null){
+            return;
+        }
+
+        $whereClause = '';
+        foreach ($membersId as $id) {
+            if($whereClause !== ''){
+                $whereClause .= '\' or userid = \'';
+            }
+            $whereClause .= $id;
+        }
+
+        // var_dump($whereClause);
+        $memberUsername = array();
+        $stmt = "SELECT username
+        FROM users
+        where userid = '$whereClause'";
+        // var_dump($stmt);
+        $result = $this->conn->query($stmt);
+
+        if($result === false) {
+            // $this->eHandler->alertMsg('Fail to retrive task history data from database');
+            return;
+        }
+
+        while ($row = $result->fetch_assoc()) {
+                    //creating a session associate array for a task
+            array_push($memberUsername, $row['username']);
+        }
+        // var_dump($memberUsername);
+        return $memberUsername;
+    }
+
+
     public function getUser($username){
         //attempt select query execution
         $sql_data = "SELECT userid, usertypeid, username, password, firstname, lastname, email, logdelete FROM users WHERE username = '$username'";
@@ -31,218 +134,218 @@ class GroupManagement {
         return $userData->fetch_assoc();
     }
 
-        public function getGroupIdByOwner($ownerid){
-            $username = $_SESSION['username'];
-            $def = 'default';
-            $userdef = $username . $def;
+    public function getGroupIdByOwner($ownerid){
+        $username = $_SESSION['username'];
+        $def = 'default';
+        $userdef = $username . $def;
         //attempt select query execution
-            $sql_data = "SELECT groupid, groupownerid, groupname FROM groups WHERE groupownerid = '$ownerid' AND groupname = '$userdef'";
+        $sql_data = "SELECT groupid, groupownerid, groupname FROM groups WHERE groupownerid = '$ownerid' AND groupname = '$userdef'";
 
-            $userData = $this->conn->query($sql_data);
+        $userData = $this->conn->query($sql_data);
         //var_dump($userData['username']);
 
-            return $userData->fetch_assoc();
-        }
+        return $userData->fetch_assoc();
+    }
 
-        public function addMember() {
-            $ownerid = $_SESSION['userid'];
-            $user_name = (isset($_POST['username'])) ? $_POST['username'] : '';
+    public function addMember() {
+        $ownerid = $_SESSION['userid'];
+        $user_name = (isset($_POST['username'])) ? $_POST['username'] : NULL;
         //$group_id = (isset($_POST['groupid'])) ? $_POST['groupid'] : '';
 
         //$un = mysqli_real_escape_string($this->conn, $user_name);
 
-            $row = $this->getUser($user_name);
-            $row2 = $this->getGroupIdByOwner($ownerid);
+        $row = $this->getUser($user_name);
+        $row2 = $this->getGroupIdByOwner($ownerid);
 
         //$username = $row['username'];
-            $userid = $row['userid'];
-            $group_id = $row2['groupid'];
+        $userid = $row['userid'];
+        $group_id = $row2['groupid'];
 
-            $sql_data = "INSERT INTO usergroupbridge (userid, groupid) VALUES ('$userid', '$group_id')";
+        $sql_data = "INSERT INTO usergroupbridge (userid, groupid) VALUES ('$userid', '$group_id')";
 
-            if ($this->conn->query($sql_data) === true) {
-                echo "Successfully added a member!";
-            } else {
-                echo "We weren't able to add the member. Please try again.";
-            }
+        if ($this->conn->query($sql_data) === true) {
+            $this->eHandler->alertMsg("Successfully added a member!");
+        } else {
+            $this->eHandler->alertMsg("We weren't able to add the member. Please try again.");
         }
+    }
 
-        public function addNonDefaultMember() {
-            $ownerid = $_SESSION['userid'];
-            $user_name = (isset($_POST['username'])) ? $_POST['username'] : '';
-            $group_id = (isset($_POST['groupid'])) ? $_POST['groupid'] : '';
+    public function addNonDefaultMember() {
+        $ownerid = $_SESSION['userid'];
+        $user_name = (isset($_POST['username'])) ? $_POST['username'] : '';
+        $group_id = (isset($_POST['groupid'])) ? $_POST['groupid'] : '';
 
         //$un = mysqli_real_escape_string($this->conn, $user_name);
 
-            $row = $this->getUser($user_name);
+        $row = $this->getUser($user_name);
         //$row2 = $this->getGroupIdByOwner($ownerid);
 
         //$username = $row['username'];
-            $userid = $row['userid'];
+        $userid = $row['userid'];
         //$group_id = $row2['groupid'];
 
-            $sql_data = "INSERT INTO usergroupbridge (userid, groupid) VALUES ('$userid', '$group_id')";
+        $sql_data = "INSERT INTO usergroupbridge (userid, groupid) VALUES ('$userid', '$group_id')";
 
-            if ($this->conn->query($sql_data) === true) {
-                echo "Successfully added a member!";
-            } else {
-                echo "We weren't able to add the member. Please try again.";
-            }
+        if ($this->conn->query($sql_data) === true) {
+            $this->eHandler->alertMsg("Successfully added a member!");
+        } else {
+            $this->eHandler->alertMsg("We weren't able to add the member. Please try again.");
         }
+    }
 
     public function deleteNonDefaultMember($uid, $gid) {
         // attempt insert query execution
         $sql_data = "DELETE FROM usergroupbridge WHERE userid = '$uid' AND groupid = '$gid'";
 
         if($this->conn->query($sql_data) === true) {
-            echo "Successfully removed member from the group!";
+            $this->eHandler->alertMsg("Successfully removed member from the group!");
         } else {
-            echo "We weren't able to remove the member from the group. Please try again.";
+            $this->eHandler->alertMsg("We weren't able to remove the member from the group. Please try again.");
         }
     }
 
 
-        public function addProperty() {
-            $ownerid = $_SESSION['userid'];
-            $property_name = (isset($_POST['propertyname'])) ? $_POST['propertyname'] : '';
-            $group_id = (isset($_POST['groupid'])) ? $_POST['groupid'] : '';
+    public function addProperty() {
+        $ownerid = $_SESSION['userid'];
+        $property_name = (isset($_POST['propertyname'])) ? $_POST['propertyname'] : '';
+        $group_id = (isset($_POST['groupid'])) ? $_POST['groupid'] : '';
 
-            $row = $this->getProperty($property_name);
-            $propertyid = $row['propertyid'];
-            $userid = $row['ownerid'];
+        $row = $this->getProperty($property_name);
+        $propertyid = $row['propertyid'];
+        $userid = $row['ownerid'];
 
-            $sql_data = "INSERT INTO propertygroupbridge (propertyid, groupid) VALUES ('$propertyid', '$group_id')";
+        $sql_data = "INSERT INTO propertygroupbridge (propertyid, groupid) VALUES ('$propertyid', '$group_id')";
 
-            if ($this->conn->query($sql_data) === true) {
-                echo "Successfully added a property!";
-            } else {
-                echo "We weren't able to add the property. Please try again.";
-            }
+        if ($this->conn->query($sql_data) === true) {
+            $this->eHandler->alertMsg("Successfully added a property!");
+        } else {
+            $this->eHandler->alertMsg("We weren't able to add the property. Please try again.");
         }
+    }
 
     public function deleteNonDefaultProperty($uid, $gid) {
         // attempt insert query execution
         $sql_data = "DELETE FROM propertygroupbridge WHERE propertyid = '$uid' AND groupid = '$gid'";
 
         if($this->conn->query($sql_data) === true) {
-            echo "Successfully removed property from the group!";
+            $this->eHandler->alertMsg("Successfully removed property from the group!");
         } else {
-            echo "We weren't able to remove the property from the group. Please try again.";
+            $this->eHandler->alertMsg("We weren't able to remove the property from the group. Please try again.");
         }
     }
 
 
 
-        public function addGroup() {
-            $owner_id = (isset($_POST['ownerid'])) ? $_POST['ownerid'] : '';
-            $group_name = (isset($_POST['groupname'])) ? $_POST['groupname'] : '';
+    public function addGroup() {
+        $owner_id = (isset($_POST['ownerid'])) ? $_POST['ownerid'] : '';
+        $group_name = (isset($_POST['groupname'])) ? $_POST['groupname'] : '';
 
-            $gn = mysqli_real_escape_string($this->conn, $group_name);
-            $oid = mysqli_real_escape_string($this->conn, $owner_id);
+        $gn = mysqli_real_escape_string($this->conn, $group_name);
+        $oid = mysqli_real_escape_string($this->conn, $owner_id);
 
-            if($this->valid->checkGroupName($gn)) {
-                $sql_data = "INSERT INTO groups (groupownerid, groupname) VALUES ('$oid', '$gn')";
+        if($this->valid->checkGroupName($gn)) {
+            $sql_data = "INSERT INTO groups (groupownerid, groupname) VALUES ('$oid', '$gn')";
 
-                if ($this->conn->query($sql_data) === true) {
-                    echo "Successfully added a group!";
-                } else {
-                    echo "We weren't able to add the group. Please try again.";
-                }
-            }else {
-                echo "The group name should be unique.";
+            if ($this->conn->query($sql_data) === true) {
+                $this->eHandler->alertMsg("Successfully added a group!");
+            } else {
+                $this->eHandler->alertMsg("We weren't able to add the group. Please try again.");
             }
+        }else {
+            $this->eHandler->alertMsg("The group name should be unique.");
         }
+    }
 
 
-        public function getGroup($name) {
+    public function getGroup($name) {
         //attempt select query execution
-            $sql_data = "SELECT * FROM groups WHERE groupname = '$name'";
+        $sql_data = "SELECT * FROM groups WHERE groupname = '$name'";
 
-            $userData = $this->conn->query($sql_data);
+        $userData = $this->conn->query($sql_data);
 
-            return $userData->fetch_assoc();
-        }
+        return $userData->fetch_assoc();
+    }
 
-        public function updateGroup($id, $originalGroName) {
-            $groupName = (isset($_POST['groupname'])) ? $_POST['groupname'] : '';
+    public function updateGroup($id, $originalGroName) {
+        $groupName = (isset($_POST['groupname'])) ? $_POST['groupname'] : '';
 
-            $gn = mysqli_real_escape_string($this->conn, $groupName);
-            $groNameFlag = false;
+        $gn = mysqli_real_escape_string($this->conn, $groupName);
+        $groNameFlag = false;
 
         //if name is altered, check if name is unique
-            if($originalGroName != $gn){
+        if($originalGroName != $gn){
             //if name is unique, precede to update, if not don't update.
-                if($this->valid->checkGroupName($gn)) {
-                    $groNameFlag = true;
-                }
-            //name wasn't altered, so precede to update.
-            }else {
+            if($this->valid->checkGroupName($gn)) {
                 $groNameFlag = true;
             }
+            //name wasn't altered, so precede to update.
+        }else {
+            $groNameFlag = true;
+        }
 
         //if flag is true, precede with update
-            if($groNameFlag){
+        if($groNameFlag){
             // attempt insert query execution
-                $sql_data = "UPDATE groups SET groupname='$gn' WHERE groupid = '$id'";
+            $sql_data = "UPDATE groups SET groupname='$gn' WHERE groupid = '$id'";
 
-                if ($this->conn->query($sql_data) === true) {
-                    $_SESSION[$groupName] = $groupName;
-                    echo "Successfully updated the group!";
-                } else {
-                    echo "We weren't able to update the group. Please try again.";
-                }
-            }else {
-                echo "The group name should be unique.";
+            if ($this->conn->query($sql_data) === true) {
+                $_SESSION[$groupName] = $groupName;
+                $this->eHandler->alertMsg("Successfully updated the group!");
+            } else {
+                $this->eHandler->alertMsg("We weren't able to update the group. Please try again.");
             }
+        }else {
+            $this->eHandler->alertMsg("The group name should be unique.");
         }
+    }
 
-        public function deleteGroup($id) {
+    public function deleteGroup($id) {
         // attempt insert query execution
         //$sql_data = "DELETE FROM properties WHERE propertyid = '$id'";
-            $sql_data = "UPDATE groups SET logDelete = '1' WHERE groupid = '$id'";
+        $sql_data = "UPDATE groups SET logDelete = '1' WHERE groupid = '$id'";
 
-            if($this->conn->query($sql_data) === true) {
-                echo "Successfully deleted the group!";
-            } else {
-                echo "We weren't able to delete the group. Please try again.";
-            }
+        if($this->conn->query($sql_data) === true) {
+            $this->eHandler->alertMsg("Successfully deleted the group!");
+        } else {
+            $this->eHandler->alertMsg("We weren't able to delete the group. Please try again.");
         }
+    }
 
 
 
-        public function getListOfGroups($userid) {
-            $this->ownerid = $userid;
+    public function getListOfGroups($userid) {
+        $this->ownerid = $userid;
 
         //attempt select query execution
-            $sql_data = "SELECT groupid, groupownerid, groupname FROM groups WHERE groupownerid = '$userid' AND logDelete != 1";
+        $sql_data = "SELECT groupid, groupownerid, groupname FROM groups WHERE groupownerid = '$userid' AND logDelete != 1";
 
-            $userData = $this->conn->query($sql_data);
+        $userData = $this->conn->query($sql_data);
 
-            ob_start();
-            $counter = 0;
-            while ($row = $userData->fetch_assoc()) {
-                $counter++;
+        ob_start();
+        $counter = 0;
+        while ($row = $userData->fetch_assoc()) {
+            $counter++;
 
             //creating a session for listed property
-                $_SESSION['groupid' . $row['groupid']] =
-                array (
-                    'id' => $row['groupid'],
-                    'ownerid' => $row['groupownerid'],
-                    'name' => $row['groupname']
-                );
+            $_SESSION['groupid' . $row['groupid']] =
+            array (
+                'id' => $row['groupid'],
+                'ownerid' => $row['groupownerid'],
+                'name' => $row['groupname']
+            );
 
             // var_dump($_SESSION['propertyid' . $row['propertyid']]);
 
             //display list of properties that can be collapse and un-collapse.
-                echo '
+            echo '
 
-                <div class="row" id="groupList">
+            <div class="row" id="groupList">
 
             <div class="col">
 
-                <h5 class="mb-0">
-                ' . $row['groupname'] . '  
-                </h5>        
+            <h5 class="mb-0">
+            ' . $row['groupname'] . '  
+            </h5>        
 
             </div>
 
@@ -264,7 +367,7 @@ class GroupManagement {
             </div>
             </div>
 
-                </div><!-- close row -->
+            </div><!-- close row -->
 
     ';//end echo
 }
@@ -410,11 +513,11 @@ function getListOfMembers($ownerid, $groupId) {
         </div>
 
         <div class="col-1">    
-            <a href="/home_maintenance_manager/public/groupcontroller/deletemember/'. $row['userid']  .'/'. $row['groupid']  .'">
-                <button class="stand-bttn-size">
-                Delete
-                </button>
-            </a>
+        <a href="/home_maintenance_manager/public/groupcontroller/deletemember/'. $row['userid']  .'/'. $row['groupid']  .'">
+        <button class="stand-bttn-size">
+        Delete
+        </button>
+        </a>
         </div>
 
         </div><!-- close col-6 -->
@@ -555,12 +658,12 @@ function getListOfProperties($ownerid, $groupId) {
         <div class="col-1">
         </div>
 
-                <div class="col-1">    
-            <a href="/home_maintenance_manager/public/groupcontroller/deletegroupproperty/'. $row['propertyid']  .'/'. $row['groupid']  .'">
-                <button class="stand-bttn-size">
-                Delete
-                </button>
-            </a>
+        <div class="col-1">    
+        <a href="/home_maintenance_manager/public/groupcontroller/deletegroupproperty/'. $row['propertyid']  .'/'. $row['groupid']  .'">
+        <button class="stand-bttn-size">
+        Delete
+        </button>
+        </a>
         </div>
 
         </div><!-- close col-6 -->

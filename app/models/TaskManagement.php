@@ -113,7 +113,6 @@ class TaskManagement {
             return $groupUserId;
         }
         return null;
-
     }
 
     //get an array of task history list

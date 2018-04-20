@@ -20,7 +20,8 @@ class GroupController extends Controller {
     public function addMember($groupNum = 0) {
         $this->notSignedIn();
         $groupManagement =  $this->model->getGroupManagement();
-        $this->view("add-groupmember-page", ["gId" => $groupNum]);
+        $memberUsername = $groupManagement->getGroupMemberUsername();
+        $this->view("add-groupmember-page", ["gId" => $groupNum, "member" => $memberUsername]);
 
         if($_SERVER["REQUEST_METHOD"] == "POST") {
             $groupManagement->addNonDefaultMember();
