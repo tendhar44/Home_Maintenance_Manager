@@ -4,13 +4,35 @@
     <hr>
     <br>
     <form action="" method="post">
-        Property Name:<span class="reqAsk">*</span><br> <input type="text" name="propertyname" required><br><br>
-        <input type="hidden" name="groupid" value="<?php echo $data['gId']; ?>">
-        <input type="submit" value="ADD">
-    </form>
 
-    <div>
-        <br><br><br><br>
-        <span class="reqAsk">*</span> = required
-    </div>
+
+        <div class="form-group">
+            <label class="control-label col-sm-4" for="propertySelector">Property Name</label>
+            <div class="col-sm-12">
+                <select class="form-control" name="propertyname" id="propertySelector" required=>
+                    <?php 
+                    if ($data["propertiesName"] == null){                        
+                        echo '<option value="" disabled selected>There is no property created</option>';
+                    }
+
+                    foreach ($data["propertiesName"] as $property) {
+                        # code...
+                        echo '
+
+                        <option value="'. $property .'" selected>'. $property .'</option>
+
+                        ';
+
+                    }
+
+                    ?>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <input type="hidden" name="groupid" value="<?php echo $data['gId']; ?>">
+            <input class="btn btn-md btn-secondary" type="submit" value="ADD">
+        </div>
+    </form>
 </div>

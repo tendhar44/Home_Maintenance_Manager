@@ -7,7 +7,7 @@
 
 
         <div class="form-group">
-            <label class="control-label col-sm-4" for="propertyList">User Name</label>
+            <label class="control-label col-sm-4" for="memberSelector">User Name</label>
             <div class="col-sm-12">
                 <select class="form-control" name="username" id="memberSelector" required=>
                     <?php 
@@ -32,7 +32,7 @@
 
         <div class="form-group">
             <input type="hidden" name="groupid" value="<?php echo $data['gId']; ?>">
-            <input type="submit" value="ADD">
+            <input class="btn btn-md btn-secondary" type="submit" value="ADD">
         </div>
     </form>
 

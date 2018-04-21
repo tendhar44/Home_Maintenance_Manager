@@ -31,7 +31,8 @@ class GroupController extends Controller {
     public function addProperty($groupNum = 0) {
         $this->notSignedIn();
         $groupManagement =  $this->model->getGroupManagement();
-        $this->view("add-groupproperty-page", ["gId" => $groupNum]);
+        $propertiesName = $groupManagement->getGroupProperty();        
+        $this->view("add-groupproperty-page", ["gId" => $groupNum, "propertiesName" => $propertiesName]);
 
         if($_SERVER["REQUEST_METHOD"] == "POST") {
             $groupManagement->addProperty();

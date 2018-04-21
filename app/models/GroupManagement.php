@@ -58,6 +58,25 @@ class GroupManagement {
         return null;
     }
 
+    private function getGroupPropertyId($groupId){
+        $stmt = "SELECT propertyId FROM propertygroupbridge
+        WHERE groupId = '$groupId'"; 
+
+        // var_dump($stmt);
+        $result = $this->conn->query($stmt);
+        if($result){
+            $counter = 0;
+            $groupPropertyId = null;
+            while ($row = $result->fetch_assoc()) {
+                $groupPropertyId[$counter] = $row['userId'];
+                $counter++;
+            }
+            // var_dump($groupPropertyId);
+            return $groupPropertyId;
+        }
+        return null;
+    }
+
     public function getGroupMemberUsername(){   
         $userid = $_SESSION['userid'];
         $associatedGroupId = $this->getUersGroupId();
@@ -74,6 +93,10 @@ class GroupManagement {
 
         // var_dump($whereClause);
         $membersId = $this->getGroupMemberId($whereClause);
+        if($membersId == null){
+            return null;
+        }
+
         if (isset($_SESSION['owner']) && $_SESSION['owner']){
             array_push($membersId, $_SESSION['userid']);
         }else {            
@@ -111,6 +134,65 @@ class GroupManagement {
         }
         // var_dump($memberUsername);
         return $memberUsername;
+    }
+
+    public function getGroupProperty(){   
+        $userid = $_SESSION['userid'];
+        $associatedGroupId = $this->getUersGroupId();
+        if($associatedGroupId == null){
+            return;
+        }
+        $whereClause = '';
+        foreach ($associatedGroupId as $id) {
+            if($whereClause !== ''){
+                $whereClause .= '\' or groupId = \'';
+            }
+            $whereClause .= $id;
+        }
+
+        // var_dump($whereClause);
+        $propertiesId = $this->getGroupPropertyId($whereClause);
+        if($propertiesId == null){
+            return null;
+        }
+
+        if (isset($_SESSION['owner']) && $_SESSION['owner']){
+            array_push($propertiesId, $_SESSION['userid']);
+        }else {            
+            array_push($propertiesId, $_SESSION['ownerid']);
+        }
+
+        if($propertiesId == null){
+            return;
+        }
+
+        $whereClause = '';
+        foreach ($propertiesId as $id) {
+            if($whereClause !== ''){
+                $whereClause .= '\' or propertyId = \'';
+            }
+            $whereClause .= $id;
+        }
+        
+        // var_dump($whereClause);
+        $propertName = array();
+        $stmt = "SELECT propertyName
+        FROM properties
+        where propertyId = '$whereClause'";
+        // var_dump($stmt);
+        $result = $this->conn->query($stmt);
+
+        if($result === false) {
+            // $this->eHandler->alertMsg('Fail to retrive task history data from database');
+            return;
+        }
+
+        while ($row = $result->fetch_assoc()) {
+                    //creating a session associate array for a task
+            array_push($propertName, $row['username']);
+        }
+        // var_dump($propertName);
+        return $propertName;
     }
 
 
