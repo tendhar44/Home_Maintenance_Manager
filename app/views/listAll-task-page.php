@@ -2,7 +2,7 @@
 
 $display = 'none';
 
-if(isset($_SESSION['owner']) && $_SESSION['owner']){
+if(isset($_SESSION['owner']) && $_SESSION['owner'] || isset($_SESSION['manager']) && $_SESSION['manager']){
 	$display = 'block';
 }
 
