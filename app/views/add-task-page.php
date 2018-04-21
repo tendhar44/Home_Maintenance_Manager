@@ -83,12 +83,12 @@
 
         <div class="form-group"> 
             <button type="submit" name="addTask" value="submit" class="btn btn-default">Submit</button>
+
+            <span class="reqAsk">&nbsp; *</span> = required
+        </div>
+        <div>
         </div>
     </div>
 </form> 
 
-<div>
-    <br><br><br><br>
-    <span class="reqAsk">*</span> = required
-</div>
 </div>
