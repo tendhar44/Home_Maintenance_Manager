@@ -11,28 +11,50 @@
     <hr>
     <br>
     <form action="" method="post" enctype="multipart/form-data">
-        Property Name:<span class="reqAsk">*</span><br> <input type="text" name="propertyname" required><br><br>
-        Address:<br> <input type="text" name="address"><br><br>
-        Description:<br> <input type="text" name="propertydes"><br><br>
 
-        Select Image only (limited 1000 kb):<br>
-        <input id="browse" name="imgSelector[]" type="file" onchange="previewFiles()" accept="image/*">
-        <div id="preview"></div>
+        <div class="form-group">
+            <label class="control-label col-sm-4">Property Name:<span class="reqAsk">*</span></label>
+            <div class="col-sm-12">
+                <input class="form-control" type="text" name="propertyname" required>
+            </div>
+        </div>
 
-        <br><br>
-        <input type="hidden" name="ownerid" value="<?php echo $data['uId']; ?>">
-        <input type="submit" value="Submit">
+        <div class="form-group">
+            <label class="control-label col-sm-4">Address:<span class="reqAsk">*</span></label>
+            <div class="col-sm-12">
+                <input class="form-control" type="text" name="address">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-sm-4">Description:<span class="reqAsk">*</span></label>
+            <div class="col-sm-12">
+                <input class="form-control" type="text" name="propertydes">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-sm-6" for="imageSelector[]">Select Image only (limited 1000 kb):</label>
+            <div class="col-sm-12">
+                <input class="form-control" id="browse" name="imgSelector[]" type="file" onchange="previewFiles()" accept="image/*">
+                <div id="preview"></div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-12">
+                <input type="hidden" name="ownerid" value="<?php echo $data['uId']; ?>">
+                <input class="btn btn-secondary btn-md" type="submit" value="Submit">
+                <span class="reqAsk">&nbsp; *</span> = required
+            </div>
+        </div>
+
     </form>
-
-    <div>
-        <br><br><br><br>
-        <span class="reqAsk">*</span> = required
-    </div>
 </div>
 
 <script>
-    $(function() {
-        $("#imgupload").on('change', function(){
-        });
-    });    
+$(function() {
+    $("#imgupload").on('change', function(){
+    });
+});    
 </script>

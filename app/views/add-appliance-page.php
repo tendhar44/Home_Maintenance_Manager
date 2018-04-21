@@ -11,20 +11,34 @@
     <hr>
     <br>
     <form action="" method="post" enctype="multipart/form-data">
-        Appliance Name:<span class="reqAsk">*</span><br> <input type="text" name="applianceName"><br><br>
 
-        Select Image only (limited 1000 kb):<br>
-        <input id="browse" name="imgSelector[]" type="file" onchange="previewFiles()" accept="image/*">
-        <div id="preview"></div>
 
-        <br>
-        <br>
-        <input type="hidden" name="propertyId" value="<?php echo $data['proId']; ?>">
-        <input type="submit" value="Submit">
+
+        <div class="form-group">
+            <label class="control-label col-sm-4"> Appliance Name:<span class="reqAsk">*</span></label>
+            <div class="col-sm-12">
+                <input class="form-control" type="text" name="applianceName">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-sm-6" for="imageSelector[]">Select Image only (limited 1000 kb):</label>
+            <div class="col-sm-12">
+                <input class="form-control" id="browse" name="imgSelector[]" type="file" onchange="previewFiles()" accept="image/*">
+                <div id="preview"></div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-12">
+                <input type="hidden" name="propertyId" value="<?php echo $data['proId']; ?>">
+                <input class="btn btn-secondary btn-md" type="submit" value="Submit">
+                    
+            <span class="reqAsk">&nbsp; *</span> = required
+            </div>
+        </div>
+
+
     </form>
 
-    <div>
-        <br><br><br><br>
-        <span class="reqAsk">*</span> = required
-    </div>
 </div>

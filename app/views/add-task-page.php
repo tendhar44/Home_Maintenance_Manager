@@ -63,17 +63,15 @@
             <label class="control-label col-sm-4" for="taskDes">Description:</label>
             <div class="col-sm-12">
                 <textarea name="taskDes" class="form-control" id="taskDes"></textarea>
-                <input id="browse" name="imgSelector[]" type="file" onchange="previewFiles()" accept="image/*">
-                <div id="preview"></div>
             </div>
         </div>
 
 
         <div class="form-group">
-            <br>
-            <label class="control-label col-sm-4" for="imageSelector[]">Select Image only (limited 1000 kb):</label>
+            <label class="control-label col-sm-6" for="imageSelector[]">Select Image only (limited 1000 kb):</label>
             <div class="col-sm-12">
-
+                <input class="form-control" id="browse" name="imgSelector[]" type="file" onchange="previewFiles()" accept="image/*">
+                <div id="preview"></div>
             </div>
         </div>
 
@@ -82,7 +80,7 @@
         <input type="hidden" name="proId" value="<?php echo $data['proNum']; ?>">
 
         <div class="form-group"> 
-            <button type="submit" name="addTask" value="submit" class="btn btn-default">Submit</button>
+            <button type="submit" name="addTask" value="submit" class="btn btn-secondary btn-md">Submit</button>
 
             <span class="reqAsk">&nbsp; *</span> = required
         </div>
