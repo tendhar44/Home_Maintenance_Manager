@@ -7,6 +7,6 @@
     <form action="" method="post">
         Property Name:<br> <input type="text" name="groupname" value="<?php echo $_SESSION['groupid' . $data["gn"]]['name'] ?>"><br><br>
         
-        <button type="submit" value="Submit">
+        <input type="submit" value="Submit">
     </form>
 </div>
