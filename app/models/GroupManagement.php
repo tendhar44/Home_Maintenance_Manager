@@ -136,60 +136,31 @@ class GroupManagement {
         return $memberUsername;
     }
 
-    public function getGroupProperty(){   
-        $userid = $_SESSION['userid'];
-        $associatedGroupId = $this->getUersGroupId();
-        if($associatedGroupId == null){
-            return;
-        }
-        $whereClause = '';
-        foreach ($associatedGroupId as $id) {
-            if($whereClause !== ''){
-                $whereClause .= '\' or groupId = \'';
-            }
-            $whereClause .= $id;
-        }
-
-        // var_dump($whereClause);
-        $propertiesId = $this->getGroupPropertyId($whereClause);
-        if($propertiesId == null){
-            return null;
-        }
+    public function getGroupProperty(){
+        $id;
 
         if (isset($_SESSION['owner']) && $_SESSION['owner']){
-            array_push($propertiesId, $_SESSION['userid']);
+            $id = $_SESSION['userid'];
         }else {            
-            array_push($propertiesId, $_SESSION['ownerid']);
-        }
-
-        if($propertiesId == null){
-            return;
-        }
-
-        $whereClause = '';
-        foreach ($propertiesId as $id) {
-            if($whereClause !== ''){
-                $whereClause .= '\' or propertyId = \'';
-            }
-            $whereClause .= $id;
+            $id = $_SESSION['ownerid'];
         }
         
         // var_dump($whereClause);
         $propertName = array();
         $stmt = "SELECT propertyName
         FROM properties
-        where propertyId = '$whereClause'";
+        where ownerid = '$id' and logDelete != 1";
         // var_dump($stmt);
         $result = $this->conn->query($stmt);
 
         if($result === false) {
             // $this->eHandler->alertMsg('Fail to retrive task history data from database');
-            return;
+            return null;
         }
 
         while ($row = $result->fetch_assoc()) {
                     //creating a session associate array for a task
-            array_push($propertName, $row['username']);
+            array_push($propertName, $row['propertyName']);
         }
         // var_dump($propertName);
         return $propertName;
