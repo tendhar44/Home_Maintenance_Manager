@@ -128,21 +128,14 @@ class TaskManagement {
                 $whereClause .= '\' or groupId = \'';
             }
             $whereClause .= $id;
-            // $groupMemberId = $this->getGroupMemberId($groupId);
-            // $taskHistoryList = array(
-            //     'groupId' => $groupId,
-
-            //     );
-            //     while ($row = $result->fetch_assoc()) {
-            //         $_SESSION['groupAssociatedPropertyID'][$counter] =
-            //         array (
-            //             $id => $row['propertyid'],
-            //         );
-            //     }
         }
 
-        // var_dump($whereClause);
         $membersId = $this->getGroupMemberId($whereClause);
+
+        if($membersId == null){
+            return null;
+        }
+
         if (isset($_SESSION['owner']) && $_SESSION['owner']){
             array_push($membersId, $_SESSION['userid']);
         }else {            
