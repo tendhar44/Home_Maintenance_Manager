@@ -153,7 +153,6 @@ class GroupManagement {
             }
         }
 
-
         public function getGroup($name) {
         //attempt select query execution
             $sql_data = "SELECT * FROM groups WHERE groupname = '$name'";

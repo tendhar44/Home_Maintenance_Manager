@@ -257,6 +257,25 @@ class AccountManagement {
             $sql_data = "INSERT INTO users (userTypeId, username, password, email, firstname, lastname, logdelete) VALUES (1, '$username', '$password', '$email', '$firstname', '$lastname', '0')";
 
             if($this->conn->query($sql_data)){
+                $row = $this->getUser($username);
+                $owner_id = $row['userid'];
+                $def = 'default';
+                $group_name = $username . $def;
+
+                $gn = mysqli_real_escape_string($this->conn, $group_name);
+                $oid = mysqli_real_escape_string($this->conn, $owner_id);
+
+                if($this->valid->checkGroupName($gn)) {
+                    $sql_data = "INSERT INTO groups (groupownerid, groupname) VALUES ('$oid', '$gn')";
+
+                    if ($this->conn->query($sql_data) === true) {
+                        echo "Successfully added a group!";
+                    } else {
+                        echo "We weren't able to add the group. Please try again.";
+                    }
+                }else {
+                    echo "The group name should be unique.";
+                }
 
                 echo '<script language="javascript">';
                 echo 'alert("Register Success, Please Login");';
