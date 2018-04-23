@@ -133,11 +133,17 @@ class ApplianceManagement {
         //attempt select query execution
         $sql_data = "SELECT a.applianceid, a.appliancename, pa.propertyid FROM appliances a JOIN propertyappliancebridge pa ON a.applianceid = pa.applianceid WHERE pa.propertyid = '$propertyId' AND (logDelete IS NULL or logDelete = 0)";
 
-        $userData = $this->conn->query($sql_data);
+        $result = $this->conn->query($sql_data);
 
         $counter = 0;
         ob_start();
-        while ($row = $userData->fetch_assoc()) {
+
+        if($result == null){
+            
+        }
+
+
+        while ($row = $result->fetch_assoc()) {
             $counter++;
 
             $_SESSION['applianceId' . $row['applianceid']] = 

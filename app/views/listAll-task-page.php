@@ -121,110 +121,109 @@ if(isset($_SESSION['owner']) && $_SESSION['owner'] || isset($_SESSION['manager']
 			</div>
 			';
 
-			return;
-		}
+		}else{
+			
+			echo '<div id="accordion">';
+			foreach ($data['taskList'] as $task) {
+				$counter++;
 
-		echo '<div id="accordion">';
-		foreach ($data['taskList'] as $task) {
-			$counter++;
+				echo '
+				<div class="card">
+				<div class="card-header" id="heading'.$counter.'">
+				<h5 class="mb-0">
+				<a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo'. $counter .'" aria-expanded="false" aria-controls="collapseTwo">
+				' . $task['name'] . '             
+				</a>
+				</h5>
+				</div><!-- close card-header -->
+				<div id="collapseTwo'. $counter .'" class="collapse" role="tabpanel" aria-labelledby="headingTwo">
+				<div class="card-body">
 
-			echo '
-			<div class="card">
-			<div class="card-header" id="heading'.$counter.'">
-			<h5 class="mb-0">
-			<a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo'. $counter .'" aria-expanded="false" aria-controls="collapseTwo">
-			' . $task['name'] . '             
-			</a>
-			</h5>
-			</div><!-- close card-header -->
-			<div id="collapseTwo'. $counter .'" class="collapse" role="tabpanel" aria-labelledby="headingTwo">
-			<div class="card-body">
+				<div class="container-fluid">
+				<div class="row">
+				<div class="col-sm-6">
 
-			<div class="container-fluid">
-			<div class="row">
-			<div class="col-sm-6">
+				<div class="row">
+				<p>
+				Property: &nbsp;
+				<span style="font-weight:600">
+				'
+				. $task['propertyName'] .
+				'
+				</span>
+				</p>
+				</div><!-- close row -->
 
-			<div class="row">
-			<p>
-			Property: &nbsp;
-			<span style="font-weight:600">
-			'
-			. $task['propertyName'] .
-			'
-			</span>
-			</p>
-			</div><!-- close row -->
+				<div class="row">
+				<p>
+				Appliance: &nbsp;
+				<span style="font-weight:600">
+				'
+				. $task['applianceName'] .
+				'
+				</span>
+				</p>
+				</div><!-- close row -->
 
-			<div class="row">
-			<p>
-			Appliance: &nbsp;
-			<span style="font-weight:600">
-			'
-			. $task['applianceName'] .
-			'
-			</span>
-			</p>
-			</div><!-- close row -->
+				<div class="row">
+				<p>
+				Description: &nbsp;
+				<span style="font-weight:600">
+				'
+				. $task['description'] .
+				'
+				</span>
+				</p>
+				</div><!-- close row -->
 
-			<div class="row">
-			<p>
-			Description: &nbsp;
-			<span style="font-weight:600">
-			'
-			. $task['description'] .
-			'
-			</span>
-			</p>
-			</div><!-- close row -->
-
-			<div class="row">
-			<p>
-			Due Date: &nbsp;
-			<span style="font-weight:600">
-			'
-			. $task['duedate'] .
-			'
-			</span>
-			</p>
-			</div><!-- close row -->
-			</div><!-- close col -->
-			<div class="col-sm-12 col-md-auto">
-			<div class="row">
-			';
-
+				<div class="row">
+				<p>
+				Due Date: &nbsp;
+				<span style="font-weight:600">
+				'
+				. $task['duedate'] .
+				'
+				</span>
+				</p>
+				</div><!-- close row -->
+				</div><!-- close col -->
+				<div class="col-sm-12 col-md-auto">
+				<div class="row">
+				';
 
 
-			if($task['imgs'] != null){
+
+				if($task['imgs'] != null){
                     // var_dump($data["img"]);
 
-				foreach ($task['imgs'] as $image) {
-					echo '
-					<div class="img-wrap">
-					<img id="myImg" class="imgPreview" src="/home_maintenance_manager/public/img/' . $image['name'] . '" alt="'. explode( '_', $image["name"] )[1] .'" width="150" height="150">
+					foreach ($task['imgs'] as $image) {
+						echo '
+						<div class="img-wrap">
+						<img id="myImg" class="imgPreview" src="/home_maintenance_manager/public/img/' . $image['name'] . '" alt="'. explode( '_', $image["name"] )[1] .'" width="150" height="150">
 
-					<div class="caption text-center">
-					<p>'. $image["altText"] .'</p>
-					</div>
-					</div>
-					';
+						<div class="caption text-center">
+						<p>'. $image["altText"] .'</p>
+						</div>
+						</div>
+						';
+					}
 				}
-			}
 
 
-			echo '
+				echo '
 
-			</div>
-			</div>
-			</div><!-- close row -->
+				</div>
+				</div>
+				</div><!-- close row -->
 
 
-			<div class="row">
-			<div class="col">
-			<div class="btn-group float-left mt-2">
-			<a class="btn btn-secondary btn-md" href="/home_maintenance_manager/public/taskcontroller/task/'. $task['id'] .'">
-			<i class="fa fa-flag" aria-hidden="true"></i>Details</a>
-			</div>
-			</div>
+				<div class="row">
+				<div class="col">
+				<div class="btn-group float-left mt-2">
+				<a class="btn btn-secondary btn-md" href="/home_maintenance_manager/public/taskcontroller/task/'. $task['id'] .'">
+				<i class="fa fa-flag" aria-hidden="true"></i>Details</a>
+				</div>
+				</div>
 
 
 				<div class="col">
@@ -237,36 +236,38 @@ if(isset($_SESSION['owner']) && $_SESSION['owner'] || isset($_SESSION['manager']
 
 				</form>
 
-			';
+				';
 
-			if(isset($_SESSION['owner']) && $_SESSION['owner'] || isset($_SESSION['manager']) && $_SESSION['manager']){
+				if(isset($_SESSION['owner']) && $_SESSION['owner'] || isset($_SESSION['manager']) && $_SESSION['manager']){
 
+					echo '
+
+
+					<a class="btn btn-md btn-secondary" href="/home_maintenance_manager/public/taskcontroller/update/'. $task['id'] .'">
+					<i class="fa fa-flag" aria-hidden="true"></i> Update</a>
+					<a class="btn btn-md btn-secondary" href="/home_maintenance_manager/public/taskcontroller/delete/'. $task['id'] .'">
+					<i class="fa fa-flag" aria-hidden="true"></i> Delete</a>
+
+
+
+					';
+				}
+				
 				echo '
 
+				</div>
+				</div>
+				</div><!-- close row -->
 
-				<a class="btn btn-md btn-secondary" href="/home_maintenance_manager/public/taskcontroller/update/'. $task['id'] .'">
-				<i class="fa fa-flag" aria-hidden="true"></i> Update</a>
-				<a class="btn btn-md btn-secondary" href="/home_maintenance_manager/public/taskcontroller/delete/'. $task['id'] .'">
-				<i class="fa fa-flag" aria-hidden="true"></i> Delete</a>
-
-
-
+				</div><!-- close container fluid -->
+				</div><!-- close card body -->
+				</div><!-- close collapseOne -->
+				</div><!-- close card -->
 				';
 			}
-			
-			echo '
+			echo '</div><!-- close accordion -->';
 
-				</div>
-				</div>
-			</div><!-- close row -->
-
-			</div><!-- close container fluid -->
-			</div><!-- close card body -->
-			</div><!-- close collapseOne -->
-			</div><!-- close card -->
-			';
 		}
-		echo '</div><!-- close accordion -->';
 
 		?>
 
@@ -274,9 +275,7 @@ if(isset($_SESSION['owner']) && $_SESSION['owner'] || isset($_SESSION['manager']
 	</div><!-- close list-property -->
 </div><!-- close container -->
 
-
-<script>
-	
+<script>	
 	$.getScript('/home_maintenance_manager/public/js/jqueryImg.js', function() {
 
 		var properties = <?= json_encode($data["dropDownData"]) ?>;
@@ -292,7 +291,12 @@ if(isset($_SESSION['owner']) && $_SESSION['owner'] || isset($_SESSION['manager']
 	}
 
 	$('#createTaskButton').on('click', function(){
-		$('.form-horizontal').fadeToggle(200);
+
+		if(properties == null){
+			alert('Please create a property and a appliance first');
+		}else{			
+			$('.form-horizontal').fadeToggle(200);
+		}
 	});
 
 	// update appliance selector on change value from property selector

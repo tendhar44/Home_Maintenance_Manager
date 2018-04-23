@@ -140,7 +140,7 @@ class AccountManagement {
 
             // var_dump($row['username']);
             //if username and password matches then let user log in
-        if($username == $row['username'] && $password == $row['password']) {
+        if(strtolower($username) == strtolower($row['username']) && $password == $row['password']) {
             $_SESSION['loggedin'] = true;
             $_SESSION['username'] = $row['username'];
             $_SESSION['usertype'] = $row['usertypeid'];
@@ -229,41 +229,34 @@ class AccountManagement {
         // var_dump($password);
 
         if(!$this->isValidUsername($username)){
-            $authenticity = false;
             $_SESSION['userNameError'] = 'Username should be 3-17 characters long.';
+            return false;
         }else{
             if(!$this->valid->checkSignUpUsername($username)){
-                $authenticity = false;
                 $_SESSION['userNameError'] = 'Username is taken';
+                return false;
             }
         }
 
         if($email == ''){
             $_SESSION['emailError'] = 'Please enter an Email address';
-            $authenticity = false;
+            return false;
         }else{
             if(!$this->valid->checkEmail($email)){
                 $_SESSION['emailError'] = 'Email address is taken';
-                $authenticity = false;
+                return false;
             }
         }
 
-        
-        
-        // var_dump($authenticity);
-
-        if($authenticity){
             // attempt insert query execution
-            $sql_data = "INSERT INTO users (userTypeId, username, password, email, firstname, lastname, logdelete) VALUES (1, '$username', '$password', '$email', '$firstname', '$lastname', '0')";
+        $sql_data = "INSERT INTO users (userTypeId, username, password, email, firstname, lastname, logdelete) VALUES (1, '$username', '$password', '$email', '$firstname', '$lastname', '0')";
 
-            if($this->conn->query($sql_data)){
-
-                echo '<script language="javascript">';
-                echo 'alert("Register Success, Please Login");';
-                echo 'window.location.href = "/home_maintenance_manager/public/usercontroller/signin";';
-                echo '</script>';
-
-            }
+        if($this->conn->query($sql_data)){
+            echo '<script language="javascript">';
+            echo 'alert("Register Success, Please Login");';
+            echo 'window.location.href = "/home_maintenance_manager/public/usercontroller/signin";';
+            echo '</script>';
+            return true;
         }
         return false;
     }
