@@ -262,25 +262,23 @@ class AccountManagement {
             $oid = mysqli_real_escape_string($this->conn, $owner_id);
 
             if ($this->valid->checkGroupName($gn)) {
-                $sql_data = "INSERT INTO groups (groupownerid, groupname) VALUES ('$oid', '$gn')";
+                $sql_data2 = "INSERT INTO groups (groupownerid, groupname) VALUES ('$oid', '$gn')";
 
-                if ($this->conn->query($sql_data) === true) {
-                    echo "Successfully added a group!";
+                if ($this->conn->query($sql_data2) === true) {
+
                 } else {
-                    echo "We weren't able to add the group. Please try again.";
+
                 }
             } else {
-                echo "The group name should be unique.";
+
             }
 
-            if ($this->conn->query($sql_data)) {
-                echo '<script language="javascript">';
-                echo 'alert("Register Success, Please Login");';
-                echo 'window.location.href = "/home_maintenance_manager/public/usercontroller/signin";';
-                echo '</script>';
-                return true;
-            }
-            return false;
+            echo '<script language="javascript">';
+            echo 'alert("Register Success, Please Login");';
+            echo 'window.location.href = "/home_maintenance_manager/public/usercontroller/signin";';
+            echo '</script>';
+            return true;
         }
+        return false;
     }
 }
