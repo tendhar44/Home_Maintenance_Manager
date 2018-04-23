@@ -92,37 +92,4 @@ class Model {
         return $associativeArray;
     }
 
-
-    // public function setUserGroupPropertyId(){
-    //     $userGroupId = $this->getUersGroupId();
-    //     if($userGroupId == null){
-    //         $this->eHandler->alertMsg('user is not assign to any group');
-    //         return;
-    //     }
-
-    //     // prepare and bind
-    //     $stmt = $conn->prepare("
-    //         SELECT p.propertyid FROM propertygroupbridge pgb 
-    //         INNER JOIN properties p ON p.propertyid = pgb.propertyid 
-    //         INNER JOIN groups
-    //         WHERE p.logDelete != 1 AND pgb.groupid = ?
-    //         ");
-
-    //     $stmt->bind_param("s", $groupID);
-
-    //     $counter = 0;
-    //     foreach ($userGroupId as $id) {
-    //         $groupID = $id;
-    //         $result = $stmt->execute();
-    //         if($result){
-    //             while ($row = $result->fetch_assoc()) {
-    //                 $_SESSION['groupAssociatedPropertyID'][$counter] =
-    //                 array (
-    //                     $id => $row['propertyid'],
-    //                 );
-    //             }
-    //         }
-    //     }
-    //     var_dump($_SESSION['groupAssociatedPropertyID']);
-    // }
 }

@@ -23,7 +23,7 @@ class Validation {
     public function checkEmail($email){
         if($this->checkInput($email) == '') return false;
         //var_dump($email);
-        $query = sprintf("select email from users where email = '$email'");
+        $query = sprintf("select email from users where email = '$email' and userTypeId = 1");
         //var_dump($query);
         return $this->uniqueInput($query);
     }

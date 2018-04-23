@@ -2,10 +2,8 @@
 
 class GroupController extends Controller {
     public function index ($userId = 0){
-
         $groupManagement =  $this->model->getGroupManagement();
         $this->notSignedIn();
-
         $_SESSION['outputCotent'] = $groupManagement->getListOfGroups($_SESSION['userid']);
         $this->view("list-group-page", ["uId" => $userId]);
     }
@@ -23,7 +21,8 @@ class GroupController extends Controller {
     public function addmember($groupNum = 0) {
         $this->notSignedIn();
         $groupManagement =  $this->model->getGroupManagement();
-        $this->view("add-groupmember-page", ["gId" => $groupNum]);
+        $memberUsername = $groupManagement->getGroupMemberUsername();
+        $this->view("add-groupmember-page", ["gId" => $groupNum, "member" => $memberUsername]);
 
         if($_SERVER["REQUEST_METHOD"] == "POST") {
             $groupManagement->addNonDefaultMember();
@@ -33,7 +32,8 @@ class GroupController extends Controller {
     public function addproperty($groupNum = 0) {
         $this->notSignedIn();
         $groupManagement =  $this->model->getGroupManagement();
-        $this->view("add-groupproperty-page", ["gId" => $groupNum]);
+        $propertiesName = $groupManagement->getGroupProperty();        
+        $this->view("add-groupproperty-page", ["gId" => $groupNum, "propertiesName" => $propertiesName]);
 
         if($_SERVER["REQUEST_METHOD"] == "POST") {
             $groupManagement->addProperty();

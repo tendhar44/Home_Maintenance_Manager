@@ -49,8 +49,6 @@
                 </div>
             </form>
 
-
-            ?>
             <!-- The Modal -->
             <div id="myModal" class="modal">
 

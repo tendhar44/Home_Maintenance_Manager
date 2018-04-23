@@ -4,13 +4,36 @@
     <hr>
     <br>
     <form action="" method="post">
-        User Name:<span class="reqAsk">*</span><br> <input type="text" name="username" required><br><br>
-        <input type="hidden" name="groupid" value="<?php echo $data['gId']; ?>">
-        <input type="submit" value="ADD">
+
+
+        <div class="form-group">
+            <label class="control-label col-sm-4" for="memberSelector">User Name</label>
+            <div class="col-sm-12">
+                <select class="form-control" name="username" id="memberSelector" required=>
+                    <?php 
+                    if ($data["member"] == null){                        
+                        echo '<option value="" disabled selected>There is no member created</option>';
+                    }
+
+                    foreach ($data["member"] as $member) {
+                        # code...
+                    echo '
+
+                    <option value="'. $member .'" selected>'. $member .'</option>
+
+                    ';
+
+                    }
+
+                    ?>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <input type="hidden" name="groupid" value="<?php echo $data['gId']; ?>">
+            <input class="btn btn-md btn-secondary" type="submit" value="ADD">
+        </div>
     </form>
 
-    <div>
-        <br><br><br><br>
-        <span class="reqAsk">*</span> = required
-    </div>
 </div>
