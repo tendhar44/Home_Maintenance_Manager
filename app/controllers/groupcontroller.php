@@ -3,6 +3,7 @@
 class GroupController extends Controller {
     public function index ($userId = 0){
         $groupManagement =  $this->model->getGroupManagement();
+        $this->notSignedIn();
         $_SESSION['outputCotent'] = $groupManagement->getListOfGroups($_SESSION['userid']);
         $this->view("list-group-page", ["uId" => $userId]);
     }
