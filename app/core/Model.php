@@ -70,16 +70,59 @@ class Model {
     public function getAssociatedData(){
 
         $userId = $_SESSION['userid'];
+        if (isset($_SESSION['owner']) && $_SESSION['owner']){
 
-        $stmt = "
-        SELECT p.propertyName, a.applianceid, a.appliancename 
-        FROM propertyappliancebridge pa 
-        INNER JOIN properties p ON p.propertyId = pa.propertyId 
-        INNER JOIN appliances a ON a.applianceid = pa.applianceid
-        WHERE p.ownerId = '$userId' and p.logDelete != 1
-        ";
+            $stmt = "
+            SELECT p.propertyName, a.applianceid, a.appliancename 
+            FROM propertyappliancebridge pa 
+            INNER JOIN properties p ON p.propertyId = pa.propertyId 
+            INNER JOIN appliances a ON a.applianceid = pa.applianceid
+            WHERE p.ownerId = '$userId' and p.logDelete != 1
+            ";   
+        } else if (isset($_SESSION['manager']) && $_SESSION['manager']){    
+            $groupIds = $this->getUersGroupId();
+            if($groupIds == null){
+                return;
+            }
+            $whereClause = '';
+            foreach ($groupIds as $id) {
+                if($whereClause !== ''){
+                    $whereClause .= '\' or groupId = \'';
+                }
+                $whereClause .= $id;
+            }
+
+            $propertiesId = $this->getGroupPropertyId($whereClause);
+            if ($propertiesId == null){
+                return null;
+            }
+            $whereClause = '';
+            foreach ($propertiesId as $id) {
+                if($whereClause !== ''){
+                    $whereClause .= '\' or pa.propertyId = \'';
+                }
+                $whereClause .= $id;
+            }
+
+
+            $stmt = "
+            SELECT p.propertyName, a.applianceid, a.appliancename 
+            FROM propertyappliancebridge pa 
+            INNER JOIN properties p ON p.propertyId = pa.propertyId 
+            INNER JOIN appliances a ON a.applianceid = pa.applianceid
+            WHERE p.logDelete != 1 and pa.propertyId = '$whereClause'
+            ";   
+
+
+        }else {
+            return null;
+        }
 
         $result = $this->conn->query($stmt);
+
+        if(!$result){
+            return null;
+        }
 
         $associativeArray = [];
 
@@ -90,6 +133,54 @@ class Model {
 
         // var_dump($associativeArray);
         return $associativeArray;
+    }
+
+
+    //get all the groupid that the login user is associated with
+    private function getUersGroupId(){
+        $userid = $_SESSION['userid'];
+        if (isset($_SESSION['owner']) && $_SESSION['owner']){
+            $stmt = "SELECT groupid FROM groups 
+            WHERE groupOwnerId = '$userid' and logDelete != 1"; 
+        }else{
+            $stmt = "SELECT groupid FROM usergroupbridge 
+            WHERE userid = '$userid'"; 
+        }
+        // var_dump($stmt);        
+        $result = $this->conn->query($stmt);
+
+        if($result === FALSE) {
+            // $this->eHandler->alertMsg('Fail to retrive group id associated with user from database');
+            return null;
+        }
+
+        $associatedGroupId = null;
+        $counter = 0;
+        //fetch and store the data in an array
+        while ($row = $result->fetch_assoc()) {
+            $associatedGroupId[$counter] = $row['groupid'];
+            $counter++;
+        }
+        return $associatedGroupId;
+    }
+
+    private function getGroupPropertyId($groupId){
+        $stmt = "SELECT propertyId FROM propertygroupbridge
+        WHERE groupId = '$groupId'"; 
+
+        // var_dump($stmt);
+        $result = $this->conn->query($stmt);
+        if($result){
+            $counter = 0;
+            $groupPropertyId = null;
+            while ($row = $result->fetch_assoc()) {
+                $groupPropertyId[$counter] = $row['propertyId'];
+                $counter++;
+            }
+            // var_dump($groupPropertyId);
+            return $groupPropertyId;
+        }
+        return null;
     }
 
 }

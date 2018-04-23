@@ -68,7 +68,7 @@ class GroupManagement {
             $counter = 0;
             $groupPropertyId = null;
             while ($row = $result->fetch_assoc()) {
-                $groupPropertyId[$counter] = $row['userId'];
+                $groupPropertyId[$counter] = $row['propertyId'];
                 $counter++;
             }
             // var_dump($groupPropertyId);
