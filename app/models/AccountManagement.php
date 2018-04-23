@@ -140,7 +140,7 @@ class AccountManagement {
 
             // var_dump($row['username']);
             //if username and password matches then let user log in
-        if($username == $row['username'] && $password == $row['password']) {
+        if(strtolower($username) == strtolower($row['username']) && $password == $row['password']) {
             $_SESSION['loggedin'] = true;
             $_SESSION['username'] = $row['username'];
             $_SESSION['usertype'] = $row['usertypeid'];
@@ -207,7 +207,8 @@ class AccountManagement {
      * Then it signs user up for an account.
      * @return bool
      */
-    public function signUpUser() {
+    public function signUpUser()
+    {
 
         $authenticity = true;
         $username = (isset($_POST['userName'])) ? $_POST['userName'] : '';
@@ -228,62 +229,58 @@ class AccountManagement {
         // var_dump($email);
         // var_dump($password);
 
-        if(!$this->isValidUsername($username)){
-            $authenticity = false;
+        if (!$this->isValidUsername($username)) {
             $_SESSION['userNameError'] = 'Username should be 3-17 characters long.';
-        }else{
-            if(!$this->valid->checkSignUpUsername($username)){
-                $authenticity = false;
+            return false;
+        } else {
+            if (!$this->valid->checkSignUpUsername($username)) {
                 $_SESSION['userNameError'] = 'Username is taken';
+                return false;
             }
         }
 
-        if($email == ''){
+        if ($email == '') {
             $_SESSION['emailError'] = 'Please enter an Email address';
-            $authenticity = false;
-        }else{
-            if(!$this->valid->checkEmail($email)){
+            return false;
+        } else {
+            if (!$this->valid->checkEmail($email)) {
                 $_SESSION['emailError'] = 'Email address is taken';
-                $authenticity = false;
+                return false;
             }
         }
 
-        
-        
-        // var_dump($authenticity);
+        // attempt insert query execution
+        $sql_data = "INSERT INTO users (userTypeId, username, password, email, firstname, lastname, logdelete) VALUES (1, '$username', '$password', '$email', '$firstname', '$lastname', '0')";
 
-        if($authenticity){
-            // attempt insert query execution
-            $sql_data = "INSERT INTO users (userTypeId, username, password, email, firstname, lastname, logdelete) VALUES (1, '$username', '$password', '$email', '$firstname', '$lastname', '0')";
+        if ($this->conn->query($sql_data)) {
+            $row = $this->getUser($username);
+            $owner_id = $row['userid'];
+            $def = 'default';
+            $group_name = $username . $def;
 
-            if($this->conn->query($sql_data)){
-                $row = $this->getUser($username);
-                $owner_id = $row['userid'];
-                $def = 'default';
-                $group_name = $username . $def;
+            $gn = mysqli_real_escape_string($this->conn, $group_name);
+            $oid = mysqli_real_escape_string($this->conn, $owner_id);
 
-                $gn = mysqli_real_escape_string($this->conn, $group_name);
-                $oid = mysqli_real_escape_string($this->conn, $owner_id);
+            if ($this->valid->checkGroupName($gn)) {
+                $sql_data = "INSERT INTO groups (groupownerid, groupname) VALUES ('$oid', '$gn')";
 
-                if($this->valid->checkGroupName($gn)) {
-                    $sql_data = "INSERT INTO groups (groupownerid, groupname) VALUES ('$oid', '$gn')";
-
-                    if ($this->conn->query($sql_data) === true) {
-                        echo "Successfully added a group!";
-                    } else {
-                        echo "We weren't able to add the group. Please try again.";
-                    }
-                }else {
-                    echo "The group name should be unique.";
+                if ($this->conn->query($sql_data) === true) {
+                    echo "Successfully added a group!";
+                } else {
+                    echo "We weren't able to add the group. Please try again.";
                 }
+            } else {
+                echo "The group name should be unique.";
+            }
 
+            if ($this->conn->query($sql_data)) {
                 echo '<script language="javascript">';
                 echo 'alert("Register Success, Please Login");';
                 echo 'window.location.href = "/home_maintenance_manager/public/usercontroller/signin";';
                 echo '</script>';
-
+                return true;
             }
+            return false;
         }
-        return false;
     }
 }

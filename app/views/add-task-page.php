@@ -12,35 +12,81 @@
     <h3>Create A Task</h3>
     <hr>
     <br>
+
+
     <form id="addTaskForm" action="" method="post" enctype="multipart/form-data">
-        Task Name: <span class="reqAsk">*</span><br> <input type="text" name="taskName" required><br><br>
-        Task Due Date: <span class="reqAsk">*</span><br> <input type="date" name="taskDue" required><br><br>
 
-        <!-- one time task = 0, and repeat task = 1 -->
-        Repeat Task: <br> <input type="radio" name="repeatTask" value="1">&nbsp; Yes
-        <br><input type="radio" name="repeatTask" value="0" checked="checked">&nbsp; No<br><br>
-        Interval Days:<br> <input type="number" name="intervalDay" value="1"><br><br>
-        Task Reminder Date:<br> <input type="date" name="taskReminder" required><br><br>
-        Reminder Interval Days:<br> <input type="number" name="reminderInterval"><br><br>
+        <div class="form-group">
+            <label class="control-label col-sm-4" for="taskName">Task Name: <span class="reqAsk">*</span></label>
+            <div class="col-sm-12">
+                <input class="form-control" name="taskName" id="taskName" placeholder="Enter Task Name" required>
+            </div>
+        </div>
 
-        Description:<br> <textarea name="taskDes"></textarea><br><br>
+        <div class="form-group">
+            <label class="control-label col-sm-4" for="taskDue">Task Due Date: <span class="reqAsk">*</span></label>
+            <div class="col-sm-12">
+                <input type="date" class="form-control" name="taskDue" id="taskDue" required>
+            </div>
+        </div>
 
-        Select Image only (limited 1000 kb):<br>
-        <input id="browse" name="imgSelector[]" type="file" onchange="previewFiles()" accept="image/*">
-        <div id="preview"></div>
-        <br><br>
+        <div class="form-group">
+            <label class="control-label col-sm-4">Repeat Task:</label>
+            <div class="col-sm-12">
+                <input type="radio" name="repeatTask" value="1">&nbsp; Yes &nbsp; &nbsp;
+                <input type="radio" name="repeatTask" value="0" checked="checked">&nbsp; No
+            </div>
+        </div>
 
-        <!--<input type="hidden" name="taskActiveStatus" value="1">-->
+        <div class="form-group">
+            <label class="control-label col-sm-4" for="intervalDay">Interval Days:</label>
+            <div class="col-sm-12">
+                <input type="number" class="form-control" name="intervalDay" id="intervalDay">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-sm-4" for="taskReminder">Reminder Date: </label>
+            <div class="col-sm-12">
+                <input type="date" class="form-control" name="taskReminder" id="taskReminder">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-sm-4" for="reminderInterval">Reminder Interval Days:</label>
+            <div class="col-sm-12">
+                <input type="number" class="form-control" name="reminderInterval" id="reminderInterval">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-sm-4" for="taskDes">Description:</label>
+            <div class="col-sm-12">
+                <textarea name="taskDes" class="form-control" id="taskDes"></textarea>
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <label class="control-label col-sm-6" for="imageSelector[]">Select Image only (limited 1000 kb):</label>
+            <div class="col-sm-12">
+                <input class="form-control" id="browse" name="imgSelector[]" type="file" onchange="previewFiles()" accept="image/*">
+                <div id="preview"></div>
+            </div>
+        </div>
+
         <input type="hidden" name="taskComplete" value="0">
         <input type="hidden" name="appId" value="<?php echo $data['appId']; ?>">
         <input type="hidden" name="proId" value="<?php echo $data['proNum']; ?>">
 
+        <div class="form-group"> 
+            <button type="submit" name="addTask" value="submit" class="btn btn-secondary btn-md">Submit</button>
 
-        <input name="addTask" value="addTask" type="submit" value="Submit">
-    </form>
-
-    <div>
-        <br><br><br><br>
-        <span class="reqAsk">*</span> = required
+            <span class="reqAsk">&nbsp; *</span> = required
+        </div>
+        <div>
+        </div>
     </div>
+</form> 
+
 </div>
