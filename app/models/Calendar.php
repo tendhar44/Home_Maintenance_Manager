@@ -179,10 +179,17 @@ class Calendar {
      * @return string
      */
     private function displayDay($dayBox, $currDay, $currMonth, $currYear) {
+        $userid = $_SESSION['userid'];
+
         $taskNameArray = array();
         $taskIdArray = array();
         $taskLogDeleteArray = array();
         $taskUserIdArray = array();
+
+        $taskNameArray2 = array();
+        $taskIdArray2 = array();
+        $taskLogDeleteArray2 = array();
+        //$taskUserIdArray2 = array();
 
         $this->toDay = str_pad($this->toDay, 2, 0, STR_PAD_LEFT);
 
@@ -230,28 +237,83 @@ class Calendar {
             $taskUserIdArray[$i];
         }
 
-        if ($boxContent == $currDay && $currMonth == $thisMonth && $currYear == $thisYear) {
-            if ($taskNameArray != null) {
-                return '<li id="li-' . $this->todayDate . '" class="' . ($dayBox % 7 == 1 ? ' start ' : ($dayBox % 7 == 0 ? ' end ' : ' ')) .
-                    ($boxContent == null ? 'mask' : '') . '">' . '<span style="font-weight: 900;">' . $boxContent . '</span>'
-                    . (isset($taskNameArray[0]) && $taskLogDeleteArray[0] == 0 && $taskUserIdArray[0] == 1 ? '<br><a href="/home_maintenance_manager/public/taskcontroller/task/' . $taskIdArray[0] . '" style="background-color:yellow;">' . $taskNameArray[0] . '..</a>' : '</li>')
-                    . (isset($taskNameArray[1]) && $taskLogDeleteArray[1] == 0 && $taskUserIdArray[0] == 1 ? '<br><a href="/home_maintenance_manager/public/taskcontroller/task/' . $taskIdArray[1] . '" style="background-color:yellow;">' . $taskNameArray[1] . '..</a>' : '</li>')
-                    . (isset($taskNameArray[2]) && $taskLogDeleteArray[2] == 0 && $taskUserIdArray[0] == 1 ? '<br><a href="/home_maintenance_manager/public/taskcontroller/task/' . $taskIdArray[2] . '" style="background-color:yellow;">' . $taskNameArray[2] . '..</a>' : '</li>');
+        $sql_data2 = "SELECT pr.propertyName, a.applianceName, p.propertyId, p.applianceId, t.taskid, t.propertyApplianceId, t.taskname, t.description, t.repeatTask, t.duedate, t.complete, t.intervalDays, t.reminderdate, t.reminderinterval, t.logdelete 
+            FROM tasks t 
+            INNER JOIN propertyappliancebridge p ON t.propertyApplianceId = p.propertyApplianceId
+            INNER JOIN propertygroupbridge pg ON p.propertyId = pg.propertyId 
+            INNER JOIN usergroupbridge ug ON pg.groupId = ug.groupId
+            INNER JOIN properties pr ON pr.propertyId = p.propertyId
+            INNER JOIN appliances a ON a.applianceId = p.applianceId            
+            WHERE ug.userId = '$userid' and t.logDelete !=1 and t.complete != 1 and t.duedate = '$dueDate'";
+
+        $userData2 = $this->conn->query($sql_data2);
+        while ($row2 = $userData2->fetch_assoc()) {
+            $row2['taskname'] = substr($row2['taskname'], 0, 12);
+            $taskNameArray2[] = $row2['taskname'];
+            $taskIdArray2[] = $row2['taskid'];
+            $taskLogDeleteArray2[] = $row2['logdelete'];
+            //$taskUserIdArray2[] = $row2['userId'];
+        }
+        for ($i = 0; $i < sizeof($taskNameArray2); $i++) {
+            $taskNameArray2[$i];
+            $taskIdArray2[$i];
+            $taskLogDeleteArray2[$i];
+            //$taskUserIdArray[$i];
+        }
+
+        if($_SESSION['owner']) {
+
+            if ($boxContent == $currDay && $currMonth == $thisMonth && $currYear == $thisYear) {
+                if ($taskNameArray != null) {
+                    return '<li id="li-' . $this->todayDate . '" class="' . ($dayBox % 7 == 1 ? ' start ' : ($dayBox % 7 == 0 ? ' end ' : ' ')) .
+                        ($boxContent == null ? 'mask' : '') . '">' . '<span style="font-weight: 900;">' . $boxContent . '</span>'
+                        . (isset($taskNameArray[0]) && $taskLogDeleteArray[0] == 0 && $taskUserIdArray[0] == $userid ? '<br><a href="/home_maintenance_manager/public/taskcontroller/task/' . $taskIdArray[0] . '" style="background-color:yellow;">' . $taskNameArray[0] . '..</a>' : '</li>')
+                        . (isset($taskNameArray[1]) && $taskLogDeleteArray[1] == 0 && $taskUserIdArray[1] == $userid ? '<br><a href="/home_maintenance_manager/public/taskcontroller/task/' . $taskIdArray[1] . '" style="background-color:yellow;">' . $taskNameArray[1] . '..</a>' : '</li>')
+                        . (isset($taskNameArray[2]) && $taskLogDeleteArray[2] == 0 && $taskUserIdArray[2] == $userid ? '<br><a href="/home_maintenance_manager/public/taskcontroller/task/' . $taskIdArray[2] . '" style="background-color:yellow;">' . $taskNameArray[2] . '..</a>' : '</li>');
+                } else {
+                    return '<li id="li-' . $this->todayDate . '" class="' . ($dayBox % 7 == 1 ? ' start ' : ($dayBox % 7 == 0 ? ' end ' : ' ')) .
+                        ($boxContent == null ? 'mask' : '') . '">' . '<span style="font-weight: 900;">' . $boxContent . '</span></li>';
+                }
             } else {
-                return '<li id="li-' . $this->todayDate . '" class="' . ($dayBox % 7 == 1 ? ' start ' : ($dayBox % 7 == 0 ? ' end ' : ' ')) .
-                    ($boxContent == null ? 'mask' : '') . '">' . '<span style="font-weight: 900;">' . $boxContent . '</span></li>';
+                if ($taskNameArray != null) {
+                    return '<li id="li-' . $this->todayDate . '" class="' . ($dayBox % 7 == 1 ? ' start ' : ($dayBox % 7 == 0 ? ' end ' : ' ')) .
+                        ($boxContent == null ? 'mask' : '') . '">' . $boxContent . '</span>'
+                        . (isset($taskNameArray[0]) && $taskLogDeleteArray[0] == 0 && $taskUserIdArray[0] == $userid ? '<br><a href="/home_maintenance_manager/public/taskcontroller/task/' . $taskIdArray[0] . '" style="background-color:yellow;">' . $taskNameArray[0] . '..</a>' : '</li>')
+                        . (isset($taskNameArray[1]) && $taskLogDeleteArray[1] == 0 && $taskUserIdArray[1] == $userid ? '<br><a href="/home_maintenance_manager/public/taskcontroller/task/' . $taskIdArray[1] . '" style="background-color:yellow;">' . $taskNameArray[1] . '..</a>' : '</li>')
+                        . (isset($taskNameArray[2]) && $taskLogDeleteArray[2] == 0 && $taskUserIdArray[2] == $userid ? '<br><a href="/home_maintenance_manager/public/taskcontroller/task/' . $taskIdArray[2] . '" style="background-color:yellow;">' . $taskNameArray[2] . '..</a>' : '</li>');
+                } else {
+                    return '<li id="li-' . $this->todayDate . '" class="' . ($dayBox % 7 == 1 ? ' start ' : ($dayBox % 7 == 0 ? ' end ' : ' ')) .
+                        ($boxContent == null ? 'mask' : '') . '">' . $boxContent . '</span></li>';
+                }
             }
-        } else {
-            if ($taskNameArray != null) {
-                return '<li id="li-' . $this->todayDate . '" class="' . ($dayBox % 7 == 1 ? ' start ' : ($dayBox % 7 == 0 ? ' end ' : ' ')) .
-                    ($boxContent == null ? 'mask' : '') . '">' . $boxContent . '</span>'
-                    . (isset($taskNameArray[0]) && $taskLogDeleteArray[0] == 0 && $taskUserIdArray[0] == 1 ? '<br><a href="/home_maintenance_manager/public/taskcontroller/task/' . $taskIdArray[0] . '" style="background-color:yellow;">' . $taskNameArray[0] . '..</a>' : '</li>')
-                    . (isset($taskNameArray[1]) && $taskLogDeleteArray[1] == 0 && $taskUserIdArray[0] == 1 ? '<br><a href="/home_maintenance_manager/public/taskcontroller/task/' . $taskIdArray[1] . '" style="background-color:yellow;">' . $taskNameArray[1] . '..</a>' : '</li>')
-                    . (isset($taskNameArray[2]) && $taskLogDeleteArray[2] == 0 && $taskUserIdArray[0] == 1 ? '<br><a href="/home_maintenance_manager/public/taskcontroller/task/' . $taskIdArray[2] . '" style="background-color:yellow;">' . $taskNameArray[2] . '..</a>' : '</li>');
+
+        }
+        if($_SESSION['manager'] || $_SESSION['limitedUser']){
+
+            if ($boxContent == $currDay && $currMonth == $thisMonth && $currYear == $thisYear) {
+                if ($taskNameArray2 != null) {
+                    return '<li id="li-' . $this->todayDate . '" class="' . ($dayBox % 7 == 1 ? ' start ' : ($dayBox % 7 == 0 ? ' end ' : ' ')) .
+                        ($boxContent == null ? 'mask' : '') . '">' . '<span style="font-weight: 900;">' . $boxContent . '</span>'
+                        . (isset($taskNameArray2[0]) && $taskLogDeleteArray2[0] == 0 ? '<br><a href="/home_maintenance_manager/public/taskcontroller/task/' . $taskIdArray2[0] . '" style="background-color:yellow;">' . $taskNameArray2[0] . '..</a>' : '</li>')
+                        . (isset($taskNameArray2[1]) && $taskLogDeleteArray2[1] == 0 ? '<br><a href="/home_maintenance_manager/public/taskcontroller/task/' . $taskIdArray2[1] . '" style="background-color:yellow;">' . $taskNameArray2[1] . '..</a>' : '</li>')
+                        . (isset($taskNameArray2[2]) && $taskLogDeleteArray2[2] == 0 ? '<br><a href="/home_maintenance_manager/public/taskcontroller/task/' . $taskIdArray2[2] . '" style="background-color:yellow;">' . $taskNameArray2[2] . '..</a>' : '</li>');
+                } else {
+                    return '<li id="li-' . $this->todayDate . '" class="' . ($dayBox % 7 == 1 ? ' start ' : ($dayBox % 7 == 0 ? ' end ' : ' ')) .
+                        ($boxContent == null ? 'mask' : '') . '">' . '<span style="font-weight: 900;">' . $boxContent . '</span></li>';
+                }
             } else {
-                return '<li id="li-' . $this->todayDate . '" class="' . ($dayBox % 7 == 1 ? ' start ' : ($dayBox % 7 == 0 ? ' end ' : ' ')) .
-                    ($boxContent == null ? 'mask' : '') . '">' . $boxContent . '</span></li>';
+                if ($taskNameArray2 != null) {
+                    return '<li id="li-' . $this->todayDate . '" class="' . ($dayBox % 7 == 1 ? ' start ' : ($dayBox % 7 == 0 ? ' end ' : ' ')) .
+                        ($boxContent == null ? 'mask' : '') . '">' . $boxContent . '</span>'
+                        . (isset($taskNameArray2[0]) && $taskLogDeleteArray2[0] == 0 ? '<br><a href="/home_maintenance_manager/public/taskcontroller/task/' . $taskIdArray2[0] . '" style="background-color:yellow;">' . $taskNameArray2[0] . '..</a>' : '</li>')
+                        . (isset($taskNameArray2[1]) && $taskLogDeleteArray2[1] == 0 ? '<br><a href="/home_maintenance_manager/public/taskcontroller/task/' . $taskIdArray2[1] . '" style="background-color:yellow;">' . $taskNameArray2[1] . '..</a>' : '</li>')
+                        . (isset($taskNameArray2[2]) && $taskLogDeleteArray2[2] == 0 ? '<br><a href="/home_maintenance_manager/public/taskcontroller/task/' . $taskIdArray2[2] . '" style="background-color:yellow;">' . $taskNameArray2[2] . '..</a>' : '</li>');
+                } else {
+                    return '<li id="li-' . $this->todayDate . '" class="' . ($dayBox % 7 == 1 ? ' start ' : ($dayBox % 7 == 0 ? ' end ' : ' ')) .
+                        ($boxContent == null ? 'mask' : '') . '">' . $boxContent . '</span></li>';
+                }
             }
+
         }
 
     }
