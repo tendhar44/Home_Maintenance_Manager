@@ -60,6 +60,9 @@ class TaskController extends Controller {
             if (isset($_POST['deleteImage'])){
                 $taskManagement->deleteImage($taskID);
             }      
+            echo '<script language="javascript">';
+            echo 'window.location.href = "/home_maintenance_manager/public/taskcontroller/update/'.$taskNum.'";';
+            echo '</script>';
         }
         
         $this->view("update-task-page", ["tn" => $taskNum, "img" => $images]);

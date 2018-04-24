@@ -42,6 +42,9 @@ class ApplianceController extends Controller {
             if (isset($_POST['deleteImage'])){
                 $appManagement->deleteImage($_SESSION['applianceId' . $applianceID]['id']);
             }      
+            echo '<script language="javascript">';
+            echo 'window.location.href = "/home_maintenance_manager/public/appliancecontroller/update/'.$propertyId.'/'.$applianceID.'";';
+            echo '</script>';
         }
 
         $this->view("update-appliance-page", ["pn" => $propertyId, "an" => $applianceID, "img" => $images]);

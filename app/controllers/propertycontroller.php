@@ -28,7 +28,6 @@ class PropertyController extends Controller {
         $images = $proManagement->getImage($propertyNum);
 
         $this->view("update-property-page", ["pn" => $propertyNum, "img" => $images]);
-
         /**
          * If form is submitted as post method, update property method is called.
          * Property ID is passed as parameter in the update property method.
@@ -46,7 +45,10 @@ class PropertyController extends Controller {
             }      
             if (isset($_POST['deleteImage'])){
                 $proManagement->deleteImage($_SESSION['propertyid' . $propertyNum]['id']);
-            }      
+            }
+            echo '<script language="javascript">';
+            echo 'window.location.href = "/home_maintenance_manager/public/propertycontroller/update/'.$propertyNum.'";';
+            echo '</script>';
         }
 
     }
