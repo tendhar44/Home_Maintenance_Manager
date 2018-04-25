@@ -14,7 +14,7 @@ if(isset($_SESSION['owner']) && $_SESSION['owner'] || isset($_SESSION['manager']
 	<div id="listAll-property">    	
 		<button id="createTaskButton" type="button" class="btn btn-primary"  style="display:<?php echo $display ?>">Create Task</button>
 
-		<form id="taskForm" class="form-horizontal" action="/home_maintenance_manager/public/taskcontroller/listAll/<?php echo $_SESSION['userid']; ?>" method="post"">
+		<form id="taskForm" class="form-horizontal" action="" method="post"">
 
 			<div class="form-group">
 				<label class="control-label col-sm-4" for="propertyList">Select Property:</label>

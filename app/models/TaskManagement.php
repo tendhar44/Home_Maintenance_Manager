@@ -345,10 +345,10 @@ class TaskManagement {
             VALUES ('$proAppID', '$tn', '$des', '$userid', '$repeattask', '$duedate', '$complete', '$repeatlength', '$reminderdate', '$reminderinterval')";
             if($this->conn->query($sql_data) === true) {
                 $last_Insert_Id = $this->conn->insert_id;
-                $this->addImage($last_Insert_Id);
                 if (!$redirectPage){
                     return;
                 }
+                $this->addImage($last_Insert_Id);
                 $link = '/Home_Maintenance_Manager/public/taskcontroller/'.$proId.'/'.$appId;
 
                 $this->eHandler->alertMsgRedirect("Successfully added your task!", $link);
