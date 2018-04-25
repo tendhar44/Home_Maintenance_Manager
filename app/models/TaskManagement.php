@@ -36,18 +36,18 @@ class TaskManagement {
             }
 
 
-            if ($_SESSION['task'.$id]['repeatTask'] == 1){
-                $newDueDate = new DateTime($_SESSION['task'.$id]['duedate']);
+            // if ($_SESSION['task'.$id]['repeatTask'] == 1){
+            //     $newDueDate = new DateTime($_SESSION['task'.$id]['duedate']);
 
-                date_add($newDueDate,date_interval_create_from_date_string($_SESSION['task'.$id]['intervaldays'] . ' days'));
+            //     date_add($newDueDate,date_interval_create_from_date_string($_SESSION['task'.$id]['intervaldays'] . ' days'));
 
-                $newReminderDate = new DateTime($_SESSION['task'.$id]['reminderdate']);
+            //     $newReminderDate = new DateTime($_SESSION['task'.$id]['reminderdate']);
 
-                date_add($newReminderDate,date_interval_create_from_date_string($_SESSION['task'.$id]['intervaldays'] . ' days'));
+            //     date_add($newReminderDate,date_interval_create_from_date_string($_SESSION['task'.$id]['intervaldays'] . ' days'));
 
 
-                $stmt = "UPDATE tasks SET complete='$status', duedate = '$newDueDate', reminderdate = '$newReminderDate'  WHERE taskid = '$id'";
-            }
+            //     $stmt = "UPDATE tasks SET complete='$status', duedate = '$newDueDate', reminderdate = '$newReminderDate'  WHERE taskid = '$id'";
+            // }
 
             // attempt insert query execution
             $stmt = "UPDATE tasks SET complete='$status' WHERE taskid = '$id'";
