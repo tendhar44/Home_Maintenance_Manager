@@ -309,7 +309,7 @@ class TaskManagement {
 
 
     // add a task to the database
-    public function addTask() {
+    public function addTask($redirectPage) {
         $appId = (isset($_POST['appId'])) ? $_POST['appId'] : NULL;
         $proId = (isset($_POST['proId'])) ? $_POST['proId'] : NULL;
         //$proAppID = (isset($_POST['proAppID'])) ? $_POST['proAppID'] : NULL;
@@ -346,7 +346,11 @@ class TaskManagement {
             if($this->conn->query($sql_data) === true) {
                 $last_Insert_Id = $this->conn->insert_id;
                 $this->addImage($last_Insert_Id);
+                if (!$redirectPage){
+                    return;
+                }
                 $link = '/Home_Maintenance_Manager/public/taskcontroller/'.$proId.'/'.$appId;
+
                 $this->eHandler->alertMsgRedirect("Successfully added your task!", $link);
             }else {
                 $this->eHandler->alertMsg("We weren't able to add your task. Please try again.");
