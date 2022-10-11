@@ -1,4 +1,4 @@
-# Instructions for the Professor:
+# Instructions:
 
 1. Install XAMPP at - https://www.apachefriends.org/download.html
 2. Start up Apache and MySQL
